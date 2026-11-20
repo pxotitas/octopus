@@ -9,30 +9,27 @@
 - [x] Identify the official Ewwii project and current published docs (0.10.0); inspect window/widget-control capabilities.
 - [x] Identify a simple shared-window content approach: one Ewwii `Stack`, switch its selected child.
 - [x] Confirm Nucleus Shell is archived; retain it as visual inspiration only.
-- [ ] Prototype Ewwii shared-window content switching and Wayland anchoring before committing to the UI transport.
+- [x] Define the minimal Waybar/Ewwii hand-off contract; Ewwii window and anchoring implementation is user-owned.
 
 ## 1. Waybar
 - [x] Review Waybar and Ewwii package sources/metadata; no packages installed.
-- [ ] Confirm weather provider; location is manually fixed to Campo Grande, MS.
+- [x] Choose Open-Meteo for weather; fixed manual location is Campo Grande, MS.
 - [x] Confirm Waybar has a native MPRIS module; no custom player bridge needed for the basic bar item.
 - [ ] Test MPRIS behaviour for paused/stopped states and multiple available players.
-- [ ] Implement left, centre, and right groups.
-- [ ] Implement the shared section-window request protocol.
-- [ ] Test click and right-click behaviour.
+- [x] Implement left, centre, and right groups in Waybar JSONC/CSS.
+- [x] Define the Waybar-to-Ewwii CLI hand-off contract; Ewwii implementation is user-owned.
+- [ ] Test click and right-click behaviour after the user-owned Ewwii window exists.
 - [ ] Test CAVA lazy start/stop and cleanup.
-- [ ] Preview without enabling it at login.
+- [ ] Install Waybar and preview manually; do not enable it at login yet.
 
-## 2. Octopus sections
-- [ ] Shared window controller.
-- [ ] Main section.
-- [ ] Clock and calendar section.
-- [ ] Weather section.
-- [ ] Media section and CAVA lifecycle.
-- [ ] Power section.
-- [ ] Network, Bluetooth, audio, and clipboard panels.
+## 2. Ewwii sections (user-owned; outside the Waybar implementation)
+- [ ] Shared window and contextual anchoring.
+- [ ] Main, clock, weather, media, and power sections.
+- [ ] Network, Bluetooth, audio, microphone, and clipboard panels.
+- [ ] Media controls and CAVA lifecycle.
 
 ## 3. Shell integration
-- [ ] Matugen token pipeline.
+- [x] Matugen token template and Waybar output path.
 - [ ] Walker integration.
 - [ ] Dunst configuration and notification icon/avatar capability test.
 - [ ] Niri animation tuning.

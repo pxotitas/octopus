@@ -37,14 +37,14 @@ The modules are independent. There is no shared expandable centre button.
 - Left click on Media → show Media section.
 - Right click on any of the three → show the Main section.
 
-There is exactly one shared Octopus section window. If it is already open, selecting another module replaces the content in that same window; do not spawn a second window.
+There is exactly one shared Octopus section window. If it is already open, selecting another module replaces the content in that same window; do not spawn a second window. The Waybar hand-off contract is `ewwii update 'section="clock"' && ewwii open octopus` (with the relevant section name). Ewwii implementation is user-owned; see `waybar/README.md` for the section names.
 
 #### Media section and CAVA lifecycle
 
 - The media section provides playback information and common controls.
 - Track title may use a restrained marquee/scroll when it does not fit.
-- Use Waybar's native `mpris` module (it uses libplayerctl); do not add a custom MPRIS script or separate Waybar plugin. Its default `player: "playerctld"` follows the currently active player.
-- Set `hide-on-paused` if testing confirms it matches the desired hidden state. Confirm how stopped/no-player states behave before finalizing visibility.
+- Use Waybar's native `mpris` module (it uses libplayerctl); do not add a custom MPRIS script or separate Waybar plugin. Its default `player: "playerctld"` follows the currently active player; `playerctld daemon` must be running for active-player selection.
+- Keep paused playback visible with a paused indicator; stopped/no-player states are hidden. Verify this against the installed Waybar at runtime.
 - Start CAVA lazily when the media section needs it.
 - When the media section is left or its window is closed, stop the CAVA process. It must not remain running in the background.
 
@@ -83,8 +83,8 @@ No custom workspace polling script or window-title script is planned. Keep the J
 - Location mode: manual — Campo Grande, Mato Grosso do Sul, Brazil.
 - Compact format: condition icon + temperature.
 - Icon changes with the reported weather condition.
-- The location provider and weather data source are not selected yet. Choose a privacy-conscious source and document its network behaviour before implementation.
-- Handle unavailable network/data gracefully without leaving a broken placeholder in the bar.
+- Data source: Open-Meteo current conditions, using fixed coordinates for Campo Grande (-20.4697, -54.6201) and the `America/Campo_Grande` timezone. No geolocation or API key is used.
+- Refresh every 15 minutes. Handle unavailable network/data by hiding the text rather than leaving a broken placeholder.
 
 ## Notifications
 
@@ -102,5 +102,5 @@ Discord sender-avatar support is not assumed. It needs a real payload/integratio
 - Use Waybar's native Niri and MPRIS modules where they meet the requirements.
 - Add scripts only for gaps that native modules cannot cover cleanly.
 - Keep scripts small, readable, and independently testable.
-- Do not start or enable Waybar automatically during the initial development stage.
+- Keep Waybar manual during development; do not enable it at login until runtime testing is complete.
 - Do not change the current login manager, display manager, shell, or Niri startup configuration as part of the first implementation.
