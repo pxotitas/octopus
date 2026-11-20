@@ -12,7 +12,7 @@
 - [ ] Prototype Ewwii shared-window content switching and Wayland anchoring before committing to the UI transport.
 
 ## 1. Waybar
-- [ ] Review available package sources and dependency versions.
+- [x] Review Waybar and Ewwii package sources/metadata; no packages installed.
 - [ ] Confirm weather provider and automatic-location behaviour.
 - [x] Confirm Waybar has a native MPRIS module; no custom player bridge needed for the basic bar item.
 - [ ] Test MPRIS behaviour for paused/stopped states and multiple available players.

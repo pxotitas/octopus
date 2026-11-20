@@ -24,6 +24,13 @@
 
 These are intended boundaries. The exact IPC and process model must be verified against the installed versions before implementation.
 
+## Package source review
+
+- Waybar `0.16.0-1.1` is available from the configured `cachyos-extra-v3` repository. The package already depends on `playerctl`, which is installed on this machine; no separate MPRIS bridge package is needed for Waybar's native module.
+- Ewwii `0.10.0-1` is available from the AUR as `ewwii-bin` and `ewwii`. The binary PKGBUILD reviewed here downloads the upstream GitHub release binary and verifies a SHA-256 checksum; it declares no additional runtime dependencies. The source package builds with Cargo, GTK4, gtk4-layer-shell, and Graphene. Neither package has been installed.
+
+This is a source/metadata review only, not an approval to install.
+
 ## Ewwii research note
 
 The official Ewwii project is [Ewwii-sh/ewwii](https://github.com/Ewwii-sh/ewwii). Its current published documentation identifies version 0.10.0 and describes a Rust + GTK4 widget system configured with NBCL and styled with CSS/SCSS.
