@@ -59,7 +59,9 @@ In this order:
 6. Battery.
 7. Power icon, opening the Octopus power section/menu.
 
-Audio and microphone modules use an icon plus a readable value/state (for example, an icon and percentage). Icons must adapt to mute and level states rather than remain static.
+Audio output and microphone can both use Waybar's native `wireplumber` module: use `node-type: "Audio/Sink"` for output and `node-type: "Audio/Source"` for the microphone. The module supports separate normal/muted formats and volume-based icons. Prefer this over custom scripts.
+
+Network, Bluetooth, battery, and system tray also have native Waybar modules. The weather provider remains the only known data-source gap in the bar specification; the power icon can be a simple clickable custom/text module that opens the Octopus power section.
 
 ## Native media module
 
