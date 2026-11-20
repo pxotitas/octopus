@@ -18,7 +18,7 @@ The bar has three groups.
 
 Workspace display: show **all currently existing workspaces**, with the focused workspace visually emphasized. Do not show only the focused workspace, and do not create persistent placeholder workspaces. Switching workspaces should have a restrained animation.
 
-The focused-window item should display the app icon and title. If Waybar's native Niri module cannot provide the icon, use a small, documented app-id-to-icon resolver rather than a large framework.
+The native `niri/window` module provides the focused window title, app ID, and an optional application icon. Use its `icon` option; no custom icon resolver is needed unless testing reveals a concrete gap.
 
 ### Centre
 
@@ -59,6 +59,15 @@ In this order:
 7. Power icon, opening the Octopus power section/menu.
 
 Audio and microphone modules use an icon plus a readable value/state (for example, an icon and percentage). Icons must adapt to mute and level states rather than remain static.
+
+## Native Niri modules
+
+Use Waybar’s built-in modules directly:
+
+- `niri/workspaces`: keep `hide-empty` disabled (the default) so existing empty workspaces remain visible; do not enable `current-only`. The focused workspace receives the `.focused` CSS class, while other states have their own classes. Use `format-icons` only if the chosen compact representation needs it.
+- `niri/window`: use the native `icon` option and format the title directly.
+
+No custom workspace polling script or window-title script is planned. Keep the JSONC configuration and CSS straightforward; add a script only if a tested native-module limitation requires one.
 
 ## Weather
 
