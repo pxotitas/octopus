@@ -46,6 +46,30 @@ The list is a plan, not a claim that every component is installed or configured 
 
 Octopus is in its foundation and Waybar specification stage. See [TODO](TODO.md), [design principles](docs/DESIGN.md), and the [Waybar specification](docs/WAYBAR.md).
 
+## Dependencies
+
+Install the packages used by the planned Octopus components on CachyOS/Arch:
+
+```bash
+sudo pacman -S --needed waybar walker dunst hyprlock hypridle awww matugen cava playerctl python wl-clipboard
+```
+
+Clipse is distributed through the AUR, so install it separately with an AUR helper:
+
+```bash
+yay -S --needed clipse
+```
+
+Notes:
+- `playerctl` provides the MPRIS interface used by Waybar; it is listed explicitly even where Waybar may pull it as a dependency.
+- `python` runs the Open-Meteo weather helper.
+- `wl-clipboard` supports clipboard integration with Clipse.
+- `cava` is used by the media section and should only run when that section needs its visualizer.
+- Niri is the existing compositor/session and is not included in the install command.
+- Ewwii is intentionally not included: its implementation and installation are user-managed.
+
+These commands install packages only. They do not enable services, change the login manager, or configure startup.
+
 ## Development
 
 The repository is intentionally local-first. No installer or system-wide changes are part of the initial scaffold.
