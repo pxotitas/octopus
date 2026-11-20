@@ -16,9 +16,7 @@ The bar has three groups.
 1. Niri workspaces.
 2. Focused window title, accompanied by an application icon.
 
-Workspace selection is **focused**. The exact display semantics still need confirmation before implementation: whether this means only the focused workspace is shown, or all existing workspaces with the focused one emphasized. Do not silently choose one.
-
-Workspaces must reflect Niri's real, currently existing workspaces. Do not create persistent placeholder workspaces unless explicitly requested. Switching workspaces should have a restrained animation.
+Workspace display: show **all currently existing workspaces**, with the focused workspace visually emphasized. Do not show only the focused workspace, and do not create persistent placeholder workspaces. Switching workspaces should have a restrained animation.
 
 The focused-window item should display the app icon and title. If Waybar's native Niri module cannot provide the icon, use a small, documented app-id-to-icon resolver rather than a large framework.
 
