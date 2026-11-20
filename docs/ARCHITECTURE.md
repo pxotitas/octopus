@@ -26,9 +26,19 @@ These are intended boundaries. The exact IPC and process model must be verified 
 
 ## Ewwii research note
 
-The official Ewwii project is [Ewwii-sh/ewwii](https://github.com/Ewwii-sh/ewwii). Its current published documentation identifies version 0.10.0 and describes a Rust + GTK4 widget system configured with NBCL and styled with CSS/SCSS. Its Wayland window model exposes layer-shell-oriented properties such as stacking, focusability, namespace, and screen-edge geometry anchors. This looks like a promising fit for Octopus, but the shared-window content-switching mechanism and exact anchor behaviour must be prototyped before we lock the architecture.
+The official Ewwii project is [Ewwii-sh/ewwii](https://github.com/Ewwii-sh/ewwii). Its current published documentation identifies version 0.10.0 and describes a Rust + GTK4 widget system configured with NBCL and styled with CSS/SCSS.
 
-References: [Ewwii documentation](https://ewwii-sh.github.io/docs/), [window properties](https://ewwii-sh.github.io/docs/next/widgets_and_window/window-props/), [widget-control commands](https://ewwii-sh.github.io/docs/0.9.0/commands/widget-control/).
+### Shared-window content
+
+Ewwii has a native `Stack` widget with a `selected` child index and transition options. Its `widget-control property-update` command can update a named widget's properties at runtime; signals can also update reactive properties. The straightforward prototype is therefore one Ewwii window containing one named `Stack`, with each Octopus section as a child. Switching sections changes `Stack.selected` rather than opening another window or building a separate window manager.
+
+This is a documented capability, not yet a tested implementation on this machine. Keep the prototype small.
+
+### Wayland positioning
+
+Ewwii exposes Wayland layer-shell properties including stacking, focusability, namespace, and geometry anchors. Geometry supports screen-relative anchors and x/y offsets. The documentation does not describe anchoring a window directly to an arbitrary Waybar module or receiving that module's on-screen coordinates. Therefore, the desired contextual placement (slightly below the module that opened the section) remains an implementation test; do not add a positioning daemon or elaborate IPC before a minimal experiment shows one is necessary.
+
+References: [Ewwii documentation](https://ewwii-sh.github.io/docs/), [widget properties including Stack](https://ewwii-sh.github.io/docs/next/widgets_and_window/props/), [window properties](https://ewwii-sh.github.io/docs/next/widgets_and_window/window-props/), [widget-control commands](https://ewwii-sh.github.io/docs/0.9.0/commands/widget-control/), [Ewwii changelog](https://ewwii-sh.github.io/changelog/).
 
 ## Shared section window
 

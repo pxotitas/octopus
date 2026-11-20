@@ -7,6 +7,7 @@
 - [x] Confirm workspace display: show all existing workspaces and emphasize the focused one.
 - [x] Verify native Waybar Niri workspace/window modules; no helper scripts needed for these basics.
 - [x] Identify the official Ewwii project and current published docs (0.10.0); inspect window/widget-control capabilities.
+- [x] Identify a simple shared-window content approach: one Ewwii `Stack`, switch its selected child.
 - [x] Confirm Nucleus Shell is archived; retain it as visual inspiration only.
 - [ ] Prototype Ewwii shared-window content switching and Wayland anchoring before committing to the UI transport.
 
