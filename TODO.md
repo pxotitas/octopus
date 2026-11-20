@@ -14,7 +14,8 @@
 ## 1. Waybar
 - [ ] Review available package sources and dependency versions.
 - [ ] Confirm weather provider and automatic-location behaviour.
-- [ ] Confirm MPRIS state/visibility rules for multiple players.
+- [x] Confirm Waybar has a native MPRIS module; no custom player bridge needed for the basic bar item.
+- [ ] Test MPRIS behaviour for paused/stopped states and multiple available players.
 - [ ] Implement left, centre, and right groups.
 - [ ] Implement the shared section-window request protocol.
 - [ ] Test click and right-click behaviour.

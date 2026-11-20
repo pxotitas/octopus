@@ -43,7 +43,8 @@ There is exactly one shared Octopus section window. If it is already open, selec
 
 - The media section provides playback information and common controls.
 - Track title may use a restrained marquee/scroll when it does not fit.
-- Hide the media module completely when no player is actively playing, subject to final MPRIS state handling.
+- Use Waybar's native `mpris` module (it uses libplayerctl); do not add a custom MPRIS script or separate Waybar plugin. Its default `player: "playerctld"` follows the currently active player.
+- Set `hide-on-paused` if testing confirms it matches the desired hidden state. Confirm how stopped/no-player states behave before finalizing visibility.
 - Start CAVA lazily when the media section needs it.
 - When the media section is left or its window is closed, stop the CAVA process. It must not remain running in the background.
 
@@ -59,6 +60,12 @@ In this order:
 7. Power icon, opening the Octopus power section/menu.
 
 Audio and microphone modules use an icon plus a readable value/state (for example, an icon and percentage). Icons must adapt to mute and level states rather than remain static.
+
+## Native media module
+
+Waybar includes a native `mpris` module backed by libplayerctl. It supports player selection, status-specific formats, title/artist metadata, player/status icons, and click actions. The default `player: "playerctld"` follows the currently active player. Use this module for the compact media item and override its click actions to open Octopus sections; do not add a custom MPRIS process unless testing reveals a specific limitation.
+
+The `hide-on-paused` option hides the module while paused. The exact behaviour for stopped players and multiple simultaneously available players still needs a quick runtime test.
 
 ## Native Niri modules
 
@@ -90,7 +97,7 @@ Discord sender-avatar support is not assumed. It needs a real payload/integratio
 
 ## Implementation constraints
 
-- Use Waybar's native Niri modules where they meet the requirements.
+- Use Waybar's native Niri and MPRIS modules where they meet the requirements.
 - Add scripts only for gaps that native modules cannot cover cleanly.
 - Keep scripts small, readable, and independently testable.
 - Do not start or enable Waybar automatically during the initial development stage.
