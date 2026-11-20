@@ -128,9 +128,7 @@
       "󰕾"
     ],
     "scroll-step": 2,
-    "on-click": "ewwii update 'section=\"audio\"' && ewwii open octopus",
-    "format-bluetooth": "󰂱  {volume}%",
-    "format-bluetooth-muted": "󰝟  Muted"
+    "on-click": "ewwii update 'section=\"audio\"' && ewwii open octopus"
   },
   "wireplumber#microphone": {
     "node-type": "Audio/Source",

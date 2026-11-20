@@ -9,9 +9,17 @@
   font-weight: 500;
 }
 
+/* Keep the GTK/layer-shell window itself transparent. Drawing the rounded
+   surface on its child box prevents square corners in the outer margins. */
 window#waybar {
-  background-color: @surface;
+  background: transparent;
   color: @text_primary;
+  border: none;
+  border-radius: 0;
+}
+
+window#waybar > box {
+  background-color: @surface;
   border: 1px solid @outline;
   border-radius: 15px;
 }
