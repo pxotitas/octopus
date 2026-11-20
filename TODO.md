@@ -13,7 +13,7 @@
 
 ## 1. Waybar
 - [x] Review Waybar and Ewwii package sources/metadata; no packages installed.
-- [ ] Confirm weather provider and automatic-location behaviour.
+- [ ] Confirm weather provider; location is manually fixed to Campo Grande, MS.
 - [x] Confirm Waybar has a native MPRIS module; no custom player bridge needed for the basic bar item.
 - [ ] Test MPRIS behaviour for paused/stopped states and multiple available players.
 - [ ] Implement left, centre, and right groups.

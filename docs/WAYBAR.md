@@ -25,7 +25,7 @@ The native `niri/window` module provides the focused window title, app ID, and a
 Three independent clickable modules:
 
 1. **Clock** — opens the clock section, containing a polished time and calendar view.
-2. **Weather** — opens the weather section. The compact bar representation uses a condition-sensitive icon and temperature. Location mode: automatic.
+2. **Weather** — opens the weather section. The compact bar representation uses a condition-sensitive icon and temperature. Location mode: manual — Campo Grande, Mato Grosso do Sul, Brazil.
 3. **Media** — opens the media section. Use MPRIS so compatible players can be supported, rather than hard-coding Spotify.
 
 The modules are independent. There is no shared expandable centre button.
@@ -80,7 +80,7 @@ No custom workspace polling script or window-title script is planned. Keep the J
 
 ## Weather
 
-- Location mode: automatic.
+- Location mode: manual — Campo Grande, Mato Grosso do Sul, Brazil.
 - Compact format: condition icon + temperature.
 - Icon changes with the reported weather condition.
 - The location provider and weather data source are not selected yet. Choose a privacy-conscious source and document its network behaviour before implementation.
