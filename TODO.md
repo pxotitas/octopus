@@ -5,8 +5,9 @@
 - [x] Record design direction and interaction rules.
 - [x] Record Waybar module requirements.
 - [ ] Confirm the exact meaning of the focused workspace mode.
-- [ ] Inspect the Nucleus Shell reference and relevant upstream component capabilities.
-- [ ] Verify Ewwii project identity, version, IPC, and licence.
+- [x] Identify the official Ewwii project and current published docs (0.10.0); inspect window/widget-control capabilities.
+- [x] Confirm Nucleus Shell is archived; retain it as visual inspiration only.
+- [ ] Prototype Ewwii shared-window content switching and Wayland anchoring before committing to the UI transport.
 
 ## 1. Waybar
 - [ ] Review available package sources and dependency versions.

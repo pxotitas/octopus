@@ -24,6 +24,12 @@
 
 These are intended boundaries. The exact IPC and process model must be verified against the installed versions before implementation.
 
+## Ewwii research note
+
+The official Ewwii project is [Ewwii-sh/ewwii](https://github.com/Ewwii-sh/ewwii). Its current published documentation identifies version 0.10.0 and describes a Rust + GTK4 widget system configured with NBCL and styled with CSS/SCSS. Its Wayland window model exposes layer-shell-oriented properties such as stacking, focusability, namespace, and screen-edge geometry anchors. This looks like a promising fit for Octopus, but the shared-window content-switching mechanism and exact anchor behaviour must be prototyped before we lock the architecture.
+
+References: [Ewwii documentation](https://ewwii-sh.github.io/docs/), [window properties](https://ewwii-sh.github.io/docs/next/widgets_and_window/window-props/), [widget-control commands](https://ewwii-sh.github.io/docs/0.9.0/commands/widget-control/).
+
 ## Shared section window
 
 The centre Waybar modules send a section request to one Octopus UI controller:

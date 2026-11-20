@@ -4,7 +4,7 @@
 
 Octopus should feel like a carefully designed desktop product, not a pile of widgets. Its visual language is **contemporary minimalism**: quiet structure, precise alignment, restrained decoration, and small moments of personality.
 
-The reference direction is the visual restraint and composition of [Nucleus Shell](https://github.com/nucleus-hq/nucleus-shell). This is a direction for study, not a request to clone its implementation or identity.
+The reference direction is the visual restraint and composition of [Nucleus Shell](https://github.com/nucleus-hq/nucleus-shell). This is a direction for study, not a request to clone its implementation or identity. The upstream repository was archived on July 11, 2026, so it is a visual/reference source only, not a dependency or foundation for Octopus.
 
 ## Non-negotiable visual rules
 
