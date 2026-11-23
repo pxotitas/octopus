@@ -1,129 +1,213 @@
-@import url("colors.css");
+@import "colors.css";
+
+/* Octopus bar: one opaque tonal column, Material Symbols for glyphs. */
 
 * {
+  font-family: "Rubik", sans-serif;
+  font-size: 13px;
+  min-height: 0;
   border: none;
   border-radius: 0;
-  min-height: 0;
-  font-family: "SF Pro Display", "JetBrainsMono Nerd Font", "Cantarell", sans-serif;
-  font-size: 14px;
-  font-weight: 500;
+  box-shadow: none;
 }
 
-/* Keep the GTK/layer-shell window itself transparent. Drawing the rounded
-   surface on its child box prevents square corners in the outer margins. */
 window#waybar {
   background: transparent;
-  color: @text_primary;
-  border: none;
-  border-radius: 0;
 }
 
 window#waybar > box {
-  background-color: @surface;
-  border: 1px solid @outline;
-  border-radius: 15px;
+  background: @surface_container;
+  border-radius: 24px;
+  padding: 10px 0;
 }
 
-#workspaces,
-#window,
-#clock,
-#custom-weather,
-#mpris,
-#tray,
+tooltip {
+  background: @surface_container_highest;
+  border-radius: 12px;
+}
+
+tooltip label {
+  color: @on_surface;
+}
+
+#custom-launcher,
+#custom-control-center,
 #network,
 #bluetooth,
 #wireplumber,
-#battery,
 #custom-power {
-  margin: 5px 3px;
-  padding: 0 9px;
-  border-radius: 10px;
-  background-color: transparent;
-  color: @text_primary;
+  font-family: "Material Symbols Rounded";
+  font-size: 20px;
+  color: @on_surface;
+  padding: 8px 0;
+  margin: 0 8px;
+  border-radius: 14px;
+  transition: background 180ms ease, color 180ms ease;
 }
 
-#workspaces {
-  padding: 0 4px;
+#custom-launcher {
+  font-family: "JetBrainsMono Nerd Font", "Symbols Nerd Font";
+  font-size: 22px;
+  color: @primary;
+  padding: 6px 0 10px;
 }
 
-#workspaces button {
-  min-width: 25px;
-  margin: 0 2px;
-  padding: 0 7px;
-  border-radius: 8px;
-  background-color: transparent;
-  color: @text_secondary;
-  transition: background-color 160ms ease, color 160ms ease;
-}
-
-#workspaces button:hover,
-#clock:hover,
-#custom-weather:hover,
-#mpris:hover,
+#custom-launcher:hover,
+#custom-control-center:hover,
 #network:hover,
 #bluetooth:hover,
 #wireplumber:hover,
 #custom-power:hover {
-  background-color: @surface_container;
+  background: @surface_container_highest;
 }
 
-#workspaces button.focused {
-  background-color: @accent;
-  color: @accent_fg;
-  font-weight: 700;
-}
-
-#workspaces button.active:not(.focused) {
-  background-color: @surface_raised;
-  color: @text_primary;
-}
-
-#workspaces button.empty {
-  color: @text_secondary;
-}
-
-#workspaces button.urgent,
-#battery.critical {
-  color: @error;
-}
-
-#window {
-  color: @text_secondary;
-  padding-left: 10px;
-}
-
-#clock,
-#custom-weather {
-  font-weight: 600;
-}
-
-#mpris {
-  color: @text_primary;
-  padding-left: 12px;
-  padding-right: 12px;
-}
-
-#mpris.paused {
-  color: @text_secondary;
-}
-
-#tray {
-  padding-left: 8px;
-  padding-right: 8px;
-}
-
-#network.disconnected,
-#bluetooth.disabled,
-#wireplumber.muted {
-  color: @text_secondary;
-}
-
-#battery.warning {
-  color: @warning;
+#custom-control-center {
+  background: @secondary_container;
+  color: @on_secondary_container;
 }
 
 #custom-power {
-  color: @text_primary;
-  padding-left: 11px;
-  padding-right: 11px;
+  color: @error;
 }
+
+/* workspaces: dots, the focused one stretched into a pill */
+
+#workspaces {
+  margin: 4px 0;
+}
+
+#workspaces button {
+  padding: 0;
+  margin: 4px 26px;
+  min-height: 12px;
+  border-radius: 999px;
+  background: @outline_variant;
+  transition: min-height 260ms cubic-bezier(0.2, 0, 0, 1), background 200ms ease;
+}
+
+#workspaces button label {
+  font-size: 0;
+}
+
+#workspaces button:hover {
+  background: @outline;
+}
+
+#workspaces button.active {
+  min-height: 32px;
+  background: @primary;
+}
+
+#workspaces button.urgent {
+  background: @error;
+}
+
+#window {
+  margin: 6px 0;
+}
+
+window#waybar.empty #window {
+  margin: 0;
+}
+
+/* clock: hours over minutes */
+
+#clock {
+  font-size: 15px;
+  font-weight: 600;
+  color: @on_primary_container;
+  background: @primary_container;
+  border-radius: 16px;
+  margin: 0 8px;
+  padding: 8px 0;
+}
+
+#clock:hover {
+  background: @primary;
+  color: @on_primary;
+}
+
+#tray {
+  margin: 4px 0;
+}
+
+#tray > .needs-attention {
+  background: @error;
+  border-radius: 999px;
+}
+
+/* battery: a pill that fills from the bottom */
+
+#custom-battery {
+  margin: 6px 24px;
+  min-width: 20px;
+  min-height: 40px;
+  border-radius: 8px;
+  font-size: 1px;
+  color: transparent;
+  background-color: @surface_container_highest;
+}
+
+#custom-battery.b-0 { background-image: linear-gradient(to top, @primary 0%, @surface_container_highest 0%); }
+#custom-battery.b-5 { background-image: linear-gradient(to top, @primary 5%, @surface_container_highest 5%); }
+#custom-battery.b-10 { background-image: linear-gradient(to top, @primary 10%, @surface_container_highest 10%); }
+#custom-battery.b-15 { background-image: linear-gradient(to top, @primary 15%, @surface_container_highest 15%); }
+#custom-battery.b-20 { background-image: linear-gradient(to top, @primary 20%, @surface_container_highest 20%); }
+#custom-battery.b-25 { background-image: linear-gradient(to top, @primary 25%, @surface_container_highest 25%); }
+#custom-battery.b-30 { background-image: linear-gradient(to top, @primary 30%, @surface_container_highest 30%); }
+#custom-battery.b-35 { background-image: linear-gradient(to top, @primary 35%, @surface_container_highest 35%); }
+#custom-battery.b-40 { background-image: linear-gradient(to top, @primary 40%, @surface_container_highest 40%); }
+#custom-battery.b-45 { background-image: linear-gradient(to top, @primary 45%, @surface_container_highest 45%); }
+#custom-battery.b-50 { background-image: linear-gradient(to top, @primary 50%, @surface_container_highest 50%); }
+#custom-battery.b-55 { background-image: linear-gradient(to top, @primary 55%, @surface_container_highest 55%); }
+#custom-battery.b-60 { background-image: linear-gradient(to top, @primary 60%, @surface_container_highest 60%); }
+#custom-battery.b-65 { background-image: linear-gradient(to top, @primary 65%, @surface_container_highest 65%); }
+#custom-battery.b-70 { background-image: linear-gradient(to top, @primary 70%, @surface_container_highest 70%); }
+#custom-battery.b-75 { background-image: linear-gradient(to top, @primary 75%, @surface_container_highest 75%); }
+#custom-battery.b-80 { background-image: linear-gradient(to top, @primary 80%, @surface_container_highest 80%); }
+#custom-battery.b-85 { background-image: linear-gradient(to top, @primary 85%, @surface_container_highest 85%); }
+#custom-battery.b-90 { background-image: linear-gradient(to top, @primary 90%, @surface_container_highest 90%); }
+#custom-battery.b-95 { background-image: linear-gradient(to top, @primary 95%, @surface_container_highest 95%); }
+#custom-battery.b-100 { background-image: linear-gradient(to top, @primary 100%, @surface_container_highest 100%); }
+#custom-battery.b-0.charging { background-image: linear-gradient(to top, @tertiary 0%, @surface_container_highest 0%); }
+#custom-battery.b-5.charging { background-image: linear-gradient(to top, @tertiary 5%, @surface_container_highest 5%); }
+#custom-battery.b-10.charging { background-image: linear-gradient(to top, @tertiary 10%, @surface_container_highest 10%); }
+#custom-battery.b-15.charging { background-image: linear-gradient(to top, @tertiary 15%, @surface_container_highest 15%); }
+#custom-battery.b-20.charging { background-image: linear-gradient(to top, @tertiary 20%, @surface_container_highest 20%); }
+#custom-battery.b-25.charging { background-image: linear-gradient(to top, @tertiary 25%, @surface_container_highest 25%); }
+#custom-battery.b-30.charging { background-image: linear-gradient(to top, @tertiary 30%, @surface_container_highest 30%); }
+#custom-battery.b-35.charging { background-image: linear-gradient(to top, @tertiary 35%, @surface_container_highest 35%); }
+#custom-battery.b-40.charging { background-image: linear-gradient(to top, @tertiary 40%, @surface_container_highest 40%); }
+#custom-battery.b-45.charging { background-image: linear-gradient(to top, @tertiary 45%, @surface_container_highest 45%); }
+#custom-battery.b-50.charging { background-image: linear-gradient(to top, @tertiary 50%, @surface_container_highest 50%); }
+#custom-battery.b-55.charging { background-image: linear-gradient(to top, @tertiary 55%, @surface_container_highest 55%); }
+#custom-battery.b-60.charging { background-image: linear-gradient(to top, @tertiary 60%, @surface_container_highest 60%); }
+#custom-battery.b-65.charging { background-image: linear-gradient(to top, @tertiary 65%, @surface_container_highest 65%); }
+#custom-battery.b-70.charging { background-image: linear-gradient(to top, @tertiary 70%, @surface_container_highest 70%); }
+#custom-battery.b-75.charging { background-image: linear-gradient(to top, @tertiary 75%, @surface_container_highest 75%); }
+#custom-battery.b-80.charging { background-image: linear-gradient(to top, @tertiary 80%, @surface_container_highest 80%); }
+#custom-battery.b-85.charging { background-image: linear-gradient(to top, @tertiary 85%, @surface_container_highest 85%); }
+#custom-battery.b-90.charging { background-image: linear-gradient(to top, @tertiary 90%, @surface_container_highest 90%); }
+#custom-battery.b-95.charging { background-image: linear-gradient(to top, @tertiary 95%, @surface_container_highest 95%); }
+#custom-battery.b-100.charging { background-image: linear-gradient(to top, @tertiary 100%, @surface_container_highest 100%); }
+#custom-battery.b-0.low { background-image: linear-gradient(to top, @error 0%, @surface_container_highest 0%); }
+#custom-battery.b-5.low { background-image: linear-gradient(to top, @error 5%, @surface_container_highest 5%); }
+#custom-battery.b-10.low { background-image: linear-gradient(to top, @error 10%, @surface_container_highest 10%); }
+#custom-battery.b-15.low { background-image: linear-gradient(to top, @error 15%, @surface_container_highest 15%); }
+#custom-battery.b-20.low { background-image: linear-gradient(to top, @error 20%, @surface_container_highest 20%); }
+#custom-battery.b-25.low { background-image: linear-gradient(to top, @error 25%, @surface_container_highest 25%); }
+#custom-battery.b-30.low { background-image: linear-gradient(to top, @error 30%, @surface_container_highest 30%); }
+#custom-battery.b-35.low { background-image: linear-gradient(to top, @error 35%, @surface_container_highest 35%); }
+#custom-battery.b-40.low { background-image: linear-gradient(to top, @error 40%, @surface_container_highest 40%); }
+#custom-battery.b-45.low { background-image: linear-gradient(to top, @error 45%, @surface_container_highest 45%); }
+#custom-battery.b-50.low { background-image: linear-gradient(to top, @error 50%, @surface_container_highest 50%); }
+#custom-battery.b-55.low { background-image: linear-gradient(to top, @error 55%, @surface_container_highest 55%); }
+#custom-battery.b-60.low { background-image: linear-gradient(to top, @error 60%, @surface_container_highest 60%); }
+#custom-battery.b-65.low { background-image: linear-gradient(to top, @error 65%, @surface_container_highest 65%); }
+#custom-battery.b-70.low { background-image: linear-gradient(to top, @error 70%, @surface_container_highest 70%); }
+#custom-battery.b-75.low { background-image: linear-gradient(to top, @error 75%, @surface_container_highest 75%); }
+#custom-battery.b-80.low { background-image: linear-gradient(to top, @error 80%, @surface_container_highest 80%); }
+#custom-battery.b-85.low { background-image: linear-gradient(to top, @error 85%, @surface_container_highest 85%); }
+#custom-battery.b-90.low { background-image: linear-gradient(to top, @error 90%, @surface_container_highest 90%); }
+#custom-battery.b-95.low { background-image: linear-gradient(to top, @error 95%, @surface_container_highest 95%); }
+#custom-battery.b-100.low { background-image: linear-gradient(to top, @error 100%, @surface_container_highest 100%); }
