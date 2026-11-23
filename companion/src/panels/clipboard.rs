@@ -1,3 +1,4 @@
+use crate::i18n::t;
 use std::io::Write;
 use std::process::{Command, Stdio};
 use std::rc::Rc;
@@ -26,14 +27,14 @@ impl Clipboard {
         root.add_css_class("surface");
         root.add_css_class("clipboard");
 
-        let wipe = icons::button("delete_sweep", "apagar tudo");
+        let wipe = icons::button("delete_sweep", t("apagar tudo"));
         root.append(&widgets::heading(
-            "área de transferência",
+            t("área de transferência"),
             Some(wipe.upcast_ref()),
         ));
 
         let search = gtk::SearchEntry::new();
-        search.set_placeholder_text(Some("buscar"));
+        search.set_placeholder_text(Some(t("buscar")));
         root.append(&search);
 
         let list = gtk::ListBox::new();
@@ -120,6 +121,15 @@ impl Clipboard {
             }
         });
         panel
+    }
+
+    pub fn unload(self: &Rc<Self>) {
+        let weak = Rc::downgrade(self);
+        glib::timeout_add_local_once(std::time::Duration::from_millis(400), move || {
+            if let Some(p) = weak.upgrade().filter(|p| !p.root.is_mapped()) {
+                widgets_clear(&p.list);
+            }
+        });
     }
 
     pub fn load(self: &Rc<Self>) {
@@ -240,7 +250,7 @@ fn row(line: &str) -> gtk::ListBoxRow {
             .iter()
             .any(|k| content.contains(k));
     if image {
-        unsafe { row.set_data("search", "imagem".to_owned()) };
+        unsafe { row.set_data("search", t("imagem").to_owned()) };
         let picture = gtk::Picture::new();
         picture.set_content_fit(gtk::ContentFit::Contain);
         picture.set_size_request(-1, 120);
