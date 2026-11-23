@@ -1,3 +1,4 @@
+use crate::i18n::t;
 use std::rc::Rc;
 
 use gtk::prelude::*;
@@ -48,7 +49,7 @@ fn header(s: &Rc<Services>, open: Rc<dyn Fn(&str)>) -> gtk::CenterBox {
     bar.set_start_widget(Some(&left));
 
     let power = gtk::Button::new();
-    power.set_tooltip_text(Some("energia"));
+    power.set_tooltip_text(Some(t("energia")));
     power.set_child(Some(&Shape::new(
         ShapeKind::Cookie9,
         44,
@@ -62,10 +63,7 @@ fn header(s: &Rc<Services>, open: Rc<dyn Fn(&str)>) -> gtk::CenterBox {
 
     crate::shell::every_minute(move |now| {
         time.set_label(&now.format("%H:%M").to_string());
-        date.set_label(
-            &now.format_localized("%A, %-d de %B", chrono::Locale::pt_BR)
-                .to_string(),
-        );
+        date.set_label(&crate::i18n::date(&now));
     });
     s.weather.reading.subscribe(move |reading| {
         weather.set_visible(reading.is_some());
@@ -88,7 +86,7 @@ fn tiles(s: &Rc<Services>, open: Rc<dyn Fn(&str)>) -> gtk::Grid {
     grid.set_row_spacing(8);
     grid.set_column_homogeneous(true);
 
-    let wifi = Tile::new("wifi", "wi-fi", true);
+    let wifi = Tile::new("wifi", t("wi-fi"), true);
     {
         let w = s.wifi.clone();
         wifi.on_toggle(move || {
@@ -100,9 +98,9 @@ fn tiles(s: &Rc<Services>, open: Rc<dyn Fn(&str)>) -> gtk::Grid {
         let tile = wifi.clone();
         s.wifi.state.subscribe(move |st| {
             let (icon, sub) = match (st.enabled, st.active()) {
-                (false, _) => ("wifi_off", "desligado".to_owned()),
+                (false, _) => ("wifi_off", t("desligado").to_owned()),
                 (true, Some(n)) => (icons::wifi(n.signal), n.ssid.clone()),
-                (true, None) => ("wifi", "desconectado".to_owned()),
+                (true, None) => ("wifi", t("desconectado").to_owned()),
             };
             tile.set(st.enabled, icon, &sub);
         });
@@ -120,15 +118,15 @@ fn tiles(s: &Rc<Services>, open: Rc<dyn Fn(&str)>) -> gtk::Grid {
         let tile = bt.clone();
         s.bluetooth.state.subscribe(move |st| {
             let (icon, sub) = match (st.powered, st.connected()) {
-                (false, _) => ("bluetooth_disabled", "desligado".to_owned()),
+                (false, _) => ("bluetooth_disabled", t("desligado").to_owned()),
                 (true, Some(d)) => ("bluetooth_connected", d.name.clone()),
-                (true, None) => ("bluetooth", "ligado".to_owned()),
+                (true, None) => ("bluetooth", t("ligado").to_owned()),
             };
             tile.set(st.powered, icon, &sub);
         });
     }
 
-    let mic = Tile::new("mic", "microfone", true);
+    let mic = Tile::new("mic", t("microfone"), true);
     {
         let a = s.audio.clone();
         mic.on_toggle(move || a.toggle_mute(Kind::Source));
@@ -139,24 +137,29 @@ fn tiles(s: &Rc<Services>, open: Rc<dyn Fn(&str)>) -> gtk::Grid {
             tile.set(
                 !muted,
                 if muted { "mic_off" } else { "mic" },
-                if muted { "mudo" } else { "ativo" },
+                if muted { t("mudo") } else { t("ativo") },
             );
         });
     }
 
-    let theme = Tile::new("dark_mode", "tema", false);
+    let theme = Tile::new("dark_mode", t("tema"), false);
     {
-        let t = s.theme.clone();
-        theme.on_toggle(move || {
-            let dark = *t.dark.get();
-            t.set_dark(!dark);
-        });
+        let mode = s.theme.clone();
+        theme.on_toggle(move || mode.toggle());
         let tile = theme.clone();
+        let current = s.theme.mode.clone();
         s.theme.dark.subscribe(move |dark| {
+            let auto = *current.get() == crate::services::theme::Mode::Auto;
             tile.set(
                 *dark,
                 if *dark { "dark_mode" } else { "light_mode" },
-                if *dark { "escuro" } else { "claro" },
+                if auto {
+                    t("automático")
+                } else if *dark {
+                    t("escuro")
+                } else {
+                    t("claro")
+                },
             );
         });
     }
@@ -175,7 +178,9 @@ fn sliders(s: &Rc<Services>) -> gtk::Box {
 
     for kind in [Kind::Sink, Kind::Source] {
         let audio = s.audio.clone();
-        let slider = Slider::new("volume_up", "silenciar", move |v| audio.set_volume(kind, v));
+        let slider = Slider::new("volume_up", t("silenciar"), move |v| {
+            audio.set_volume(kind, v)
+        });
         let audio = s.audio.clone();
         slider.on_icon(move || audio.toggle_mute(kind));
         column.append(&slider.root);
@@ -214,12 +219,12 @@ fn notifications(s: &Rc<Services>) -> gtk::Box {
     card.add_css_class("card");
     card.add_css_class("cc-notifications");
 
-    let clear = icons::button("clear_all", "limpar tudo");
+    let clear = icons::button("clear_all", t("limpar tudo"));
     {
         let n = s.notifications.clone();
         clear.connect_clicked(move |_| n.clear());
     }
-    let dnd = icons::button("notifications", "não perturbe");
+    let dnd = icons::button("notifications", t("não perturbe"));
     {
         let n = s.notifications.clone();
         dnd.connect_clicked(move |_| {
@@ -247,7 +252,7 @@ fn notifications(s: &Rc<Services>) -> gtk::Box {
     actions.append(&dnd);
     actions.append(&clear);
     card.append(&widgets::heading(
-        "notificações",
+        t("notificações"),
         Some(actions.upcast_ref()),
     ));
     let list = notification::list(&s.notifications);

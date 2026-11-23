@@ -4,5 +4,9 @@
 image=$1
 [ -f "$image" ] || exit 1
 mode=$(cat "${XDG_STATE_HOME:-$HOME/.local/state}/octopus/mode" 2>/dev/null || echo dark)
+if [ "$mode" = auto ]; then
+  mode=$(octopus luma "$image" 2>/dev/null || echo dark)
+  gsettings set org.gnome.desktop.interface color-scheme "prefer-$mode" 2>/dev/null
+fi
 matugen image "$image" -m "$mode" --source-color-index 0 -c "$HOME/.config/octopus/matugen/config.toml"
 [ -f "$HOME/.config/matugen/config.toml" ] && matugen image "$image" -m "$mode" --source-color-index 0
