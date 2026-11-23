@@ -2,6 +2,7 @@ use serde_json::{json, Map, Value};
 
 use crate::config::Bar;
 use crate::exec;
+use crate::i18n::t;
 
 /// The bar's modules by the names the settings use.
 pub const MODULES: [(&str, &str); 6] = [
@@ -19,7 +20,7 @@ fn waybar_name(module: &str) -> Option<&'static str> {
         "workspaces" => "niri/workspaces",
         "clock" => "clock",
         "tray" => "custom/tray",
-        "battery" => "custom/battery",
+        "battery" => "group/battery",
         "controls" => "group/controls",
         _ => return None,
     })
@@ -68,8 +69,8 @@ pub fn waybar_config(bar: &Bar) -> String {
         json!({
             "format": "{:%H\n%M}",
             "justify": "center",
-            "locale": "pt_BR.UTF-8",
-            "tooltip-format": "{:%A, %d de %B}",
+            "locale": if crate::i18n::english() { "en_US.UTF-8" } else { "pt_BR.UTF-8" },
+            "tooltip-format": if crate::i18n::english() { "{:%A, %B %d}" } else { "{:%A, %d de %B}" },
             "on-click": "octopus toggle dash"
         }),
     );
@@ -85,6 +86,14 @@ pub fn waybar_config(bar: &Bar) -> String {
             "format": "{}",
             "on-click": "octopus toggle tray"
         }),
+    );
+    config.insert(
+        "group/battery".into(),
+        json!({ "orientation": "inherit", "modules": ["custom/battery", "battery"] }),
+    );
+    config.insert(
+        "battery".into(),
+        json!({ "format": "{capacity}", "interval": 60, "tooltip": false }),
     );
     config.insert(
         "custom/battery".into(),
@@ -127,7 +136,7 @@ pub fn waybar_config(bar: &Bar) -> String {
             "format-disabled": "wifi_off",
             "format-icons": ["network_wifi_1_bar", "network_wifi_2_bar", "network_wifi_3_bar", "signal_wifi_4_bar"],
             "tooltip-format-wifi": "{essid} · {signalStrength}%",
-            "tooltip-format-disconnected": "desconectado",
+            "tooltip-format-disconnected": t("desconectado"),
             "on-click": "octopus toggle wifi"
         }),
     );
@@ -155,7 +164,7 @@ pub fn waybar_config(bar: &Bar) -> String {
     );
     config.insert(
         "custom/power".into(),
-        icon_module("power_settings_new", "energia", "octopus toggle power"),
+        icon_module("power_settings_new", t("energia"), "octopus toggle power"),
     );
 
     let mut text = String::from(
@@ -176,11 +185,13 @@ pub fn layout_css(bar: &Bar) -> String {
 #custom-launcher, #custom-control-center, #custom-tray, #network, #bluetooth, #wireplumber, #custom-power {{ min-width: {icon}px; margin-left: 8px; margin-right: 8px; }}\n\
 #workspaces button {{ margin: 3px {ws}px; }}\n\
 #clock {{ margin-left: {clock}px; margin-right: {clock}px; }}\n\
-#custom-battery {{ margin: 4px {bat}px; }}\n",
+#custom-battery {{ margin: 4px {bat}px 0; }}\n\
+#battery {{ margin-left: {pct}px; margin-right: {pct}px; }}\n",
         icon = (w - 16).max(0),
         ws = side(10),
         clock = side(32),
         bat = side(14),
+        pct = side(24),
     )
 }
 

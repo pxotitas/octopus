@@ -1072,3 +1072,39 @@ popover > contents {
   border-radius: 16px;
   box-shadow: none;
 }
+
+/* emoji */
+
+.emoji {
+  min-width: 470px;
+}
+
+.emoji entry {
+  background: @surface_container_high;
+  border-radius: 16px;
+  padding: 10px 14px;
+  border: none;
+  box-shadow: none;
+}
+
+gridview.emoji-grid {
+  background: none;
+}
+
+gridview.emoji-grid > child {
+  border-radius: 14px;
+  padding: 6px;
+}
+
+gridview.emoji-grid > child:hover {
+  background: alpha(@on_surface, 0.06);
+}
+
+gridview.emoji-grid > child:selected {
+  background: @secondary_container;
+}
+
+.emoji-glyph {
+  font-family: "Noto Color Emoji", "Twemoji", sans-serif;
+  font-size: 26px;
+}

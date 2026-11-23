@@ -132,7 +132,15 @@ tooltip label {
   color: @on_primary;
 }
 
-/* battery: a pill that fills from the bottom */
+/* battery: a pill that fills from the bottom, the percentage under it */
+
+#battery {
+  font-size: 10px;
+  font-weight: 500;
+  color: @on_surface_variant;
+  padding: 2px 0 4px;
+  background: transparent;
+}
 
 #custom-battery {
   min-width: 14px;
