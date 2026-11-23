@@ -3,24 +3,8 @@
 
 spawn-at-startup "waybar"
 spawn-at-startup "octopus"
-spawn-at-startup "wl-paste" "--watch" "cliphist" "store"
-
-layer-rule {
-    match namespace="^octopus-"
-    geometry-corner-radius 28
-    shadow {
-        on
-        softness 24
-        spread 2
-        offset x=0 y=4
-        color "#0006"
-    }
-}
-
-layer-rule {
-    match namespace="^octopus-backdrop$"
-    shadow { off; }
-}
+spawn-at-startup "wl-paste" "--type" "text" "--watch" "cliphist" "store"
+spawn-at-startup "wl-paste" "--type" "image" "--watch" "cliphist" "store"
 
 binds {
     Mod+D hotkey-overlay-title="apps" { spawn-sh "~/.config/octopus/scripts/launcher.sh"; }
@@ -31,7 +15,7 @@ binds {
     Mod+Shift+E hotkey-overlay-title="energia" { spawn-sh "~/.config/octopus/scripts/powermenu.sh"; }
     Mod+C hotkey-overlay-title="central de controle" { spawn "octopus" "toggle" "control-center"; }
     Mod+A hotkey-overlay-title="dash" { spawn "octopus" "toggle" "dash"; }
-    Mod+L hotkey-overlay-title="bloquear" { spawn "hyprlock"; }
+    Mod+L hotkey-overlay-title="bloquear" { spawn "octopus" "lock"; }
 
     XF86AudioRaiseVolume allow-when-locked=true { spawn "octopus" "volume" "up"; }
     XF86AudioLowerVolume allow-when-locked=true { spawn "octopus" "volume" "down"; }

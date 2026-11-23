@@ -13,7 +13,7 @@ choice=$(printf '%b\n' "${entries[@]}" |
   fuzzel --dmenu --prompt "" --placeholder "energia" --lines 5 --width 24 --hide-prompt)
 
 case $choice in
-  bloquear) hyprlock ;;
+  bloquear) octopus lock ;;
   suspender) systemctl suspend ;;
   sair) niri msg action quit --skip-confirmation ;;
   reiniciar) systemctl reboot ;;
