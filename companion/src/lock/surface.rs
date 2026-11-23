@@ -1,3 +1,4 @@
+use crate::i18n::t;
 use std::cell::{Cell, RefCell};
 use std::rc::Rc;
 use std::time::Duration;
@@ -120,7 +121,7 @@ impl Surface {
         let name = gtk::Label::new(Some(&display_name()));
         name.add_css_class("lock-name");
         name.set_xalign(0.0);
-        let hint = gtk::Label::new(Some("digite sua senha"));
+        let hint = gtk::Label::new(Some(t("digite sua senha")));
         hint.add_css_class("lock-hint");
         hint.set_xalign(0.0);
         resting.append(&name);
@@ -133,15 +134,14 @@ impl Surface {
         field.set_hexpand(true);
         field.set_valign(gtk::Align::Center);
 
-        let middle = gtk::Stack::new();
-        middle.set_transition_type(gtk::StackTransitionType::Crossfade);
-        middle.set_transition_duration(140);
-        middle.set_hhomogeneous(false);
-        middle.set_vhomogeneous(false);
-        middle.set_valign(gtk::Align::Center);
+        // The field is always mapped (a hidden one cannot hold the keyboard),
+        // invisible over the name until something is typed.
+        let middle = gtk::Overlay::new();
         middle.set_hexpand(true);
-        middle.add_named(&resting, Some("resting"));
-        middle.add_named(&field, Some("typing"));
+        middle.set_valign(gtk::Align::Center);
+        middle.set_child(Some(&resting));
+        field.set_opacity(0.0);
+        middle.add_overlay(&field);
         pill.append(&middle);
 
         let send = gtk::Button::new();
@@ -201,10 +201,9 @@ impl Surface {
         }
         {
             let weak = Rc::downgrade(&surface);
-            let middle = middle.clone();
             surface.field.connect_changed(move |field| {
                 if let Some(s) = weak.upgrade() {
-                    s.set_typing(!field.text().is_empty(), &middle);
+                    s.set_typing(!field.text().is_empty());
                 }
             });
         }
@@ -221,7 +220,18 @@ impl Surface {
                 s.sleep();
                 return glib::Propagation::Stop;
             }
+            let had_focus = s.field.has_focus();
             s.wake();
+            // A key that lands before the field holds focus still counts.
+            if !had_focus {
+                if let Some(c) = key.to_unicode().filter(|c| !c.is_control()) {
+                    s.field.grab_focus_without_selecting();
+                    let mut at = s.field.text().chars().count() as i32;
+                    s.field.insert_text(&c.to_string(), &mut at);
+                    s.field.set_position(at);
+                    return glib::Propagation::Stop;
+                }
+            }
             glib::Propagation::Proceed
         });
         surface.window.add_controller(keys);
@@ -242,10 +252,7 @@ impl Surface {
         crate::shell::every_minute_for(&surface.window, move |now| {
             hours.set_label(&now.format("%H").to_string());
             minutes.set_label(&now.format("%M").to_string());
-            date.set_label(
-                &now.format_localized("%A, %-d de %B", chrono::Locale::pt_BR)
-                    .to_string(),
-            );
+            date.set_label(&crate::i18n::date(&now));
         });
 
         let weak = Rc::downgrade(&surface);
@@ -310,11 +317,12 @@ impl Surface {
         });
     }
 
-    fn set_typing(&self, typing: bool, middle: &gtk::Stack) {
+    fn set_typing(&self, typing: bool) {
         if self.typing.replace(typing) == typing {
             return;
         }
-        middle.set_visible_child_name(if typing { "typing" } else { "resting" });
+        self.field.set_opacity(if typing { 1.0 } else { 0.0 });
+        self.resting.set_opacity(if typing { 0.0 } else { 1.0 });
         if typing {
             self.pill.add_css_class("typing");
             self.status.set_label("");
@@ -337,7 +345,6 @@ impl Surface {
             move |w| pill.set_size_request(w.round() as i32, 60),
             || {},
         );
-        let _ = &self.resting;
     }
 
     fn wake(self: &Rc<Self>) {
@@ -387,7 +394,7 @@ impl Surface {
         self.field.set_sensitive(!on);
         self.send.set_sensitive(!on);
         if on {
-            self.status.set_label("verificando…");
+            self.status.set_label(t("verificando…"));
         }
     }
 
@@ -476,7 +483,8 @@ fn avatar() -> gtk::Widget {
                 .map(|c| c.to_uppercase().to_string())
                 .unwrap_or_default();
             let label = gtk::Label::new(Some(&initial));
-            label.set_vexpand(true);
+            label.set_valign(gtk::Align::Center);
+            label.set_size_request(48, 48);
             holder.append(&label);
         }
     }
@@ -494,9 +502,13 @@ fn power() -> gtk::Box {
     row.set_margin_bottom(24);
     let armed: Rc<RefCell<Option<(gtk::Button, glib::SourceId)>>> = Rc::default();
     for (icon, caption, args) in [
-        ("bedtime", "suspender", ["systemctl", "suspend"]),
-        ("restart_alt", "reiniciar", ["systemctl", "reboot"]),
-        ("power_settings_new", "desligar", ["systemctl", "poweroff"]),
+        ("bedtime", t("suspender"), ["systemctl", "suspend"]),
+        ("restart_alt", t("reiniciar"), ["systemctl", "reboot"]),
+        (
+            "power_settings_new",
+            t("desligar"),
+            ["systemctl", "poweroff"],
+        ),
     ] {
         let chip = gtk::Button::new();
         chip.add_css_class("lock-chip");

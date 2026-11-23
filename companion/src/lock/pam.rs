@@ -1,3 +1,4 @@
+use crate::i18n::t;
 use std::ffi::{c_char, c_int, c_void, CStr, CString};
 use std::ptr;
 
@@ -81,7 +82,7 @@ extern "C" fn converse(
 pub fn authenticate(service: &str, user: &str, password: &str) -> Result<(), String> {
     let service = CString::new(service).map_err(|e| e.to_string())?;
     let user = CString::new(user).map_err(|e| e.to_string())?;
-    let password = CString::new(password).map_err(|_| "senha inválida".to_owned())?;
+    let password = CString::new(password).map_err(|_| t("senha inválida").to_owned())?;
     let conversation = Conversation {
         callback: converse,
         data: password.as_ptr() as *mut c_void,
@@ -103,7 +104,7 @@ pub fn authenticate(service: &str, user: &str, password: &str) -> Result<(), Str
         } else {
             let text = pam_strerror(handle, status);
             Some(if text.is_null() {
-                "falha na autenticação".to_owned()
+                t("falha na autenticação").to_owned()
             } else {
                 CStr::from_ptr(text).to_string_lossy().into_owned()
             })

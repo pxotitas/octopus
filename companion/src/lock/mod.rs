@@ -2,6 +2,7 @@ mod blur;
 mod pam;
 mod surface;
 
+use crate::i18n::t;
 use std::cell::{Cell, RefCell};
 use std::rc::Rc;
 
@@ -125,14 +126,14 @@ impl Lock {
                 pam::authenticate(pam::service(), &user, &password)
             })
             .await
-            .unwrap_or_else(|_| Err("falha na autenticação".to_owned()));
+            .unwrap_or_else(|_| Err(t("falha na autenticação").to_owned()));
             let Some(lock) = weak.upgrade() else { return };
             lock.checking.set(false);
             match result {
                 Ok(()) => lock.release(),
                 Err(_) => {
                     for surface in lock.surfaces.borrow().iter() {
-                        surface.fail("senha incorreta");
+                        surface.fail(t("senha incorreta"));
                     }
                 }
             }
@@ -149,7 +150,10 @@ impl Lock {
                 remaining.set(remaining.get().saturating_sub(1));
                 if remaining.get() == 0 {
                     if let Some(lock) = weak.upgrade() {
-                        if let Some(instance) = lock.instance.borrow().as_ref() {
+                        // unlock() emits "unlocked" right away, which clears the
+                        // instance, so it must not be borrowed here.
+                        let instance = lock.instance.borrow().clone();
+                        if let Some(instance) = instance {
                             instance.unlock();
                         }
                     }
@@ -160,8 +164,10 @@ impl Lock {
 
     fn finish(&self) {
         self.instance.borrow_mut().take();
-        for surface in self.surfaces.borrow_mut().drain(..) {
+        let surfaces: Vec<_> = self.surfaces.borrow_mut().drain(..).collect();
+        for surface in surfaces {
             surface.window.destroy();
         }
+        crate::memory::release_soon();
     }
 }
