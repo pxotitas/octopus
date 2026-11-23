@@ -1,0 +1,24 @@
+# Octopus' own matugen config. theme.sh runs it after Matuwall applies a
+# wallpaper; ~/.config/matugen/config.toml still runs after it for every
+# other app.
+
+# No [config.wallpaper]: Matuwall sets the wallpaper through awww itself.
+[config]
+source_color_index = 0
+
+[templates.octopus]
+input_path = "templates/colors.css"
+output_path = "~/.config/octopus/colors.css"
+
+[templates.waybar]
+input_path = "templates/colors.css"
+output_path = "~/.config/waybar/colors.css"
+post_hook = "pkill -SIGUSR2 -x waybar"
+
+[templates.fuzzel]
+input_path = "templates/fuzzel.ini"
+output_path = "~/.config/fuzzel/fuzzel.ini"
+
+[templates.matuwall]
+input_path = "templates/matuwall.toml"
+output_path = "~/.config/matuwall/config.toml"

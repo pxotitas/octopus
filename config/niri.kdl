@@ -1,0 +1,48 @@
+// Octopus: included from ~/.config/niri/config.kdl with
+//   include "~/.config/octopus/niri.kdl"
+
+spawn-at-startup "waybar"
+spawn-at-startup "octopus"
+spawn-at-startup "wl-paste" "--watch" "cliphist" "store"
+
+layer-rule {
+    match namespace="^octopus-"
+    geometry-corner-radius 28
+    shadow {
+        on
+        softness 24
+        spread 2
+        offset x=0 y=4
+        color "#0006"
+    }
+}
+
+layer-rule {
+    match namespace="^octopus-backdrop$"
+    shadow { off; }
+}
+
+binds {
+    Mod+D hotkey-overlay-title="apps" { spawn-sh "~/.config/octopus/scripts/launcher.sh"; }
+    Mod+Space hotkey-overlay-title="apps" { spawn-sh "~/.config/octopus/scripts/launcher.sh"; }
+    Mod+Shift+V hotkey-overlay-title="clipboard" { spawn-sh "~/.config/octopus/scripts/clipboard.sh"; }
+    Mod+Period hotkey-overlay-title="emoji" { spawn-sh "~/.config/octopus/scripts/emoji.sh"; }
+    Mod+Shift+W hotkey-overlay-title="wallpapers" { spawn-sh "~/.config/octopus/scripts/wallpaper.sh"; }
+    Mod+Shift+E hotkey-overlay-title="energia" { spawn-sh "~/.config/octopus/scripts/powermenu.sh"; }
+    Mod+C hotkey-overlay-title="central de controle" { spawn "octopus" "toggle" "control-center"; }
+    Mod+A hotkey-overlay-title="dash" { spawn "octopus" "toggle" "dash"; }
+    Mod+L hotkey-overlay-title="bloquear" { spawn "hyprlock"; }
+
+    XF86AudioRaiseVolume allow-when-locked=true { spawn "octopus" "volume" "up"; }
+    XF86AudioLowerVolume allow-when-locked=true { spawn "octopus" "volume" "down"; }
+    XF86AudioMute allow-when-locked=true { spawn "octopus" "volume" "mute"; }
+    Mod+XF86AudioMute allow-when-locked=true { spawn "octopus" "mic" "mute"; }
+    XF86AudioMicMute allow-when-locked=true { spawn "octopus" "mic" "mute"; }
+    XF86MonBrightnessUp allow-when-locked=true { spawn "octopus" "brightness" "up"; }
+    XF86MonBrightnessDown allow-when-locked=true { spawn "octopus" "brightness" "down"; }
+    XF86KbdBrightnessUp { spawn "octopus" "kbd" "up"; }
+    XF86KbdBrightnessDown { spawn "octopus" "kbd" "down"; }
+    XF86AudioPlay allow-when-locked=true { spawn "playerctl" "play-pause"; }
+    XF86AudioNext allow-when-locked=true { spawn "playerctl" "next"; }
+    XF86AudioPrev allow-when-locked=true { spawn "playerctl" "previous"; }
+}

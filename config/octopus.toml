@@ -1,0 +1,17 @@
+# Octopus companion settings. Everything is optional.
+
+[weather]
+# A city, postcode or airport code for wttr.in; empty locates by IP.
+place = ""
+
+[brightness]
+# brightnessctl device names; empty finds the backlight and *kbd_backlight.
+screen = ""
+keyboard = ""
+
+[notifications]
+timeout_ms = 5000
+max_popups = 3
+
+[media]
+lyrics = true
