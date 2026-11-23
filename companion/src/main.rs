@@ -2,6 +2,7 @@ mod config;
 mod exec;
 mod icons;
 mod ipc;
+mod lock;
 mod panels;
 mod popup;
 mod services;
@@ -18,6 +19,7 @@ const APP_ID: &str = "dev.pxota.Octopus";
 const USAGE: &str = "usage: octopus [daemon]
        octopus toggle <control-center|dash|wifi|bluetooth|audio>
        octopus close
+       octopus lock
        octopus volume <up|down|mute>
        octopus mic mute
        octopus brightness <up|down>

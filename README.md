@@ -9,14 +9,14 @@ Superfícies opacas e tonais, sem blur. As cores saem do wallpaper via matugen.
 | Parte | O quê |
 |---|---|
 | `waybar/` | barra vertical: launcher, workspaces, janela focada, relógio, tray, bateria em pílula e o grupo com drawer |
-| `companion/` | `octopus`, o daemon: control center, dash, menus de wi-fi/bluetooth/som, notificações, OSD |
+| `companion/` | `octopus`, o daemon: control center, dash, menus de wi-fi/bluetooth/som, notificações, OSD e a tela de bloqueio |
 | `config/scripts/` | fuzzel (apps, clipboard, emoji, energia), Matuwall, bateria, tema, clima e letras |
 | `config/matugen/` | templates de cores pro companion, Waybar, fuzzel e Matuwall |
 | `config/niri.kdl` | autostart, binds e layer rules, incluído no config do niri |
 
 ## Instalar
 
-Depende de: `waybar fuzzel matugen matuwall awww cliphist wl-clipboard wtype playerctl cava brightnessctl networkmanager bluez-utils libpulse python unicode-emoji unicode-cldr gtk4 gtk4-layer-shell ttf-material-symbols-variable rust`.
+Depende de: `pam waybar fuzzel matugen matuwall awww cliphist wl-clipboard wtype playerctl cava brightnessctl networkmanager bluez-utils libpulse python unicode-emoji unicode-cldr gtk4 gtk4-layer-shell ttf-material-symbols-variable rust`.
 
 ```sh
 ./install.sh
@@ -34,6 +34,7 @@ include "~/.config/octopus/niri.kdl"
 octopus                      # o daemon
 octopus toggle <control-center|dash|wifi|bluetooth|audio>
 octopus close
+octopus lock
 octopus volume <up|down|mute>
 octopus mic mute
 octopus brightness <up|down>
