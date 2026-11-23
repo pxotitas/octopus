@@ -33,7 +33,7 @@ impl Shell {
         crate::theme::install();
         let config = config::load();
         crate::i18n::init(&config.language);
-        crate::bar::ensure(&config.bar);
+        crate::bar::apply(&config.bar);
         let services = Services::new(&config);
 
         Rc::new_cyclic(|weak: &std::rc::Weak<Shell>| {
@@ -356,7 +356,10 @@ impl Shell {
                 self.services.notifications.dnd.set(on);
                 if on { "on" } else { "off" }.to_owned()
             }
-            ["reload"] => String::new(),
+            ["reload"] => {
+                crate::bar::apply(&self.config.borrow().bar);
+                String::new()
+            }
             _ => format!("unknown command: {command}"),
         }
     }

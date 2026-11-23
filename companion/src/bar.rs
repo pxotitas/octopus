@@ -195,22 +195,22 @@ pub fn layout_css(bar: &Bar) -> String {
     )
 }
 
-/// Writes Waybar's generated files and asks it to reload them.
+/// Writes Waybar's generated files and asks it to reload when they changed.
 pub fn apply(bar: &Bar) {
     let dir = gtk::glib::user_config_dir().join("waybar");
     let _ = std::fs::create_dir_all(&dir);
-    let _ = std::fs::write(dir.join("config.jsonc"), waybar_config(bar));
-    let _ = std::fs::write(dir.join("layout.css"), layout_css(bar));
-    exec::spawn("pkill", &["-SIGUSR2", "-x", "waybar"]);
-}
-
-/// Creates the layout stylesheet on first run, so Waybar's import resolves.
-pub fn ensure(bar: &Bar) {
-    let path = gtk::glib::user_config_dir()
-        .join("waybar")
-        .join("layout.css");
-    if !path.exists() {
-        let _ = std::fs::write(path, layout_css(bar));
+    let mut changed = false;
+    for (name, text) in [
+        ("config.jsonc", waybar_config(bar)),
+        ("layout.css", layout_css(bar)),
+    ] {
+        let path = dir.join(name);
+        if std::fs::read_to_string(&path).ok().as_deref() != Some(text.as_str()) {
+            changed |= std::fs::write(path, text).is_ok();
+        }
+    }
+    if changed {
+        exec::spawn("pkill", &["-SIGUSR2", "-x", "waybar"]);
     }
 }
 
