@@ -6,6 +6,8 @@ pub mod lyrics;
 pub mod media;
 pub mod network;
 pub mod notifications;
+pub mod theme;
+pub mod tray;
 pub mod weather;
 
 use std::rc::Rc;
@@ -22,6 +24,8 @@ pub struct Services {
     pub weather: Rc<weather::Weather>,
     pub cava: Rc<cava::Cava>,
     pub notifications: Rc<notifications::Notifications>,
+    pub theme: Rc<theme::Theme>,
+    pub tray: Rc<tray::Tray>,
 }
 
 impl Services {
@@ -36,6 +40,8 @@ impl Services {
             weather: weather::Weather::new(&config.weather.place),
             cava: cava::Cava::new(),
             notifications: notifications::Notifications::new(),
+            theme: theme::Theme::new(),
+            tray: tray::Tray::new(),
         })
     }
 }

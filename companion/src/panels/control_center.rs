@@ -144,23 +144,19 @@ fn tiles(s: &Rc<Services>, open: Rc<dyn Fn(&str)>) -> gtk::Grid {
         });
     }
 
-    let dnd = Tile::new("notifications", "não perturbe", false);
+    let theme = Tile::new("dark_mode", "tema", false);
     {
-        let n = s.notifications.clone();
-        dnd.on_toggle(move || {
-            let on = *n.dnd.get();
-            n.dnd.set(!on);
+        let t = s.theme.clone();
+        theme.on_toggle(move || {
+            let dark = *t.dark.get();
+            t.set_dark(!dark);
         });
-        let tile = dnd.clone();
-        s.notifications.dnd.subscribe(move |on| {
+        let tile = theme.clone();
+        s.theme.dark.subscribe(move |dark| {
             tile.set(
-                *on,
-                if *on {
-                    "notifications_off"
-                } else {
-                    "notifications"
-                },
-                if *on { "ligado" } else { "desligado" },
+                *dark,
+                if *dark { "dark_mode" } else { "light_mode" },
+                if *dark { "escuro" } else { "claro" },
             );
         });
     }
@@ -168,7 +164,7 @@ fn tiles(s: &Rc<Services>, open: Rc<dyn Fn(&str)>) -> gtk::Grid {
     grid.attach(&wifi.root, 0, 0, 1, 1);
     grid.attach(&bt.root, 1, 0, 1, 1);
     grid.attach(&mic.root, 0, 1, 1, 1);
-    grid.attach(&dnd.root, 1, 1, 1, 1);
+    grid.attach(&theme.root, 1, 1, 1, 1);
     grid
 }
 
@@ -223,7 +219,37 @@ fn notifications(s: &Rc<Services>) -> gtk::Box {
         let n = s.notifications.clone();
         clear.connect_clicked(move |_| n.clear());
     }
-    card.append(&widgets::heading("notificações", Some(clear.upcast_ref())));
+    let dnd = icons::button("notifications", "não perturbe");
+    {
+        let n = s.notifications.clone();
+        dnd.connect_clicked(move |_| {
+            let on = *n.dnd.get();
+            n.dnd.set(!on);
+        });
+        let button = dnd.clone();
+        s.notifications.dnd.subscribe(move |on| {
+            icons::set(
+                &button,
+                if *on {
+                    "notifications_off"
+                } else {
+                    "notifications"
+                },
+            );
+            if *on {
+                button.add_css_class("on");
+            } else {
+                button.remove_css_class("on");
+            }
+        });
+    }
+    let actions = gtk::Box::new(gtk::Orientation::Horizontal, 2);
+    actions.append(&dnd);
+    actions.append(&clear);
+    card.append(&widgets::heading(
+        "notificações",
+        Some(actions.upcast_ref()),
+    ));
     let list = notification::list(&s.notifications);
     list.set_size_request(-1, 120);
     card.append(&list);
