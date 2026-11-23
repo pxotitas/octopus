@@ -1,5 +1,5 @@
 companion/target/
+/colors.css
 waybar/colors.css
-config/colors.css
-__pycache__/
 waybar/layout.css
+__pycache__/

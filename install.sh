@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# Builds the companion and links Octopus into ~/.config. Anything it would
+# Octopus lives in ~/.config/octopus: clone it there and run this. It builds
+# the companion and links Waybar and the theme hook. Anything it would
 # replace is moved aside with a timestamp first.
 set -euo pipefail
 
@@ -7,6 +8,7 @@ repo=$(cd "$(dirname "$0")" && pwd)
 config=${XDG_CONFIG_HOME:-$HOME/.config}
 bin=$HOME/.local/bin
 stamp=$(date +%Y%m%d-%H%M%S)
+export CARGO_TARGET_DIR=${XDG_CACHE_HOME:-$HOME/.cache}/octopus/target
 
 link() {
   local target=$1 path=$2
@@ -21,18 +23,21 @@ link() {
   echo "  linked: $path"
 }
 
+if [ "$(readlink -f "$repo")" != "$(readlink -f "$config/octopus")" ]; then
+  echo ":: octopus is not in $config/octopus, linking it there"
+  link "$repo" "$config/octopus"
+fi
+
 echo ":: building the companion"
 cargo build --release --manifest-path "$repo/companion/Cargo.toml"
 mkdir -p "$bin"
-install -m 755 "$repo/companion/target/release/octopus" "$bin/octopus"
+install -m 755 "$CARGO_TARGET_DIR/release/octopus" "$bin/octopus"
 
-echo ":: linking configs"
-mkdir -p "$config"
-link "$repo/config" "$config/octopus"
+echo ":: linking"
 link "$repo/waybar" "$config/waybar"
-link "$repo/config/scripts/theme.sh" "$bin/octopus-theme"
+link "$repo/scripts/theme.sh" "$bin/octopus-theme"
 
-if [ ! -f "$repo/config/colors.css" ]; then
+if [ ! -f "$repo/colors.css" ]; then
   wallpaper=$(awww query 2>/dev/null | sed -n 's/.*image: //p' | head -n1 || true)
   if [ -n "$wallpaper" ] && [ -f "$wallpaper" ]; then
     echo ":: first palette from $wallpaper"
@@ -42,11 +47,11 @@ if [ ! -f "$repo/config/colors.css" ]; then
   fi
 fi
 
-cat <<EOF
+cat <<MSG
 
 Done. Add this line to the end of ~/.config/niri/config.kdl:
 
   include "~/.config/octopus/niri.kdl"
 
 and remove the old shell's spawn-at-startup lines and any binds it repeats.
-EOF
+MSG
