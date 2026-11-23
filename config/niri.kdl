@@ -2,17 +2,20 @@
 //   include "~/.config/octopus/niri.kdl"
 
 spawn-at-startup "waybar"
-spawn-at-startup "octopus"
+// gl: GTK's default Vulkan renderer runs through hasvk on Broadwell, which
+// is what made the panels stutter
+spawn-sh-at-startup "GSK_RENDERER=gl exec octopus"
 spawn-at-startup "wl-paste" "--type" "text" "--watch" "cliphist" "store"
 spawn-at-startup "wl-paste" "--type" "image" "--watch" "cliphist" "store"
 
 binds {
     Mod+D hotkey-overlay-title="apps" { spawn-sh "~/.config/octopus/scripts/launcher.sh"; }
     Mod+Space hotkey-overlay-title="apps" { spawn-sh "~/.config/octopus/scripts/launcher.sh"; }
-    Mod+Shift+V hotkey-overlay-title="clipboard" { spawn-sh "~/.config/octopus/scripts/clipboard.sh"; }
+    Mod+Shift+V hotkey-overlay-title="clipboard" { spawn "octopus" "toggle" "clipboard"; }
     Mod+Period hotkey-overlay-title="emoji" { spawn-sh "~/.config/octopus/scripts/emoji.sh"; }
     Mod+Shift+W hotkey-overlay-title="wallpapers" { spawn-sh "~/.config/octopus/scripts/wallpaper.sh"; }
-    Mod+Shift+E hotkey-overlay-title="energia" { spawn-sh "~/.config/octopus/scripts/powermenu.sh"; }
+    Mod+Shift+E hotkey-overlay-title="energia" { spawn "octopus" "toggle" "power"; }
+    Mod+Comma hotkey-overlay-title="configurações" { spawn "octopus" "settings"; }
     Mod+C hotkey-overlay-title="central de controle" { spawn "octopus" "toggle" "control-center"; }
     Mod+A hotkey-overlay-title="dash" { spawn "octopus" "toggle" "dash"; }
     Mod+L hotkey-overlay-title="bloquear" { spawn "octopus" "lock"; }

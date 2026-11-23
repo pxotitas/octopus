@@ -1,8 +1,12 @@
 pub mod audio;
 pub mod bluetooth;
+pub mod clipboard;
 pub mod control_center;
 pub mod dash;
 pub mod lyrics;
 pub mod osd;
+pub mod power;
+pub mod settings;
 pub mod toasts;
+pub mod tray;
 pub mod wifi;

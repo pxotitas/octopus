@@ -38,12 +38,25 @@ window.octopus-backdrop > decoration {
   border-radius: 28px;
   padding: 16px;
   border: 1px solid @outline_variant;
+  box-shadow: none;
+}
+
+/* GTK's own .card, .toast and .heading styles add outlines and shadows */
+.card,
+.toast,
+.notification,
+.tile {
+  box-shadow: none;
+  outline: none;
 }
 
 .card {
   background: @surface_container_high;
   border-radius: 20px;
   padding: 14px;
+  border: none;
+  outline: none;
+  box-shadow: none;
 }
 
 .heading label:first-child {
@@ -648,57 +661,72 @@ tooltip {
   border-radius: 10px;
 }
 
-/* lock */
+/* lock: after Velatura. Black island pills over a grey, blurred wallpaper. */
 
 window.octopus-lock {
-  background: @surface_container_lowest;
+  background: black;
 }
 
-.octopus-lock .lock-date {
-  font-size: 24px;
+.lock-scrim {
+  background: alpha(black, 0.18);
+}
+
+.octopus-lock label {
+  color: white;
+}
+
+.lock-clock {
+  transition: margin 380ms cubic-bezier(0.05, 0.7, 0.1, 1);
+}
+
+.lock-date {
+  font-size: 26px;
   font-weight: 600;
   color: alpha(white, 0.92);
 }
 
-.octopus-lock .lock-hours,
-.octopus-lock .lock-minutes {
-  font-size: 200px;
+.lock-hours,
+.lock-minutes {
+  font-size: 300px;
   font-weight: 700;
-  letter-spacing: -8px;
-  color: white;
+  letter-spacing: -12px;
+  transition: font-size 380ms cubic-bezier(0.05, 0.7, 0.1, 1), margin 380ms cubic-bezier(0.05, 0.7, 0.1, 1);
 }
 
-.octopus-lock .lock-hours {
-  margin-top: -24px;
+.lock-hours {
+  margin-top: -40px;
 }
 
 .octopus-lock .lock-minutes {
   color: alpha(white, 0.55);
-  margin-top: -72px;
+  margin-top: -126px;
 }
 
-.octopus-lock .lock-clock.compact .lock-hours,
-.octopus-lock .lock-clock.compact .lock-minutes {
-  font-size: 104px;
-  letter-spacing: -4px;
+.lock-clock.awake .lock-hours,
+.lock-clock.awake .lock-minutes {
+  font-size: 270px;
 }
 
-.octopus-lock .lock-clock.compact .lock-hours {
-  margin-top: -12px;
+.lock-clock.awake .lock-minutes {
+  margin-top: -114px;
 }
 
-.octopus-lock .lock-clock.compact .lock-minutes {
-  margin-top: -38px;
+.lock-clock.compact .lock-date {
+  font-size: 20px;
 }
 
-.octopus-lock .lock-clock.compact .lock-date {
-  font-size: 18px;
+.lock-clock.compact .lock-hours,
+.lock-clock.compact .lock-minutes {
+  font-size: 150px;
+  letter-spacing: -6px;
 }
 
-.octopus-lock .media-title,
-.octopus-lock .media-artist,
-.octopus-lock .media-idle label {
-  color: white;
+.lock-clock.compact .lock-hours {
+  margin-top: -20px;
+}
+
+.lock-clock.compact .lock-minutes {
+  margin-top: -63px;
 }
 
 .octopus-lock .media-artist {
@@ -710,17 +738,30 @@ window.octopus-lock {
 }
 
 .octopus-lock .media-controls button {
-  background: alpha(white, 0.12);
+  background: none;
 }
 
-.octopus-lock .media-controls button.media-play {
-  background: none;
+.octopus-lock .media-controls button:hover {
+  background: alpha(white, 0.14);
+}
+
+.octopus-lock .media-art-hero,
+.octopus-lock .media-art {
+  background: black;
+}
+
+.octopus-lock .media-play-shape {
+  color: white;
+}
+
+.octopus-lock .media-play-shape label {
+  color: black;
 }
 
 .octopus-lock .lyric {
   font-size: 26px;
   font-weight: 700;
-  color: alpha(white, 0.22);
+  color: alpha(white, 0.18);
 }
 
 .octopus-lock .lyric.near {
@@ -736,74 +777,298 @@ window.octopus-lock {
   color: alpha(white, 0.75);
 }
 
-.octopus-lock .lyrics label.dim {
-  color: alpha(white, 0.6);
-}
-
-.lock-account {
-  background: alpha(@surface_container, 0.72);
-  border: 1px solid alpha(white, 0.08);
+.lock-pill {
+  background: black;
+  border: 1px solid #262626;
   border-radius: 999px;
-  padding: 6px 6px 6px 8px;
-  min-width: 340px;
-  transition: border-color 200ms ease;
+  padding: 0 8px 0 6px;
+  transition: border-color 140ms ease;
 }
 
-.shake .lock-account {
+.lock-pill.typing {
+  border-color: @primary;
+}
+
+.lock-pill.failed {
   border-color: @error;
 }
 
-.lock-account passwordentry {
-  background: none;
-  font-size: 15px;
+.lock-avatar {
+  border-radius: 999px;
+  background: @primary_container;
 }
 
-shape.lock-avatar {
-  color: @primary_container;
-}
-
-shape.lock-avatar label {
+.lock-avatar label {
   color: @on_primary_container;
+  font-size: 20px;
+  font-weight: 600;
 }
 
-.lock-go {
+.lock-name {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.octopus-lock .lock-hint {
+  font-size: 13px;
+  color: alpha(white, 0.6);
+}
+
+.lock-field {
+  font-size: 11px;
+  letter-spacing: 3px;
+  color: white;
+  caret-color: white;
+  margin-right: 4px;
+}
+
+.lock-send {
+  background: white;
+  border-radius: 999px;
+  min-width: 44px;
+  min-height: 44px;
   padding: 0;
-  background: none;
+  transition: opacity 200ms ease, background 140ms ease;
 }
 
-.lock-go shape {
-  color: @primary;
+.lock-send:hover {
+  background: alpha(white, 0.7);
 }
 
-.lock-go shape label {
-  color: @on_primary;
+.lock-send .icon {
+  color: black;
 }
 
-.lock-status {
-  color: alpha(white, 0.8);
-  font-size: 12px;
+.octopus-lock .lock-status {
+  font-size: 11px;
+  color: @error;
 }
 
-.lock-power button {
-  background: alpha(@surface_container, 0.6);
-  padding: 10px;
+.lock-chip {
+  background: black;
+  border: 1px solid #262626;
+  border-radius: 999px;
+  min-height: 36px;
+  min-width: 36px;
+  padding: 0 11px;
+  transition: background 140ms ease, border-color 140ms ease;
 }
 
-.lock-power .icon {
+.lock-chip:hover {
+  background: #1f1f1f;
+}
+
+.lock-chip .icon {
+  font-size: 16px;
+  color: alpha(white, 0.75);
+}
+
+.lock-chip.armed {
+  background: @error;
+  border-color: @error;
+}
+
+.lock-chip.armed .icon,
+.lock-chip-name {
+  color: white;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.lock-chip.armed .icon {
+  font-size: 16px;
+}
+
+.lock-battery {
+  background: black;
+  border: 1px solid #262626;
+  border-radius: 999px;
+  padding: 6px 12px;
+}
+
+.lock-battery .icon {
+  font-size: 16px;
   color: white;
 }
 
-.lock-battery levelbar trough {
-  border-radius: 6px;
-  min-width: 20px;
-  background: alpha(white, 0.18);
+.icon-button.on {
+  background: @secondary_container;
 }
 
-.lock-battery levelbar block.filled {
-  background: white;
-  border-radius: 6px;
+.icon-button.on .icon {
+  color: @on_secondary_container;
 }
 
-.lock-battery levelbar.charging block.filled {
-  background: @tertiary;
+/* clipboard */
+
+.clipboard {
+  min-width: 520px;
+}
+
+.clipboard searchbar,
+.clipboard entry {
+  background: @surface_container_high;
+  border-radius: 16px;
+  padding: 10px 14px;
+  border: none;
+  box-shadow: none;
+}
+
+.clip-list {
+  background: none;
+}
+
+.clip-row {
+  border-radius: 16px;
+  padding: 10px 12px;
+  margin-bottom: 2px;
+  transition: background 120ms ease;
+}
+
+.clip-row:hover {
+  background: alpha(@on_surface, 0.06);
+}
+
+.clip-row:selected {
+  background: @secondary_container;
+}
+
+.clip-row:selected label {
+  color: @on_secondary_container;
+}
+
+.clip-image {
+  border-radius: 12px;
+}
+
+/* power */
+
+.power {
+  padding: 20px 22px 22px;
+}
+
+.power-hint {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+button.power-action {
+  background: none;
+  border-radius: 24px;
+  padding: 12px 10px;
+}
+
+button.power-action:hover,
+button.power-action:focus-visible {
+  background: alpha(@on_surface, 0.06);
+}
+
+.power-action shape {
+  color: @secondary_container;
+  transition: color 160ms ease;
+}
+
+.power-action shape label {
+  color: @on_secondary_container;
+  font-size: 26px;
+}
+
+.power-action.armed shape {
+  color: @error;
+}
+
+.power-action.armed shape label {
+  color: @on_error;
+}
+
+/* tray */
+
+.tray-menu {
+  min-width: 300px;
+}
+
+button.tray-item {
+  border-radius: 16px;
+  padding: 10px;
+  background: @surface_container_high;
+}
+
+button.tray-item:hover {
+  background: @surface_container_highest;
+}
+
+.tray-title {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.tray-separator {
+  margin: 4px 8px;
+  background: @outline_variant;
+  min-height: 1px;
+}
+
+/* settings window */
+
+window.octopus-settings {
+  background: @surface;
+}
+
+.settings-column {
+  padding: 24px;
+}
+
+.settings-title {
+  font-size: 26px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.settings-row {
+  min-height: 40px;
+}
+
+.settings-module {
+  padding: 4px 0;
+}
+
+.segmented {
+  border-radius: 999px;
+  border: 1px solid @outline;
+}
+
+.segmented button {
+  border-radius: 0;
+  padding: 8px 12px;
+  background: none;
+}
+
+.segmented button:first-child {
+  border-radius: 999px 0 0 999px;
+}
+
+.segmented button:last-child {
+  border-radius: 0 999px 999px 0;
+}
+
+.segmented button:checked {
+  background: @secondary_container;
+}
+
+.segmented button:checked label {
+  color: @on_secondary_container;
+}
+
+dropdown > button,
+spinbutton {
+  background: @surface_container_highest;
+  border-radius: 12px;
+  border: none;
+  box-shadow: none;
+}
+
+popover > contents {
+  background: @surface_container_high;
+  border-radius: 16px;
+  box-shadow: none;
 }

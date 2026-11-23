@@ -1,3 +1,4 @@
+mod bar;
 mod config;
 mod exec;
 mod icons;
@@ -17,7 +18,8 @@ use gtk::{gio, glib};
 const APP_ID: &str = "dev.pxota.Octopus";
 
 const USAGE: &str = "usage: octopus [daemon]
-       octopus toggle <control-center|dash|wifi|bluetooth|audio>
+       octopus toggle <control-center|dash|wifi|bluetooth|audio|tray|clipboard|power>
+       octopus settings
        octopus close
        octopus lock
        octopus volume <up|down|mute>

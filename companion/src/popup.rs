@@ -20,6 +20,8 @@ pub enum Place {
     BarMiddle,
     /// Docked to the bottom edge of the screen.
     BottomEdge,
+    /// The middle of the screen, for the clipboard and power menus.
+    Center,
 }
 
 const GAP: i32 = 8;
@@ -27,9 +29,10 @@ const LEAVE_DELAY: Duration = Duration::from_millis(350);
 
 pub struct Popup {
     pub window: gtk::Window,
+    place: Place,
     motion: Motion,
     tween: Rc<Tween>,
-    open: Cell<bool>,
+    open: Rc<Cell<bool>>,
     leave: RefCell<Option<glib::SourceId>>,
     listeners: Listeners<bool>,
 }
@@ -68,8 +71,10 @@ impl Popup {
                     Origin::Left
                 }
             }
+            Place::Center => Origin::Bottom,
             Place::BottomEdge => {
                 window.set_anchor(Edge::Bottom, true);
+                window.set_margin(Edge::Bottom, -4);
                 Origin::BottomEdge
             }
         };
@@ -79,9 +84,10 @@ impl Popup {
 
         let popup = Rc::new(Self {
             window,
+            place,
             motion,
             tween: Tween::new(0.0),
-            open: Cell::new(false),
+            open: Rc::new(Cell::new(false)),
             leave: RefCell::new(None),
             listeners: RefCell::new(Vec::new()),
         });
@@ -144,6 +150,27 @@ impl Popup {
             .is_some_and(|text| !text.text().is_empty())
     }
 
+    /// Moves a bar panel to the side the bar is on.
+    pub fn set_side(&self, right: bool) {
+        if !matches!(self.place, Place::BarBottom | Place::BarMiddle) {
+            return;
+        }
+        let (near, far) = if right {
+            (Edge::Right, Edge::Left)
+        } else {
+            (Edge::Left, Edge::Right)
+        };
+        self.window.set_anchor(far, false);
+        self.window.set_margin(far, 0);
+        self.window.set_anchor(near, true);
+        self.window.set_margin(near, GAP);
+        self.motion.set_origin(match (right, self.place) {
+            (true, _) => Origin::Right,
+            (false, Place::BarBottom) => Origin::LeftBottom,
+            _ => Origin::Left,
+        });
+    }
+
     pub fn is_open(&self) -> bool {
         self.open.get()
     }
@@ -157,12 +184,32 @@ impl Popup {
         self.tween.animate(
             &self.motion,
             1.0,
-            380,
+            300,
             anim::EMPHASIZED_DECELERATE,
             move |p| motion.set_progress(p),
             || {},
         );
         self.emit(true);
+    }
+
+    /// Maps the surface once, fully transparent, so the first real opening
+    /// does not pay for creating the renderer and laying everything out.
+    pub fn warm(&self) {
+        if self.open.get() {
+            return;
+        }
+        let mode = self.window.keyboard_mode();
+        self.window.set_keyboard_mode(KeyboardMode::None);
+        self.motion.set_progress(0.0);
+        self.window.set_visible(true);
+        let window = self.window.clone();
+        let open = self.open.clone();
+        glib::timeout_add_local_once(Duration::from_millis(400), move || {
+            if !open.get() {
+                window.set_visible(false);
+            }
+            window.set_keyboard_mode(mode);
+        });
     }
 
     pub fn hide(&self) {
@@ -177,7 +224,7 @@ impl Popup {
         self.tween.animate(
             &self.motion,
             0.0,
-            200,
+            170,
             anim::EMPHASIZED_ACCELERATE,
             move |p| motion.set_progress(p),
             move || window.set_visible(false),

@@ -8,12 +8,18 @@ use gtk::prelude::*;
 use crate::config;
 use crate::exec;
 use crate::icons;
-use crate::panels::{self, dash::Dash, osd::Osd, toasts::Toasts};
+use crate::panels::{
+    self, clipboard::Clipboard, dash::Dash, osd::Osd, settings::Settings, toasts::Toasts,
+    tray::TrayPanel,
+};
 use crate::popup::{self, Place, Popup};
 use crate::services::audio::Kind;
 use crate::services::Services;
 
 pub struct Shell {
+    app: gtk::Application,
+    config: Rc<std::cell::RefCell<config::Config>>,
+    settings: std::cell::RefCell<Option<Rc<Settings>>>,
     services: Rc<Services>,
     popups: HashMap<&'static str, Rc<Popup>>,
     backdrop: gtk::Window,
@@ -26,6 +32,7 @@ impl Shell {
     pub fn new(app: &gtk::Application) -> Rc<Self> {
         crate::theme::install();
         let config = config::load();
+        crate::bar::ensure(&config.bar);
         let services = Services::new(&config);
 
         Rc::new_cyclic(|weak: &std::rc::Weak<Shell>| {
@@ -84,6 +91,45 @@ impl Shell {
                 ),
             );
 
+            let close: Rc<dyn Fn()> = {
+                let weak = weak.clone();
+                Rc::new(move || {
+                    if let Some(shell) = weak.upgrade() {
+                        shell.close_all();
+                    }
+                })
+            };
+            let tray = TrayPanel::new(&services.tray, close.clone());
+            popups.insert(
+                "tray",
+                Popup::new(app, "tray", Place::BarBottom, true, &tray.root),
+            );
+            let clipboard = Clipboard::new(close.clone());
+            popups.insert(
+                "clipboard",
+                Popup::new(app, "clipboard", Place::Center, true, &clipboard.root),
+            );
+            let power = panels::power::build({
+                let weak = weak.clone();
+                Rc::new(move |action: &str| {
+                    if let Some(shell) = weak.upgrade() {
+                        shell.power(action);
+                    }
+                })
+            });
+            popups.insert(
+                "power",
+                Popup::new(app, "power", Place::Center, true, &power),
+            );
+            for popup in popups.values() {
+                popup.set_side(config.bar.right());
+            }
+
+            services
+                .tray
+                .items
+                .subscribe(|_| exec::spawn("pkill", &["-RTMIN+8", "-x", "waybar"]));
+
             let backdrop = popup::backdrop(app, {
                 let weak = weak.clone();
                 move || {
@@ -97,6 +143,8 @@ impl Shell {
                 let s = services.clone();
                 let weak = weak.clone();
                 let dash = dash.clone();
+                let tray = tray.clone();
+                let clipboard = clipboard.clone();
                 let name = *name;
                 popup.on_visibility(move |open| {
                     match name {
@@ -104,10 +152,16 @@ impl Shell {
                             s.cava.watch(open);
                             s.media.watch(open);
                             if open {
-                                s.wifi.refresh();
-                                s.bluetooth.refresh();
-                                s.screen.refresh();
-                                s.keyboard.refresh();
+                                let s = s.clone();
+                                glib::timeout_add_local_once(
+                                    Duration::from_millis(320),
+                                    move || {
+                                        s.wifi.refresh();
+                                        s.bluetooth.refresh();
+                                        s.screen.refresh();
+                                        s.keyboard.refresh();
+                                    },
+                                );
                             }
                         }
                         "dash" => {
@@ -115,10 +169,15 @@ impl Shell {
                             dash.set_open(open);
                         }
                         "wifi" if open => {
-                            s.wifi.refresh();
-                            s.wifi.rescan();
+                            let s = s.clone();
+                            glib::timeout_add_local_once(Duration::from_millis(320), move || {
+                                s.wifi.refresh();
+                                s.wifi.rescan();
+                            });
                         }
                         "bluetooth" if open => s.bluetooth.refresh(),
+                        "tray" if open => tray.reset(),
+                        "clipboard" if open => clipboard.load(),
                         _ => {}
                     }
                     if let Some(shell) = weak.upgrade() {
@@ -135,9 +194,19 @@ impl Shell {
                 config.notifications.max_popups,
             );
 
+            for name in ["control-center", "dash"] {
+                if let Some(popup) = popups.get(name) {
+                    let popup = popup.clone();
+                    glib::timeout_add_local_once(Duration::from_millis(600), move || popup.warm());
+                }
+            }
+
             let lock = crate::lock::Lock::new(app, &services, config.media.lyrics);
 
             Shell {
+                app: app.clone(),
+                config: Rc::new(std::cell::RefCell::new(config.clone())),
+                settings: std::cell::RefCell::new(None),
                 services,
                 popups,
                 backdrop,
@@ -176,10 +245,25 @@ impl Shell {
         let audio = &self.services.audio;
         match words.as_slice() {
             ["toggle", name] => self.toggle(alias(name)),
-            ["open", "power"] => {
+            ["settings"] => {
                 self.close_all();
-                exec::spawn(&exec::script("powermenu.sh"), &[]);
+                self.open_settings();
                 String::new()
+            }
+            ["tray-status"] => {
+                let count = self
+                    .services
+                    .tray
+                    .items
+                    .get()
+                    .iter()
+                    .filter(|i| !i.passive)
+                    .count();
+                if count == 0 {
+                    r#"{"text": ""}"#.to_owned()
+                } else {
+                    format!(r#"{{"text": "apps", "tooltip": "{count} na bandeja"}}"#)
+                }
             }
             ["open", "wallpapers"] => {
                 self.close_all();
@@ -253,6 +337,48 @@ impl Shell {
             ["reload"] => String::new(),
             _ => format!("unknown command: {command}"),
         }
+    }
+
+    fn power(&self, action: &str) {
+        self.close_all();
+        match action {
+            "lock" => self.lock.start(),
+            "suspend" => exec::spawn("systemctl", &["suspend"]),
+            "logout" => exec::spawn("niri", &["msg", "action", "quit", "--skip-confirmation"]),
+            "reboot" => exec::spawn("systemctl", &["reboot"]),
+            "poweroff" => exec::spawn("systemctl", &["poweroff"]),
+            _ => {}
+        }
+    }
+
+    fn open_settings(&self) {
+        let existing = self.settings.borrow().clone();
+        let settings = match existing {
+            Some(s) => s,
+            None => {
+                let popups: Vec<Rc<Popup>> = self.popups.values().cloned().collect();
+                let current = self.config.clone();
+                let apply: Rc<dyn Fn(config::Config)> = Rc::new(move |next: config::Config| {
+                    if let Err(err) = config::save(&next) {
+                        eprintln!("octopus: cannot save settings: {err}");
+                    }
+                    crate::bar::apply(&next.bar);
+                    for popup in &popups {
+                        popup.set_side(next.bar.right());
+                    }
+                    *current.borrow_mut() = next;
+                });
+                let s = Settings::new(
+                    &self.app,
+                    &self.services,
+                    self.config.borrow().clone(),
+                    apply,
+                );
+                *self.settings.borrow_mut() = Some(s.clone());
+                s
+            }
+        };
+        settings.present();
     }
 
     fn show_volume(&self) {

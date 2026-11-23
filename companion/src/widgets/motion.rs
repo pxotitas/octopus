@@ -61,24 +61,19 @@ mod imp {
                 widget.snapshot_child(&child, snapshot);
                 return;
             }
-            let (w, h) = (widget.width() as f32, widget.height() as f32);
+            let h = widget.height() as f32;
             let rest = 1.0 - p;
             snapshot.save();
             snapshot.push_opacity(p.min(1.0) as f64);
-            let (dx, dy, ox, oy) = match self.from.get() {
-                Origin::Left => (-24.0 * rest, 0.0, 0.0, h / 2.0),
-                Origin::LeftBottom => (-24.0 * rest, 0.0, 0.0, h),
-                Origin::Right => (24.0 * rest, 0.0, w, 0.0),
-                Origin::Bottom => (0.0, 24.0 * rest, w / 2.0, h),
-                Origin::BottomEdge => (0.0, h * rest, w / 2.0, h),
+            // Translation only, in whole pixels: scaling text forces GSK to
+            // rasterize new glyph sizes every frame.
+            let (dx, dy) = match self.from.get() {
+                Origin::Left | Origin::LeftBottom => (-28.0 * rest, 0.0),
+                Origin::Right => (28.0 * rest, 0.0),
+                Origin::Bottom => (0.0, 28.0 * rest),
+                Origin::BottomEdge => (0.0, h * rest),
             };
-            snapshot.translate(&graphene::Point::new(dx, dy));
-            if !matches!(self.from.get(), Origin::BottomEdge) {
-                let scale = 0.92 + 0.08 * p;
-                snapshot.translate(&graphene::Point::new(ox, oy));
-                snapshot.scale(scale, scale);
-                snapshot.translate(&graphene::Point::new(-ox, -oy));
-            }
+            snapshot.translate(&graphene::Point::new(dx.round(), dy.round()));
             widget.snapshot_child(&child, snapshot);
             snapshot.pop();
             snapshot.restore();
@@ -98,6 +93,10 @@ impl Motion {
         motion.imp().from.set(from);
         child.set_parent(&motion);
         motion
+    }
+
+    pub fn set_origin(&self, from: Origin) {
+        self.imp().from.set(from);
     }
 
     pub fn set_progress(&self, progress: f64) {

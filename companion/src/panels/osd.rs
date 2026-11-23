@@ -38,8 +38,20 @@ impl Osd {
                 let r = h / 2.0;
                 let pill = |x: f64, width: f64| {
                     cr.new_sub_path();
-                    cr.arc(x + width - r, r, r, -std::f64::consts::FRAC_PI_2, std::f64::consts::FRAC_PI_2);
-                    cr.arc(x + r, r, r, std::f64::consts::FRAC_PI_2, 3.0 * std::f64::consts::FRAC_PI_2);
+                    cr.arc(
+                        x + width - r,
+                        r,
+                        r,
+                        -std::f64::consts::FRAC_PI_2,
+                        std::f64::consts::FRAC_PI_2,
+                    );
+                    cr.arc(
+                        x + r,
+                        r,
+                        r,
+                        std::f64::consts::FRAC_PI_2,
+                        3.0 * std::f64::consts::FRAC_PI_2,
+                    );
                     cr.close_path();
                 };
                 cr.set_source_rgba(c.red() as f64, c.green() as f64, c.blue() as f64, 0.2);
