@@ -7,13 +7,21 @@ use gtk::prelude::*;
 use gtk4_layer_shell::{Edge, KeyboardMode, Layer, LayerShell};
 
 use crate::services::notifications::{Notification, Notifications};
+use crate::widgets::anim::{self, Tween};
+use crate::widgets::motion::{Motion, Origin};
 use crate::widgets::notification;
+
+struct Toast {
+    id: u32,
+    motion: Motion,
+    tween: Rc<Tween>,
+}
 
 /// Popups for new notifications, stacked in the top-right corner.
 pub struct Toasts {
     window: gtk::Window,
     column: gtk::Box,
-    items: RefCell<Vec<(u32, gtk::Revealer)>>,
+    items: RefCell<Vec<Toast>>,
     service: Rc<Notifications>,
     timeout_ms: u32,
     max: usize,
@@ -71,7 +79,7 @@ impl Toasts {
     fn show(self: &Rc<Self>, n: &Rc<Notification>) {
         self.remove_now(n.id);
         while self.items.borrow().len() >= self.max {
-            let oldest = self.items.borrow().first().map(|(id, _)| *id);
+            let oldest = self.items.borrow().first().map(|t| t.id);
             match oldest {
                 Some(id) => self.remove_now(id),
                 None => break,
@@ -86,15 +94,22 @@ impl Toasts {
             }
         });
         card.add_css_class("toast");
-        let revealer = gtk::Revealer::builder()
-            .transition_type(gtk::RevealerTransitionType::SlideDown)
-            .transition_duration(220)
-            .child(&card)
-            .build();
-        self.column.append(&revealer);
-        self.items.borrow_mut().push((id, revealer.clone()));
+        let motion = Motion::new(&card, Origin::Right);
+        self.column.append(&motion);
+        let tween = Tween::new(0.0);
         self.window.set_visible(true);
-        glib::idle_add_local_once(move || revealer.set_reveal_child(true));
+        {
+            let motion = motion.clone();
+            tween.animate(
+                &card,
+                1.0,
+                380,
+                anim::EMPHASIZED_DECELERATE,
+                move |p| motion.set_progress(p),
+                || {},
+            );
+        }
+        self.items.borrow_mut().push(Toast { id, motion, tween });
 
         let timeout = match n.timeout {
             t if n.critical && t <= 0 => None,
@@ -113,31 +128,37 @@ impl Toasts {
 
     /// Slides out; the history in the control center keeps it.
     fn remove(self: &Rc<Self>, id: u32) {
-        let Some(revealer) = self
+        let Some((motion, tween)) = self
             .items
             .borrow()
             .iter()
-            .find(|(i, _)| *i == id)
-            .map(|(_, r)| r.clone())
+            .find(|t| t.id == id)
+            .map(|t| (t.motion.clone(), t.tween.clone()))
         else {
             return;
         };
         let weak = Rc::downgrade(self);
-        revealer.connect_child_revealed_notify(move |r| {
-            if !r.is_child_revealed() {
+        let target = motion.clone();
+        tween.animate(
+            &motion,
+            0.0,
+            200,
+            anim::EMPHASIZED_ACCELERATE,
+            move |p| target.set_progress(p),
+            move || {
                 if let Some(t) = weak.upgrade() {
                     t.remove_now(id);
                 }
-            }
-        });
-        revealer.set_reveal_child(false);
+            },
+        );
     }
 
     fn remove_now(&self, id: u32) {
         let mut items = self.items.borrow_mut();
-        if let Some(pos) = items.iter().position(|(i, _)| *i == id) {
-            let (_, revealer) = items.remove(pos);
-            self.column.remove(&revealer);
+        if let Some(pos) = items.iter().position(|t| t.id == id) {
+            let toast = items.remove(pos);
+            toast.tween.stop();
+            self.column.remove(&toast.motion);
         }
         if items.is_empty() {
             self.window.set_visible(false);

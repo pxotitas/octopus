@@ -3,12 +3,14 @@ use std::rc::Rc;
 use gtk::prelude::*;
 
 use crate::icons;
+use crate::widgets::shape::{Kind, Shape};
 
 /// A quick-settings tile: the body toggles, the chevron opens the full menu.
 pub struct Tile {
     pub root: gtk::Box,
     toggle: gtk::Button,
     icon: gtk::Label,
+    shape: Shape,
     subtitle: gtk::Label,
 }
 
@@ -23,7 +25,8 @@ impl Tile {
         toggle.set_hexpand(true);
         let body = gtk::Box::new(gtk::Orientation::Horizontal, 12);
         let icon = icons::icon(icon);
-        icon.add_css_class("tile-icon");
+        let shape = Shape::new(Kind::Circle, 36, true, Some(&icon));
+        shape.add_css_class("tile-icon");
         let text = gtk::Box::new(gtk::Orientation::Vertical, 0);
         text.set_valign(gtk::Align::Center);
         let title = gtk::Label::new(Some(title));
@@ -36,7 +39,7 @@ impl Tile {
         subtitle.set_max_width_chars(12);
         text.append(&title);
         text.append(&subtitle);
-        body.append(&icon);
+        body.append(&shape);
         body.append(&text);
         toggle.set_child(Some(&body));
         root.append(&toggle);
@@ -45,6 +48,7 @@ impl Tile {
             root,
             toggle,
             icon,
+            shape,
             subtitle,
         });
         if with_menu {
@@ -76,6 +80,8 @@ impl Tile {
         } else {
             self.root.remove_css_class("on");
         }
+        self.shape
+            .morph(if on { Kind::Clover4 } else { Kind::Circle });
         self.icon.set_label(icon);
         self.subtitle.set_label(subtitle);
     }

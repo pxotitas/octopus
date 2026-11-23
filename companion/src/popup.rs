@@ -1,10 +1,14 @@
-use std::cell::RefCell;
+use std::cell::{Cell, RefCell};
 use std::rc::Rc;
+use std::time::Duration;
 
-use crate::store::Listeners;
 use gtk::prelude::*;
 use gtk::{gdk, glib};
 use gtk4_layer_shell::{Edge, KeyboardMode, Layer, LayerShell};
+
+use crate::store::Listeners;
+use crate::widgets::anim::{self, Tween};
+use crate::widgets::motion::{Motion, Origin};
 
 /// The bar sits on the left, so its menus open beside it; anchoring the left
 /// edge only (no margin) puts them right after the bar's exclusive zone.
@@ -14,14 +18,19 @@ pub enum Place {
     BarBottom,
     /// Beside the middle of the bar, where the clock lives.
     BarMiddle,
-    BottomCenter,
+    /// Docked to the bottom edge of the screen.
+    BottomEdge,
 }
 
 const GAP: i32 = 8;
+const LEAVE_DELAY: Duration = Duration::from_millis(350);
 
 pub struct Popup {
     pub window: gtk::Window,
-    revealer: gtk::Revealer,
+    motion: Motion,
+    tween: Rc<Tween>,
+    open: Cell<bool>,
+    leave: RefCell<Option<glib::SourceId>>,
     listeners: Listeners<bool>,
 }
 
@@ -47,46 +56,35 @@ impl Popup {
             KeyboardMode::None
         });
 
-        let transition = match place {
+        let origin = match place {
             Place::BarBottom | Place::BarMiddle => {
                 window.set_anchor(Edge::Left, true);
                 window.set_margin(Edge::Left, GAP);
                 if matches!(place, Place::BarBottom) {
                     window.set_anchor(Edge::Bottom, true);
                     window.set_margin(Edge::Bottom, GAP);
+                    Origin::LeftBottom
+                } else {
+                    Origin::Left
                 }
-                gtk::RevealerTransitionType::SlideRight
             }
-            Place::BottomCenter => {
+            Place::BottomEdge => {
                 window.set_anchor(Edge::Bottom, true);
-                window.set_margin(Edge::Bottom, GAP * 6);
-                gtk::RevealerTransitionType::SlideUp
+                Origin::BottomEdge
             }
         };
 
-        let revealer = gtk::Revealer::builder()
-            .transition_type(transition)
-            .transition_duration(240)
-            .child(child)
-            .build();
-        window.set_child(Some(&revealer));
+        let motion = Motion::new(child, origin);
+        window.set_child(Some(&motion));
 
         let popup = Rc::new(Self {
             window,
-            revealer,
+            motion,
+            tween: Tween::new(0.0),
+            open: Cell::new(false),
+            leave: RefCell::new(None),
             listeners: RefCell::new(Vec::new()),
         });
-
-        let weak = Rc::downgrade(&popup);
-        popup
-            .revealer
-            .connect_child_revealed_notify(move |revealer| {
-                if let Some(popup) = weak.upgrade() {
-                    if !revealer.is_child_revealed() && !revealer.reveals_child() {
-                        popup.window.set_visible(false);
-                    }
-                }
-            });
 
         if interactive {
             let keys = gtk::EventControllerKey::new();
@@ -101,30 +99,89 @@ impl Popup {
                 glib::Propagation::Proceed
             });
             popup.window.add_controller(keys);
+            popup.close_on_leave();
         }
 
         popup
     }
 
+    /// Leaving the panel with the pointer closes it, once the pointer has
+    /// been inside, unless something is being typed.
+    fn close_on_leave(self: &Rc<Self>) {
+        let pointer = gtk::EventControllerMotion::new();
+        let weak = Rc::downgrade(self);
+        pointer.connect_enter(move |_, _, _| {
+            if let Some(popup) = weak.upgrade() {
+                if let Some(id) = popup.leave.borrow_mut().take() {
+                    id.remove();
+                }
+            }
+        });
+        let weak = Rc::downgrade(self);
+        pointer.connect_leave(move |_| {
+            let Some(popup) = weak.upgrade() else { return };
+            if !popup.is_open() || popup.typing() {
+                return;
+            }
+            let later = Rc::downgrade(&popup);
+            let id = glib::timeout_add_local_once(LEAVE_DELAY, move || {
+                if let Some(popup) = later.upgrade() {
+                    popup.leave.borrow_mut().take();
+                    popup.hide();
+                }
+            });
+            let old = popup.leave.borrow_mut().replace(id);
+            if let Some(old) = old {
+                old.remove();
+            }
+        });
+        self.window.add_controller(pointer);
+    }
+
+    fn typing(&self) -> bool {
+        gtk::prelude::GtkWindowExt::focus(&self.window)
+            .and_then(|w| w.downcast::<gtk::Text>().ok())
+            .is_some_and(|text| !text.text().is_empty())
+    }
+
     pub fn is_open(&self) -> bool {
-        self.revealer.reveals_child()
+        self.open.get()
     }
 
     pub fn show(&self) {
-        if self.is_open() {
+        if self.open.replace(true) {
             return;
         }
-        self.window.present();
-        let revealer = self.revealer.clone();
-        glib::idle_add_local_once(move || revealer.set_reveal_child(true));
+        self.window.set_visible(true);
+        let motion = self.motion.clone();
+        self.tween.animate(
+            &self.motion,
+            1.0,
+            380,
+            anim::EMPHASIZED_DECELERATE,
+            move |p| motion.set_progress(p),
+            || {},
+        );
         self.emit(true);
     }
 
     pub fn hide(&self) {
-        if !self.is_open() {
+        if !self.open.replace(false) {
             return;
         }
-        self.revealer.set_reveal_child(false);
+        if let Some(id) = self.leave.borrow_mut().take() {
+            id.remove();
+        }
+        let motion = self.motion.clone();
+        let window = self.window.clone();
+        self.tween.animate(
+            &self.motion,
+            0.0,
+            200,
+            anim::EMPHASIZED_ACCELERATE,
+            move |p| motion.set_progress(p),
+            move || window.set_visible(false),
+        );
         self.emit(false);
     }
 
@@ -155,6 +212,7 @@ pub fn backdrop(app: &gtk::Application, on_click: impl Fn() + 'static) -> gtk::W
     for edge in [Edge::Top, Edge::Bottom, Edge::Left, Edge::Right] {
         window.set_anchor(edge, true);
     }
+    window.set_child(Some(&gtk::Box::new(gtk::Orientation::Vertical, 0)));
     let click = gtk::GestureClick::new();
     click.set_button(0);
     click.connect_pressed(move |_, _, _, _| on_click());

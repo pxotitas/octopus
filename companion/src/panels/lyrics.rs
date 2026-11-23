@@ -7,6 +7,7 @@ use gtk::prelude::*;
 use crate::services::lyrics::{self, Lyrics};
 use crate::services::media::{Media, Track};
 use crate::widgets;
+use crate::widgets::anim::{self, Tween};
 
 /// Synced lyrics that follow the playing line; plain lyrics just scroll.
 pub struct LyricsView {
@@ -19,6 +20,7 @@ pub struct LyricsView {
     current: Cell<Option<usize>>,
     active: Cell<bool>,
     enabled: bool,
+    scroll: Rc<Tween>,
     media: Rc<Media>,
 }
 
@@ -54,6 +56,7 @@ impl LyricsView {
             current: Cell::new(None),
             active: Cell::new(false),
             enabled,
+            scroll: Tween::new(0.0),
             media: media.clone(),
         });
 
@@ -64,10 +67,14 @@ impl LyricsView {
             }
         });
         let weak = Rc::downgrade(&view);
-        media.position.subscribe(move |position| {
-            if let Some(v) = weak.upgrade() {
-                v.follow(*position);
+        glib::timeout_add_local(std::time::Duration::from_millis(100), move || {
+            let Some(v) = weak.upgrade() else {
+                return glib::ControlFlow::Break;
+            };
+            if v.active.get() && v.root.is_mapped() {
+                v.follow(v.media.now());
             }
+            glib::ControlFlow::Continue
         });
         view
     }
@@ -147,7 +154,7 @@ impl LyricsView {
         self.scroller.vadjustment().set_value(0.0);
         *self.lyrics.borrow_mut() = Some(lyrics);
         self.root.set_visible_child_name("lines");
-        self.follow(*self.media.position.get());
+        self.follow(self.media.now());
     }
 
     fn follow(&self, position: f64) {
@@ -160,18 +167,44 @@ impl LyricsView {
         if self.current.get() == Some(index) {
             return;
         }
-        if let Some(old) = self.current.get().and_then(|i| nth(&self.column, i)) {
-            old.remove_css_class("current");
-        }
         self.current.set(Some(index));
+        let mut child = self.column.first_child();
+        let mut i = 0usize;
+        while let Some(widget) = child {
+            let distance = i.abs_diff(index);
+            if distance == 0 {
+                widget.add_css_class("current");
+            } else {
+                widget.remove_css_class("current");
+            }
+            if distance == 1 {
+                widget.add_css_class("near");
+            } else {
+                widget.remove_css_class("near");
+            }
+            child = widget.next_sibling();
+            i += 1;
+        }
         let Some(line) = nth(&self.column, index) else {
             return;
         };
-        line.add_css_class("current");
         if let Some(bounds) = line.compute_bounds(&self.column) {
             let adj = self.scroller.vadjustment();
             let target = bounds.y() as f64 + bounds.height() as f64 / 2.0 - adj.page_size() / 2.0;
-            animate(&adj, target);
+            let target = target.clamp(
+                adj.lower(),
+                (adj.upper() - adj.page_size()).max(adj.lower()),
+            );
+            let a = adj.clone();
+            self.scroll.set(adj.value());
+            self.scroll.animate(
+                &self.scroller,
+                target,
+                520,
+                anim::EMPHASIZED_DECELERATE,
+                move |v| a.set_value(v),
+                || {},
+            );
         }
     }
 }
@@ -182,26 +215,4 @@ fn nth(column: &gtk::Box, index: usize) -> Option<gtk::Widget> {
         child = child?.next_sibling();
     }
     child
-}
-
-fn animate(adj: &gtk::Adjustment, target: f64) {
-    let start = adj.value();
-    let target = target.clamp(
-        adj.lower(),
-        (adj.upper() - adj.page_size()).max(adj.lower()),
-    );
-    let adj = adj.clone();
-    let step = Rc::new(Cell::new(0u32));
-    glib::timeout_add_local(std::time::Duration::from_millis(16), move || {
-        let n = step.get() + 1;
-        step.set(n);
-        let t = (n as f64 / 18.0).min(1.0);
-        let eased = 1.0 - (1.0 - t).powi(3);
-        adj.set_value(start + (target - start) * eased);
-        if t >= 1.0 {
-            glib::ControlFlow::Break
-        } else {
-            glib::ControlFlow::Continue
-        }
-    });
 }

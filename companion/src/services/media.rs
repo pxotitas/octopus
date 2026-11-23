@@ -22,8 +22,10 @@ pub struct Track {
 
 pub struct Media {
     pub track: Rc<Store<Option<Track>>>,
-    /// Seconds into the track; ticks only while something shows it.
+    /// Seconds into the track as last read from the player; polled only
+    /// while something shows it. `now()` runs it forward between reads.
     pub position: Rc<Store<f64>>,
+    read_at: Rc<Cell<i64>>,
     watchers: Cell<u32>,
     ticker: RefCell<Option<glib::SourceId>>,
     _events: Option<exec::Stream>,
@@ -42,13 +44,21 @@ impl Media {
                 move |line| apply(&track, &line)
             },
         );
-        Rc::new(Self {
+        let media = Rc::new(Self {
             track,
             position: Store::new(0.0),
+            read_at: Rc::new(Cell::new(glib::monotonic_time())),
             watchers: Cell::new(0),
             ticker: RefCell::new(None),
             _events: events,
-        })
+        });
+        let weak = Rc::downgrade(&media);
+        media.track.subscribe(move |_| {
+            if let Some(media) = weak.upgrade() {
+                media.poll();
+            }
+        });
+        media
     }
 
     /// Panels showing progress call this while open, so nothing polls when
@@ -63,14 +73,15 @@ impl Media {
         if count > 0 && self.ticker.borrow().is_none() {
             self.poll();
             let this = Rc::downgrade(self);
-            let id =
-                glib::timeout_add_local(Duration::from_millis(500), move || match this.upgrade() {
+            let id = glib::timeout_add_local(Duration::from_millis(1000), move || {
+                match this.upgrade() {
                     Some(this) => {
                         this.poll();
                         glib::ControlFlow::Continue
                     }
                     None => glib::ControlFlow::Break,
-                });
+                }
+            });
             *self.ticker.borrow_mut() = Some(id);
         } else if count == 0 {
             if let Some(id) = self.ticker.borrow_mut().take() {
@@ -84,13 +95,32 @@ impl Media {
             return;
         };
         let position = self.position.clone();
+        let read_at = self.read_at.clone();
         glib::spawn_future_local(async move {
             if let Some(out) = exec::output("playerctl", &["-p", &player, "position"]).await {
                 if let Ok(seconds) = out.trim().parse::<f64>() {
+                    read_at.set(glib::monotonic_time());
                     position.set(seconds);
                 }
             }
         });
+    }
+
+    /// The playing position right now, without asking the player.
+    pub fn now(&self) -> f64 {
+        let base = *self.position.get();
+        match self.track.get().as_ref() {
+            Some(t) if t.playing => {
+                let elapsed = (glib::monotonic_time() - self.read_at.get()) as f64 / 1_000_000.0;
+                let now = base + elapsed;
+                if t.length > 0.0 {
+                    now.min(t.length)
+                } else {
+                    now
+                }
+            }
+            _ => base,
+        }
     }
 
     fn command(&self, action: &str) {

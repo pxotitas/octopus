@@ -1,9 +1,13 @@
+pub mod anim;
 pub mod art;
 pub mod cava;
 pub mod media;
+pub mod motion;
 pub mod notification;
+pub mod shape;
 pub mod slider;
 pub mod tile;
+pub mod wave;
 
 use gtk::prelude::*;
 

@@ -5,6 +5,7 @@ use gtk::prelude::*;
 use crate::icons;
 use crate::services::audio::Kind;
 use crate::services::Services;
+use crate::widgets::shape::{Kind as ShapeKind, Shape};
 use crate::widgets::{self, media, notification, slider::Slider, tile::Tile};
 
 pub fn build(s: &Rc<Services>, open: Rc<dyn Fn(&str)>) -> gtk::Box {
@@ -16,7 +17,7 @@ pub fn build(s: &Rc<Services>, open: Rc<dyn Fn(&str)>) -> gtk::Box {
     root.append(&tiles(s, open));
     root.append(&sliders(s));
 
-    let player = media::player(&s.media, media::Size::Card);
+    let player = media::player(&s.media, media::Size::Card, Some(&s.cava));
     player.add_css_class("card");
     root.append(&player);
 
@@ -46,9 +47,14 @@ fn header(s: &Rc<Services>, open: Rc<dyn Fn(&str)>) -> gtk::CenterBox {
     left.append(&weather);
     bar.set_start_widget(Some(&left));
 
-    bar.set_center_widget(Some(&widgets::cava::bars(&s.cava)));
-
-    let power = icons::button("power_settings_new", "energia");
+    let power = gtk::Button::new();
+    power.set_tooltip_text(Some("energia"));
+    power.set_child(Some(&Shape::new(
+        ShapeKind::Cookie9,
+        44,
+        true,
+        Some(&icons::icon("power_settings_new")),
+    )));
     power.add_css_class("cc-power");
     power.set_valign(gtk::Align::Start);
     power.connect_clicked(move |_| open("power"));

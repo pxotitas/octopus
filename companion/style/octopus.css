@@ -170,8 +170,16 @@ scale slider {
 levelbar trough {
   background: @surface_container_highest;
   border-radius: 999px;
-  min-height: 8px;
+  min-height: 10px;
+  padding: 0;
   border: none;
+  box-shadow: none;
+}
+
+levelbar block {
+  min-height: 10px;
+  border: none;
+  box-shadow: none;
 }
 
 levelbar block.filled {
@@ -211,8 +219,17 @@ levelbar block.empty {
 }
 
 .cc-power {
-  background: @surface_container_highest;
-  padding: 10px;
+  padding: 0;
+  background: none;
+}
+
+.cc-power shape {
+  color: @surface_container_highest;
+  transition: color 180ms ease;
+}
+
+.cc-power:hover shape {
+  color: @error_container;
 }
 
 .cc-power .icon {
@@ -235,10 +252,12 @@ levelbar block.empty {
   padding: 0 8px;
 }
 
-.tile .tile-icon {
-  background: @surface_container_highest;
-  border-radius: 999px;
-  padding: 8px;
+shape.tile-icon {
+  color: @surface_container_highest;
+}
+
+shape.tile-icon label {
+  color: @on_surface;
 }
 
 .tile-title {
@@ -258,8 +277,11 @@ levelbar block.empty {
   color: @on_primary_container;
 }
 
-.tile.on .tile-icon {
-  background: @primary;
+.tile.on shape.tile-icon {
+  color: @primary;
+}
+
+.tile.on shape.tile-icon label {
   color: @on_primary;
   font-variation-settings: "FILL" 1, "wght" 400, "opsz" 24;
 }
@@ -275,8 +297,17 @@ levelbar block.empty {
   background: @surface_container_highest;
 }
 
-.media-hero .media-art {
-  border-radius: 28px;
+.media-art-hero {
+  background: @surface_container_highest;
+}
+
+.wave {
+  color: @primary;
+}
+
+.media-cava {
+  color: alpha(@primary, 0.45);
+  margin: 0 18px 1px;
 }
 
 .art-fallback {
@@ -297,33 +328,21 @@ levelbar block.empty {
   color: @on_surface_variant;
 }
 
-.media-progress trough,
-.media-progress highlight {
-  min-height: 6px;
-}
-
-.media-progress slider {
-  min-height: 14px;
-  margin: -4px 0;
-}
-
 .media-controls button {
   background: @surface_container_highest;
   padding: 8px;
 }
 
-.media-controls .media-play {
-  background: @primary_container;
-  padding: 8px 18px;
-  border-radius: 16px;
-  transition: border-radius 220ms cubic-bezier(0.2, 0, 0, 1), background 200ms ease;
+.media-controls button.media-play {
+  background: none;
+  padding: 0;
 }
 
-.media-controls .media-play.playing {
-  border-radius: 999px;
+.media-play-shape {
+  color: @primary_container;
 }
 
-.media-controls .media-play label {
+.media-play-shape label {
   color: @on_primary_container;
   font-variation-settings: "FILL" 1, "wght" 400, "opsz" 24;
 }
@@ -353,15 +372,8 @@ levelbar block.empty {
   color: @on_error;
 }
 
-.notification-avatar {
-  border-radius: 999px;
-}
-
-.notification-icon {
-  background: @surface_container;
-  border-radius: 999px;
-  min-width: 48px;
-  min-height: 48px;
+shape.notification-icon {
+  color: @surface_container;
 }
 
 .notification-badge {
@@ -417,8 +429,13 @@ levelbar block.empty {
   padding: 24px;
 }
 
-.empty-icon {
-  font-size: 32px;
+shape.empty-icon {
+  color: @surface_container_highest;
+  margin-bottom: 4px;
+}
+
+shape.empty-icon label {
+  font-size: 28px;
   color: @on_surface_variant;
 }
 
@@ -465,11 +482,17 @@ passwordentry {
   box-shadow: none;
 }
 
-/* osd */
+/* osd: docked to the bottom edge */
+
+.osd-level {
+  color: @primary;
+}
 
 .osd {
-  min-width: 280px;
-  padding: 12px 18px;
+  min-width: 300px;
+  padding: 14px 22px 16px;
+  border-radius: 24px 24px 0 0;
+  border-bottom: none;
 }
 
 /* dash */
@@ -572,6 +595,10 @@ calendar > grid > label.today {
   transition: color 260ms cubic-bezier(0.2, 0, 0, 1);
 }
 
+.lyric.near {
+  color: @on_surface_variant;
+}
+
 .lyric.current {
   color: @on_surface;
 }
@@ -619,4 +646,164 @@ scrollbar slider {
 tooltip {
   background: @surface_container_highest;
   border-radius: 10px;
+}
+
+/* lock */
+
+window.octopus-lock {
+  background: @surface_container_lowest;
+}
+
+.octopus-lock .lock-date {
+  font-size: 24px;
+  font-weight: 600;
+  color: alpha(white, 0.92);
+}
+
+.octopus-lock .lock-hours,
+.octopus-lock .lock-minutes {
+  font-size: 200px;
+  font-weight: 700;
+  letter-spacing: -8px;
+  color: white;
+}
+
+.octopus-lock .lock-hours {
+  margin-top: -24px;
+}
+
+.octopus-lock .lock-minutes {
+  color: alpha(white, 0.55);
+  margin-top: -72px;
+}
+
+.octopus-lock .lock-clock.compact .lock-hours,
+.octopus-lock .lock-clock.compact .lock-minutes {
+  font-size: 104px;
+  letter-spacing: -4px;
+}
+
+.octopus-lock .lock-clock.compact .lock-hours {
+  margin-top: -12px;
+}
+
+.octopus-lock .lock-clock.compact .lock-minutes {
+  margin-top: -38px;
+}
+
+.octopus-lock .lock-clock.compact .lock-date {
+  font-size: 18px;
+}
+
+.octopus-lock .media-title,
+.octopus-lock .media-artist,
+.octopus-lock .media-idle label {
+  color: white;
+}
+
+.octopus-lock .media-artist {
+  color: alpha(white, 0.7);
+}
+
+.octopus-lock .wave {
+  color: white;
+}
+
+.octopus-lock .media-controls button {
+  background: alpha(white, 0.12);
+}
+
+.octopus-lock .media-controls button.media-play {
+  background: none;
+}
+
+.octopus-lock .lyric {
+  font-size: 26px;
+  font-weight: 700;
+  color: alpha(white, 0.22);
+}
+
+.octopus-lock .lyric.near {
+  color: alpha(white, 0.45);
+}
+
+.octopus-lock .lyric.current {
+  color: white;
+}
+
+.octopus-lock .plain .lyric {
+  font-size: 18px;
+  color: alpha(white, 0.75);
+}
+
+.octopus-lock .lyrics label.dim {
+  color: alpha(white, 0.6);
+}
+
+.lock-account {
+  background: alpha(@surface_container, 0.72);
+  border: 1px solid alpha(white, 0.08);
+  border-radius: 999px;
+  padding: 6px 6px 6px 8px;
+  min-width: 340px;
+  transition: border-color 200ms ease;
+}
+
+.shake .lock-account {
+  border-color: @error;
+}
+
+.lock-account passwordentry {
+  background: none;
+  font-size: 15px;
+}
+
+shape.lock-avatar {
+  color: @primary_container;
+}
+
+shape.lock-avatar label {
+  color: @on_primary_container;
+}
+
+.lock-go {
+  padding: 0;
+  background: none;
+}
+
+.lock-go shape {
+  color: @primary;
+}
+
+.lock-go shape label {
+  color: @on_primary;
+}
+
+.lock-status {
+  color: alpha(white, 0.8);
+  font-size: 12px;
+}
+
+.lock-power button {
+  background: alpha(@surface_container, 0.6);
+  padding: 10px;
+}
+
+.lock-power .icon {
+  color: white;
+}
+
+.lock-battery levelbar trough {
+  border-radius: 6px;
+  min-width: 20px;
+  background: alpha(white, 0.18);
+}
+
+.lock-battery levelbar block.filled {
+  background: white;
+  border-radius: 6px;
+}
+
+.lock-battery levelbar.charging block.filled {
+  background: @tertiary;
 }

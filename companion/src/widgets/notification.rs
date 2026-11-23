@@ -6,6 +6,7 @@ use gtk::prelude::*;
 use crate::icons;
 use crate::services::notifications::{Notification, Notifications};
 use crate::widgets::art;
+use crate::widgets::shape::{Kind, Shape};
 
 /// One notification: the sender's picture when there is one (with the app
 /// icon as a badge), else the app icon.
@@ -112,22 +113,19 @@ pub fn card(
 fn avatar(n: &Notification) -> gtk::Widget {
     let texture = n.image.as_ref().and_then(art::texture);
     let Some(texture) = texture else {
-        let holder = gtk::Box::new(gtk::Orientation::Vertical, 0);
-        holder.add_css_class("notification-icon");
-        holder.set_valign(gtk::Align::Start);
-        let icon = art::app_icon(&n.app_icon, 28);
-        icon.set_vexpand(true);
-        holder.append(&icon);
-        return holder.upcast();
+        let icon = art::app_icon(&n.app_icon, 26);
+        let shape = Shape::new(Kind::Cookie6, 48, true, Some(&icon));
+        shape.add_css_class("notification-icon");
+        shape.set_valign(gtk::Align::Start);
+        return shape.upcast();
     };
 
     let overlay = gtk::Overlay::new();
     overlay.set_valign(gtk::Align::Start);
     let picture = gtk::Image::from_paintable(Some(&texture));
     picture.set_pixel_size(48);
-    picture.add_css_class("notification-avatar");
-    picture.set_overflow(gtk::Overflow::Hidden);
-    overlay.set_child(Some(&picture));
+    let avatar = Shape::new(Kind::Circle, 48, false, Some(&picture));
+    overlay.set_child(Some(&avatar));
     if !n.app_icon.is_empty() {
         let badge = art::app_icon(&n.app_icon, 16);
         badge.add_css_class("notification-badge");
@@ -147,7 +145,12 @@ pub fn list(service: &Rc<Notifications>) -> gtk::Stack {
     let empty = gtk::Box::new(gtk::Orientation::Vertical, 8);
     empty.add_css_class("empty");
     empty.set_valign(gtk::Align::Center);
-    let icon = icons::icon("notifications_off");
+    let icon = Shape::new(
+        Kind::Sunny,
+        64,
+        true,
+        Some(&icons::icon("notifications_off")),
+    );
     icon.add_css_class("empty-icon");
     let label = gtk::Label::new(Some("tudo em dia"));
     empty.append(&icon);

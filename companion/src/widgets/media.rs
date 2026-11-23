@@ -1,28 +1,29 @@
 use std::rc::Rc;
 
-use gtk::glib;
 use gtk::pango;
 use gtk::prelude::*;
 
 use crate::icons;
+use crate::services::cava::Cava;
 use crate::services::media::Media;
 use crate::widgets::art;
+use crate::widgets::shape::{Kind, Shape};
+use crate::widgets::wave::Wave;
 
 pub enum Size {
     Card,
     Hero,
 }
 
-/// Cover, title, artist, transport and a seekable progress bar. Hidden
-/// (with a placeholder) when nothing is playing.
-pub fn player(media: &Rc<Media>, size: Size) -> gtk::Stack {
+/// Cover, title, artist, transport and the wave timeline. A placeholder
+/// takes its place when nothing is playing. With `cava`, a thin visualizer
+/// runs along the card's bottom edge while music plays.
+pub fn player(media: &Rc<Media>, size: Size, cava: Option<&Rc<Cava>>) -> gtk::Overlay {
     let hero = matches!(size, Size::Hero);
     let stack = gtk::Stack::new();
     stack.set_transition_type(gtk::StackTransitionType::Crossfade);
     stack.set_vhomogeneous(false);
     stack.set_interpolate_size(true);
-    stack.add_css_class("media");
-    stack.add_css_class(if hero { "media-hero" } else { "media-card" });
 
     let idle = gtk::Box::new(gtk::Orientation::Horizontal, 12);
     idle.add_css_class("media-idle");
@@ -38,11 +39,21 @@ pub fn player(media: &Rc<Media>, size: Size) -> gtk::Stack {
         },
         if hero { 16 } else { 14 },
     );
-    let (cover, picture, _) = art::frame("media-art", if hero { 240 } else { 88 }, "music_note");
-    if hero {
-        cover.set_halign(gtk::Align::Center);
-    }
-    root.append(&cover);
+    let (cover, picture, _) = art::frame(
+        if hero { "media-art-hero" } else { "media-art" },
+        if hero { 240 } else { 84 },
+        "music_note",
+    );
+    let spinner = if hero {
+        cover.remove_css_class("media-art-hero");
+        let shape = Shape::new(Kind::Cookie9, 240, false, Some(&cover));
+        shape.add_css_class("media-art-hero");
+        root.append(&shape);
+        Some(shape)
+    } else {
+        root.append(&cover);
+        None
+    };
 
     let side = gtk::Box::new(gtk::Orientation::Vertical, 4);
     side.set_hexpand(true);
@@ -58,10 +69,8 @@ pub fn player(media: &Rc<Media>, size: Size) -> gtk::Stack {
         side.append(label);
     }
 
-    let progress = gtk::Scale::with_range(gtk::Orientation::Horizontal, 0.0, 1.0, 1.0);
-    progress.set_draw_value(false);
-    progress.add_css_class("media-progress");
-    side.append(&progress);
+    let wave = Wave::new(media);
+    side.append(&wave.area);
 
     let controls = gtk::Box::new(gtk::Orientation::Horizontal, 8);
     controls.set_halign(if hero {
@@ -71,8 +80,13 @@ pub fn player(media: &Rc<Media>, size: Size) -> gtk::Stack {
     });
     controls.add_css_class("media-controls");
     let previous = icons::button("skip_previous", "anterior");
-    let play = icons::button("play_arrow", "tocar");
+    let play_icon = icons::icon("play_arrow");
+    let play_shape = Shape::new(Kind::Circle, 40, true, Some(&play_icon));
+    play_shape.add_css_class("media-play-shape");
+    let play = gtk::Button::new();
+    play.set_child(Some(&play_shape));
     play.add_css_class("media-play");
+    play.set_tooltip_text(Some("tocar"));
     let next = icons::button("skip_next", "próxima");
     controls.append(&previous);
     controls.append(&play);
@@ -88,39 +102,56 @@ pub fn player(media: &Rc<Media>, size: Size) -> gtk::Stack {
         play.connect_clicked(move |_| m.play_pause());
         let m = media.clone();
         next.connect_clicked(move |_| m.next());
-        let m = media.clone();
-        progress.connect_change_value(move |_, _, value| {
-            m.seek(value);
-            glib::Propagation::Proceed
-        });
     }
 
+    let overlay = gtk::Overlay::new();
+    overlay.add_css_class("media");
+    overlay.add_css_class(if hero { "media-hero" } else { "media-card" });
+    overlay.set_child(Some(&stack));
+
+    let bars = cava.map(|cava| {
+        let bars = crate::widgets::cava::bars(cava);
+        bars.add_css_class("media-cava");
+        bars.set_content_height(10);
+        bars.set_valign(gtk::Align::End);
+        bars.set_hexpand(true);
+        bars.set_can_target(false);
+        overlay.add_overlay(&bars);
+        bars
+    });
+
     {
-        let progress = progress.clone();
         let stack = stack.clone();
+        let wave = wave.clone();
         media.track.subscribe(move |track| {
+            let _ = &wave;
             let Some(t) = track else {
                 stack.set_visible_child_name("idle");
+                if let Some(bars) = &bars {
+                    bars.set_visible(false);
+                }
                 return;
             };
             stack.set_visible_child_name("player");
             title.set_label(&t.title);
             artist.set_label(&t.artist);
             artist.set_visible(!t.artist.is_empty());
-            icons::set(&play, if t.playing { "pause" } else { "play_arrow" });
-            if t.playing {
-                play.add_css_class("playing");
+            play_icon.set_label(if t.playing { "pause" } else { "play_arrow" });
+            play_shape.morph(if t.playing {
+                Kind::Cookie9
             } else {
-                play.remove_css_class("playing");
+                Kind::Circle
+            });
+            if let Some(shape) = &spinner {
+                shape.set_spinning(t.playing);
+            }
+            if let Some(bars) = &bars {
+                bars.set_visible(t.playing);
             }
             art::set_file(&picture, t.art.as_deref());
-            progress.set_range(0.0, t.length.max(1.0));
-            progress.set_visible(t.length > 0.0);
+            wave.area.set_visible(t.length > 0.0);
         });
     }
-    media
-        .position
-        .subscribe(move |seconds| progress.set_value(*seconds));
 
-    stack
+    overlay
 }

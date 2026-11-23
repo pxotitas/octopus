@@ -161,7 +161,7 @@ fn overview(s: &Rc<Services>) -> gtk::Box {
     calendar.add_css_class("dash-calendar");
     left.append(&calendar);
 
-    let player = media::player(&s.media, media::Size::Card);
+    let player = media::player(&s.media, media::Size::Card, None);
     player.add_css_class("card");
     left.append(&player);
     root.append(&left);
@@ -186,7 +186,7 @@ fn media_tab(s: &Rc<Services>, lyrics: &Rc<LyricsView>) -> gtk::Box {
     root.add_css_class("dash-media");
     root.set_size_request(-1, 520);
 
-    let player = media::player(&s.media, media::Size::Hero);
+    let player = media::player(&s.media, media::Size::Hero, None);
     player.add_css_class("card");
     player.set_size_request(320, -1);
     root.append(&player);
