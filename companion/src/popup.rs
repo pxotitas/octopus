@@ -74,7 +74,7 @@ impl Popup {
             Place::Center => Origin::Bottom,
             Place::BottomEdge => {
                 window.set_anchor(Edge::Bottom, true);
-                window.set_margin(Edge::Bottom, -4);
+                window.set_margin(Edge::Bottom, -6);
                 Origin::BottomEdge
             }
         };
@@ -94,6 +94,7 @@ impl Popup {
 
         if interactive {
             let keys = gtk::EventControllerKey::new();
+            keys.set_propagation_phase(gtk::PropagationPhase::Capture);
             let weak = Rc::downgrade(&popup);
             keys.connect_key_pressed(move |_, key, _, _| {
                 if key == gdk::Key::Escape {

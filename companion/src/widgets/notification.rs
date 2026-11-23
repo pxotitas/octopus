@@ -1,3 +1,4 @@
+use crate::i18n::t;
 use std::rc::Rc;
 
 use gtk::pango;
@@ -36,7 +37,7 @@ pub fn card(
     app.set_xalign(0.0);
     app.set_hexpand(true);
     app.set_ellipsize(pango::EllipsizeMode::End);
-    let close = icons::button("close", "dispensar");
+    let close = icons::button("close", t("dispensar"));
     close.add_css_class("notification-close");
     header.append(&app);
     header.append(&close);
@@ -152,7 +153,7 @@ pub fn list(service: &Rc<Notifications>) -> gtk::Stack {
         Some(&icons::icon("notifications_off")),
     );
     icon.add_css_class("empty-icon");
-    let label = gtk::Label::new(Some("tudo em dia"));
+    let label = gtk::Label::new(Some(t("tudo em dia")));
     empty.append(&icon);
     empty.append(&label);
 

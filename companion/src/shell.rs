@@ -32,6 +32,7 @@ impl Shell {
     pub fn new(app: &gtk::Application) -> Rc<Self> {
         crate::theme::install();
         let config = config::load();
+        crate::i18n::init(&config.language);
         crate::bar::ensure(&config.bar);
         let services = Services::new(&config);
 
@@ -104,6 +105,11 @@ impl Shell {
                 "tray",
                 Popup::new(app, "tray", Place::BarBottom, true, &tray.root),
             );
+            let emoji = panels::emoji::Emoji::new(close.clone());
+            popups.insert(
+                "emoji",
+                Popup::new(app, "emoji", Place::Center, true, &emoji.root),
+            );
             let clipboard = Clipboard::new(close.clone());
             popups.insert(
                 "clipboard",
@@ -145,6 +151,7 @@ impl Shell {
                 let dash = dash.clone();
                 let tray = tray.clone();
                 let clipboard = clipboard.clone();
+                let emoji = emoji.clone();
                 let name = *name;
                 popup.on_visibility(move |open| {
                     match name {
@@ -178,7 +185,16 @@ impl Shell {
                         "bluetooth" if open => s.bluetooth.refresh(),
                         "tray" if open => tray.reset(),
                         "clipboard" if open => clipboard.load(),
+                        "clipboard" => clipboard.unload(),
+                        "emoji" if open => emoji.open(),
+                        "emoji" => emoji.unload(),
                         _ => {}
+                    }
+                    if !open {
+                        crate::memory::release_soon();
+                    }
+                    if name == "tray" {
+                        exec::spawn("pkill", &["-RTMIN+8", "-x", "waybar"]);
                     }
                     if let Some(shell) = weak.upgrade() {
                         shell.sync_backdrop();
@@ -262,7 +278,13 @@ impl Shell {
                 if count == 0 {
                     r#"{"text": ""}"#.to_owned()
                 } else {
-                    format!(r#"{{"text": "apps", "tooltip": "{count} na bandeja"}}"#)
+                    let open = self.popups.get("tray").is_some_and(|p| p.is_open());
+                    let glyph = match (open, self.config.borrow().bar.right()) {
+                        (false, _) => "keyboard_arrow_down",
+                        (true, false) => "keyboard_arrow_right",
+                        (true, true) => "keyboard_arrow_left",
+                    };
+                    serde_json::json!({"text": glyph, "tooltip": crate::i18n::tf("{} na bandeja", count)}).to_string()
                 }
             }
             ["open", "wallpapers"] => {

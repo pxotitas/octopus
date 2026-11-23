@@ -1,9 +1,11 @@
 mod bar;
 mod config;
 mod exec;
+mod i18n;
 mod icons;
 mod ipc;
 mod lock;
+mod memory;
 mod panels;
 mod popup;
 mod services;
@@ -27,6 +29,7 @@ const USAGE: &str = "usage: octopus [daemon]
        octopus brightness <up|down>
        octopus kbd <up|down>
        octopus dnd
+       octopus luma <image>
        octopus reload";
 
 fn main() -> glib::ExitCode {
@@ -37,6 +40,13 @@ fn main() -> glib::ExitCode {
             println!("{USAGE}");
             glib::ExitCode::SUCCESS
         }
+        Some("luma") => match args.get(1).and_then(|p| services::theme::luma(p)) {
+            Some(l) => {
+                println!("{}", if l < 0.5 { "dark" } else { "light" });
+                glib::ExitCode::SUCCESS
+            }
+            None => glib::ExitCode::FAILURE,
+        },
         Some(_) => match ipc::send(&args.join(" ")) {
             Ok(reply) => {
                 if !reply.is_empty() {
@@ -53,6 +63,7 @@ fn main() -> glib::ExitCode {
 }
 
 fn run_daemon() -> glib::ExitCode {
+    memory::tune();
     let app = gtk::Application::builder()
         .application_id(APP_ID)
         .flags(gio::ApplicationFlags::NON_UNIQUE)

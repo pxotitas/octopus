@@ -1,3 +1,4 @@
+use crate::i18n::t;
 use std::rc::Rc;
 
 use gtk::pango;
@@ -15,14 +16,14 @@ pub fn build(audio: &Rc<Audio>) -> gtk::Box {
 
     for kind in [Kind::Sink, Kind::Source] {
         let (title, icon) = match kind {
-            Kind::Sink => ("saída", "volume_up"),
-            Kind::Source => ("microfone", "mic"),
+            Kind::Sink => (t("saída"), "volume_up"),
+            Kind::Source => (t("microfone"), "mic"),
         };
         root.append(&widgets::heading(title, None));
 
         let slider = {
             let audio = audio.clone();
-            Slider::new(icon, "silenciar", move |v| audio.set_volume(kind, v))
+            Slider::new(icon, t("silenciar"), move |v| audio.set_volume(kind, v))
         };
         {
             let audio = audio.clone();
@@ -62,7 +63,7 @@ pub fn build(audio: &Rc<Audio>) -> gtk::Box {
         });
     }
 
-    let mixer = gtk::Button::with_label("mixer");
+    let mixer = gtk::Button::with_label(t("mixer"));
     mixer.add_css_class("pill");
     mixer.set_halign(gtk::Align::End);
     mixer.connect_clicked(|_| crate::exec::spawn("pavucontrol", &[]));

@@ -1,3 +1,4 @@
+use crate::i18n::t;
 use std::rc::Rc;
 
 use gtk::pango;
@@ -28,7 +29,7 @@ pub fn player(media: &Rc<Media>, size: Size, cava: Option<&Rc<Cava>>) -> gtk::Ov
     let idle = gtk::Box::new(gtk::Orientation::Horizontal, 12);
     idle.add_css_class("media-idle");
     idle.append(&icons::icon("music_off"));
-    idle.append(&gtk::Label::new(Some("nada tocando")));
+    idle.append(&gtk::Label::new(Some(t("nada tocando"))));
     stack.add_named(&idle, Some("idle"));
 
     let root = gtk::Box::new(
@@ -79,15 +80,15 @@ pub fn player(media: &Rc<Media>, size: Size, cava: Option<&Rc<Cava>>) -> gtk::Ov
         gtk::Align::Start
     });
     controls.add_css_class("media-controls");
-    let previous = icons::button("skip_previous", "anterior");
+    let previous = icons::button("skip_previous", t("anterior"));
     let play_icon = icons::icon("play_arrow");
     let play_shape = Shape::new(Kind::Circle, 40, true, Some(&play_icon));
     play_shape.add_css_class("media-play-shape");
     let play = gtk::Button::new();
     play.set_child(Some(&play_shape));
     play.add_css_class("media-play");
-    play.set_tooltip_text(Some("tocar"));
-    let next = icons::button("skip_next", "próxima");
+    play.set_tooltip_text(Some(t("tocar")));
+    let next = icons::button("skip_next", t("próxima"));
     controls.append(&previous);
     controls.append(&play);
     controls.append(&next);

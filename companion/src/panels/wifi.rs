@@ -1,3 +1,4 @@
+use crate::i18n::t;
 use std::cell::RefCell;
 use std::rc::Rc;
 
@@ -13,7 +14,7 @@ pub fn build(wifi: &Rc<Wifi>) -> gtk::Box {
     root.add_css_class("surface");
     root.add_css_class("menu");
 
-    let (header, switch) = widgets::switch_header("wi-fi");
+    let (header, switch) = widgets::switch_header(t("wi-fi"));
     root.append(&header);
 
     let list = gtk::Box::new(gtk::Orientation::Vertical, 4);
@@ -33,7 +34,7 @@ pub fn build(wifi: &Rc<Wifi>) -> gtk::Box {
     prompt.set_xalign(0.0);
     let entry = gtk::PasswordEntry::new();
     entry.set_show_peek_icon(true);
-    let join = gtk::Button::with_label("conectar");
+    let join = gtk::Button::with_label(t("conectar"));
     join.add_css_class("pill");
     join.add_css_class("filled");
     form.append(&prompt);
@@ -50,9 +51,9 @@ pub fn build(wifi: &Rc<Wifi>) -> gtk::Box {
 
     let footer = gtk::Box::new(gtk::Orientation::Horizontal, 8);
     footer.add_css_class("menu-footer");
-    let scan = gtk::Button::with_label("procurar redes");
+    let scan = gtk::Button::with_label(t("procurar redes"));
     scan.add_css_class("pill");
-    let settings = gtk::Button::with_label("configurações");
+    let settings = gtk::Button::with_label(t("configurações"));
     settings.add_css_class("pill");
     settings.set_hexpand(true);
     settings.set_halign(gtk::Align::End);
@@ -117,7 +118,7 @@ pub fn build(wifi: &Rc<Wifi>) -> gtk::Box {
         status.set_label(state.error.as_deref().unwrap_or(""));
         status.set_visible(state.error.is_some() || !state.enabled);
         if !state.enabled {
-            status.set_label("o wi-fi está desligado");
+            status.set_label(t("o wi-fi está desligado"));
         }
     });
 
@@ -148,9 +149,9 @@ fn row(
     name.set_ellipsize(pango::EllipsizeMode::End);
     text.append(&name);
     let detail = match (busy, network.active, network.known) {
-        (true, _, _) => Some("conectando…"),
-        (_, true, _) => Some("conectada · toque pra desconectar"),
-        (_, _, true) => Some("salva"),
+        (true, _, _) => Some(t("conectando…")),
+        (_, true, _) => Some(t("conectada · toque pra desconectar")),
+        (_, _, true) => Some(t("salva")),
         _ => None,
     };
     if let Some(detail) = detail {
@@ -179,7 +180,7 @@ fn row(
         if network.active {
             wifi.disconnect(&network.ssid);
         } else if network.secure && !network.known {
-            prompt.set_label(&format!("senha de {}", network.ssid));
+            prompt.set_label(&crate::i18n::tf("senha de {}", &network.ssid));
             *pending.borrow_mut() = Some(network.ssid.clone());
             password.set_reveal_child(true);
             entry.grab_focus();

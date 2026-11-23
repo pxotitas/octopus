@@ -1,3 +1,4 @@
+use crate::i18n::t;
 use std::cell::{Cell, RefCell};
 use std::rc::Rc;
 
@@ -97,11 +98,11 @@ impl LyricsView {
         let Some(track) = track.cloned() else {
             self.loaded_for.borrow_mut().clear();
             self.lyrics.borrow_mut().take();
-            self.say("nada tocando");
+            self.say(t("nada tocando"));
             return;
         };
         if !self.enabled {
-            self.say("letras desligadas no octopus.toml");
+            self.say(t("letras desligadas no octopus.toml"));
             return;
         }
         let key = format!("{}\n{}", track.artist, track.title);
@@ -111,7 +112,7 @@ impl LyricsView {
         *self.loaded_for.borrow_mut() = key.clone();
         self.lyrics.borrow_mut().take();
         self.current.set(None);
-        self.say("procurando a letra…");
+        self.say(t("procurando a letra…"));
 
         let weak = Rc::downgrade(self);
         glib::spawn_future_local(async move {
@@ -127,12 +128,12 @@ impl LyricsView {
     fn render(&self, result: Option<Lyrics>) {
         widgets::clear(&self.column);
         let lyrics = match result {
-            Some(l) if l.available && l.instrumental => return self.say("instrumental"),
+            Some(l) if l.available && l.instrumental => return self.say(t("instrumental")),
             Some(l) if l.available && !l.lines.is_empty() => l,
-            Some(_) => return self.say("sem letra pra essa música"),
+            Some(_) => return self.say(t("sem letra pra essa música")),
             None => {
                 self.loaded_for.borrow_mut().clear();
-                return self.say("não deu pra buscar a letra");
+                return self.say(t("não deu pra buscar a letra"));
             }
         };
         for line in &lyrics.lines {

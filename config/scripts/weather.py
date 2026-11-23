@@ -20,12 +20,14 @@ Any failure is reported as unavailable, never as a guessed value.
 """
 
 import json
+import os
 import subprocess
 import sys
 import time
 import urllib.parse
 
-ENDPOINT = "https://wttr.in/{place}?format=j1&lang=pt"
+LANG = os.environ.get("OCTOPUS_LANG", "pt")
+ENDPOINT = "https://wttr.in/{place}?format=j1&lang=" + LANG
 TIMEOUT = 12
 
 
@@ -61,7 +63,7 @@ def is_day(hour):
 
 def description(condition):
     """The Portuguese description when wttr.in has one."""
-    for key in ("lang_pt", "weatherDesc"):
+    for key in (f"lang_{LANG}", "weatherDesc"):
         values = condition.get(key) or []
         if values and values[0].get("value", "").strip():
             return values[0]["value"].strip()

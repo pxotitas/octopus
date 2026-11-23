@@ -2,14 +2,29 @@ use serde::{Deserialize, Serialize};
 
 use crate::exec;
 
-#[derive(Debug, Clone, Deserialize, Serialize, Default)]
+#[derive(Debug, Clone, Deserialize, Serialize)]
 #[serde(default)]
 pub struct Config {
+    /// "auto" follows LANG; "pt" or "en".
+    pub language: String,
     pub bar: Bar,
     pub weather: Weather,
     pub brightness: Brightness,
     pub notifications: Notifications,
     pub media: Media,
+}
+
+impl Default for Config {
+    fn default() -> Self {
+        Self {
+            language: "auto".into(),
+            bar: Bar::default(),
+            weather: Weather::default(),
+            brightness: Brightness::default(),
+            notifications: Notifications::default(),
+            media: Media::default(),
+        }
+    }
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize)]

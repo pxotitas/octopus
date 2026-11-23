@@ -1,3 +1,4 @@
+use crate::i18n::t;
 use std::rc::Rc;
 
 use gtk::prelude::*;
@@ -37,9 +38,9 @@ impl Dash {
         tabs.set_homogeneous(true);
         let mut group: Option<gtk::ToggleButton> = None;
         for (name, icon, label) in [
-            ("overview", "dashboard", "visão geral"),
-            ("media", "music_note", "mídia"),
-            ("weather", "partly_cloudy_day", "clima"),
+            ("overview", "dashboard", t("visão geral")),
+            ("media", "music_note", t("mídia")),
+            ("weather", "partly_cloudy_day", t("clima")),
         ] {
             let button = tab_button(icon, label);
             button.set_group(group.as_ref());
@@ -57,7 +58,7 @@ impl Dash {
         }
         let walls = gtk::Button::new();
         walls.add_css_class("dash-tab");
-        walls.set_child(Some(&tab_content("wallpaper", "wallpapers")));
+        walls.set_child(Some(&tab_content("wallpaper", t("wallpapers"))));
         walls.connect_clicked(move |_| wallpapers());
         tabs.append(&walls);
 
@@ -121,10 +122,7 @@ fn overview(s: &Rc<Services>) -> gtk::Box {
     clock.append(&date);
     crate::shell::every_minute(move |now| {
         time.set_label(&now.format("%H:%M").to_string());
-        date.set_label(
-            &now.format_localized("%A, %-d de %B", chrono::Locale::pt_BR)
-                .to_string(),
-        );
+        date.set_label(&crate::i18n::date(&now));
     });
 
     let weather = gtk::Box::new(gtk::Orientation::Vertical, 2);
@@ -149,7 +147,7 @@ fn overview(s: &Rc<Services>) -> gtk::Box {
             w_desc.set_label(&r.description.to_lowercase());
         } else {
             w_temp.set_label("--°");
-            w_desc.set_label("sem dados");
+            w_desc.set_label(t("sem dados"));
         }
     });
     top.append(&clock);
@@ -170,12 +168,15 @@ fn overview(s: &Rc<Services>) -> gtk::Box {
     right.add_css_class("card");
     right.set_size_request(360, -1);
     right.set_hexpand(true);
-    let clear = icons::button("clear_all", "limpar tudo");
+    let clear = icons::button("clear_all", t("limpar tudo"));
     {
         let n = s.notifications.clone();
         clear.connect_clicked(move |_| n.clear());
     }
-    right.append(&widgets::heading("notificações", Some(clear.upcast_ref())));
+    right.append(&widgets::heading(
+        t("notificações"),
+        Some(clear.upcast_ref()),
+    ));
     right.append(&notification::list(&s.notifications));
     root.append(&right);
     root
@@ -236,7 +237,7 @@ fn weather_tab(s: &Rc<Services>) -> gtk::Box {
     hours.set_homogeneous(true);
     let hours_card = gtk::Box::new(gtk::Orientation::Vertical, 10);
     hours_card.add_css_class("card");
-    hours_card.append(&widgets::heading("próximas horas", None));
+    hours_card.append(&widgets::heading(t("próximas horas"), None));
     hours_card.append(&hours);
     root.append(&hours_card);
 
@@ -247,7 +248,7 @@ fn weather_tab(s: &Rc<Services>) -> gtk::Box {
         }
         let Some(r) = reading else {
             temp.set_label("--°");
-            desc.set_label("sem dados do clima");
+            desc.set_label(t("sem dados do clima"));
             place.set_label("");
             return;
         };
@@ -276,12 +277,15 @@ fn weather_tab(s: &Rc<Services>) -> gtk::Box {
 
 fn fill_readings(grid: &gtk::Grid, r: &Reading) {
     let rows = [
-        ("thermostat", format!("sensação {}°", r.feels_like)),
-        ("humidity_percentage", format!("umidade {}%", r.humidity)),
-        ("air", format!("vento {} km/h", r.wind)),
+        ("thermostat", crate::i18n::tf("sensação {}°", r.feels_like)),
+        (
+            "humidity_percentage",
+            crate::i18n::tf("umidade {}%", r.humidity),
+        ),
+        ("air", crate::i18n::tf("vento {} km/h", r.wind)),
         (
             "arrow_downward",
-            format!("mín {}° · máx {}°", r.low, r.high),
+            crate::i18n::tf("mín {}° · máx {}°", r.low).replacen("{}", &r.high.to_string(), 1),
         ),
     ];
     for (i, (icon, text)) in rows.into_iter().enumerate() {

@@ -1,3 +1,4 @@
+use crate::i18n::t;
 use std::cell::RefCell;
 use std::rc::Rc;
 
@@ -36,7 +37,7 @@ impl Settings {
 
         let column = gtk::Box::new(gtk::Orientation::Vertical, 14);
         column.add_css_class("settings-column");
-        let title = gtk::Label::new(Some("configurações"));
+        let title = gtk::Label::new(Some(t("configurações")));
         title.add_css_class("settings-title");
         title.set_xalign(0.0);
         column.append(&title);
@@ -48,26 +49,56 @@ impl Settings {
             modules: modules.clone(),
         });
 
-        let theme = card("aparência");
+        let theme = card(t("aparência"));
         {
-            let dark = *s.theme.dark.get();
-            let t = s.theme.clone();
+            use crate::services::theme::Mode;
+            let current = match *s.theme.mode.get() {
+                Mode::Light => 0,
+                Mode::Dark => 1,
+                Mode::Auto => 2,
+            };
+            let palette = s.theme.clone();
             theme.append(&row(
-                "tema",
-                &segmented(&["claro", "escuro"], if dark { 1 } else { 0 }, move |i| {
-                    t.set_dark(i == 1)
-                }),
+                t("modo de cores"),
+                &segmented(
+                    &[t("claro"), t("escuro"), t("automático")],
+                    current,
+                    move |i| palette.set_mode([Mode::Light, Mode::Dark, Mode::Auto][i]),
+                ),
+            ));
+            let hint = gtk::Label::new(Some(t("segue o wallpaper")));
+            hint.add_css_class("dim");
+            hint.set_xalign(1.0);
+            theme.append(&hint);
+
+            let languages = ["auto", "pt", "en"];
+            let current = languages
+                .iter()
+                .position(|l| *l == config.language)
+                .unwrap_or(0);
+            let weak = Rc::downgrade(&settings);
+            theme.append(&row(
+                t("idioma"),
+                &segmented(
+                    &[t("sistema"), "português", "english"],
+                    current,
+                    move |i| {
+                        if let Some(s) = weak.upgrade() {
+                            s.draft.borrow_mut().language = languages[i].into();
+                        }
+                    },
+                ),
             ));
         }
         column.append(&theme);
 
-        let bar = card("barra");
+        let bar = card(t("barra"));
         {
             let weak = Rc::downgrade(&settings);
             let current = if config.bar.right() { 1 } else { 0 };
             bar.append(&row(
-                "posição",
-                &segmented(&["esquerda", "direita"], current, move |i| {
+                t("posição"),
+                &segmented(&[t("esquerda"), t("direita")], current, move |i| {
                     if let Some(s) = weak.upgrade() {
                         s.draft.borrow_mut().bar.position =
                             if i == 1 { "right" } else { "left" }.into();
@@ -92,20 +123,20 @@ impl Settings {
                     s.draft.borrow_mut().bar.width = w;
                 }
             });
-            bar.append(&row("largura", &holder));
+            bar.append(&row(t("largura"), &holder));
         }
         column.append(&bar);
 
-        let widgets_card = card("widgets da barra");
+        let widgets_card = card(t("widgets da barra"));
         widgets_card.append(&modules);
         column.append(&widgets_card);
         settings.rebuild_modules();
 
-        let other = card("outros");
+        let other = card(t("outros"));
         {
             let place = gtk::Entry::new();
             place.set_text(&config.weather.place);
-            place.set_placeholder_text(Some("pelo ip"));
+            place.set_placeholder_text(Some(t("pelo ip")));
             place.set_hexpand(true);
             let weak = Rc::downgrade(&settings);
             place.connect_changed(move |e| {
@@ -113,7 +144,7 @@ impl Settings {
                     s.draft.borrow_mut().weather.place = e.text().to_string();
                 }
             });
-            other.append(&row("cidade do clima", &place));
+            other.append(&row(t("cidade do clima"), &place));
 
             let seconds = gtk::SpinButton::with_range(2.0, 30.0, 1.0);
             seconds.set_value((config.notifications.timeout_ms / 1000) as f64);
@@ -123,7 +154,7 @@ impl Settings {
                     s.draft.borrow_mut().notifications.timeout_ms = spin.value() as u32 * 1000;
                 }
             });
-            other.append(&row("notificações (s)", &seconds));
+            other.append(&row(t("notificações (s)"), &seconds));
 
             let lyrics = gtk::Switch::new();
             lyrics.set_active(config.media.lyrics);
@@ -134,19 +165,19 @@ impl Settings {
                     s.draft.borrow_mut().media.lyrics = sw.is_active();
                 }
             });
-            other.append(&row("letras", &lyrics));
+            other.append(&row(t("letras"), &lyrics));
         }
         column.append(&other);
 
         let footer = gtk::Box::new(gtk::Orientation::Horizontal, 10);
-        let note = gtk::Label::new(Some(
+        let note = gtk::Label::new(Some(t(
             "clima, notificações e letras valem depois de reiniciar o octopus",
-        ));
+        )));
         note.add_css_class("dim");
         note.set_wrap(true);
         note.set_xalign(0.0);
         note.set_hexpand(true);
-        let save = gtk::Button::with_label("aplicar");
+        let save = gtk::Button::with_label(t("aplicar"));
         save.add_css_class("pill");
         save.add_css_class("filled");
         save.set_valign(gtk::Align::Center);
@@ -228,16 +259,17 @@ impl Settings {
         for (section, _, id, name) in ordered {
             let line = gtk::Box::new(gtk::Orientation::Horizontal, 6);
             line.add_css_class("settings-module");
-            let label = gtk::Label::new(Some(name));
+            let label = gtk::Label::new(Some(t(name)));
             label.set_xalign(0.0);
             label.set_hexpand(true);
             line.append(&label);
 
-            let up = icons::button("arrow_upward", "subir");
-            let down = icons::button("arrow_downward", "descer");
+            let up = icons::button("arrow_upward", t("subir"));
+            let down = icons::button("arrow_downward", t("descer"));
             up.set_sensitive(section < 3);
             down.set_sensitive(section < 3);
-            let where_ = gtk::DropDown::from_strings(&SECTIONS);
+            let names: Vec<&str> = SECTIONS.iter().map(|s| t(s)).collect();
+            let where_ = gtk::DropDown::from_strings(&names);
             where_.set_selected(section as u32);
             line.append(&up);
             line.append(&down);

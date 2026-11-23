@@ -1,3 +1,4 @@
+use crate::i18n::t;
 use std::cell::RefCell;
 use std::rc::Rc;
 use std::time::Duration;
@@ -17,19 +18,19 @@ pub fn build(run: Rc<dyn Fn(&str)>) -> gtk::Box {
 
     let row = gtk::Box::new(gtk::Orientation::Horizontal, 10);
     row.set_homogeneous(true);
-    let hint = gtk::Label::new(Some("energia"));
+    let hint = gtk::Label::new(Some(t("energia")));
     hint.add_css_class("power-hint");
 
     let armed: Rc<RefCell<Option<(gtk::Button, glib::SourceId)>>> = Rc::default();
     let actions = [
-        ("lock", "lock", "bloquear", Kind::Cookie9, false),
-        ("suspend", "bedtime", "suspender", Kind::Clover4, false),
-        ("logout", "logout", "sair", Kind::Cookie6, true),
-        ("reboot", "restart_alt", "reiniciar", Kind::Sunny, true),
+        ("lock", "lock", t("bloquear"), Kind::Cookie9, false),
+        ("suspend", "bedtime", t("suspender"), Kind::Clover4, false),
+        ("logout", "logout", t("sair"), Kind::Cookie6, true),
+        ("reboot", "restart_alt", t("reiniciar"), Kind::Sunny, true),
         (
             "poweroff",
             "power_settings_new",
-            "desligar",
+            t("desligar"),
             Kind::Cookie9,
             true,
         ),
@@ -51,18 +52,18 @@ pub fn build(run: Rc<dyn Fn(&str)>) -> gtk::Box {
                 timer.remove();
                 b.remove_css_class("armed");
             }
-            hint.set_label("energia");
+            hint.set_label(t("energia"));
             if !confirm || again {
                 run(action);
                 return;
             }
             button.add_css_class("armed");
-            hint.set_label(&format!("aperte de novo pra {label}"));
+            hint.set_label(&crate::i18n::tf("aperte de novo pra {}", label));
             let (slot, b, hint) = (armed.clone(), button.clone(), hint.clone());
             let timer = glib::timeout_add_local_once(Duration::from_secs(3), move || {
                 slot.borrow_mut().take();
                 b.remove_css_class("armed");
-                hint.set_label("energia");
+                hint.set_label(t("energia"));
             });
             *armed.borrow_mut() = Some((button.clone(), timer));
         });

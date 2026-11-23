@@ -1,3 +1,4 @@
+use crate::i18n::t;
 use std::rc::Rc;
 
 use gtk::pango;
@@ -32,7 +33,7 @@ pub fn build(bt: &Rc<Bluetooth>) -> gtk::Box {
 
     let footer = gtk::Box::new(gtk::Orientation::Horizontal, 8);
     footer.add_css_class("menu-footer");
-    let scan = gtk::Button::with_label("procurar dispositivos");
+    let scan = gtk::Button::with_label(t("procurar dispositivos"));
     scan.add_css_class("pill");
     footer.append(&scan);
     root.append(&footer);
@@ -61,9 +62,9 @@ pub fn build(bt: &Rc<Bluetooth>) -> gtk::Box {
             switch.unblock_signal(&handler);
         }
         scan.set_label(if state.scanning {
-            "procurando…"
+            t("procurando…")
         } else {
-            "procurar dispositivos"
+            t("procurar dispositivos")
         });
         scan.set_sensitive(!state.scanning);
         widgets::clear(&list);
@@ -75,9 +76,9 @@ pub fn build(bt: &Rc<Bluetooth>) -> gtk::Box {
             list.append(&row(device, busy, &bt));
         }
         let message = if !state.available {
-            Some("nenhum adaptador bluetooth")
+            Some(t("nenhum adaptador bluetooth"))
         } else if !state.powered {
-            Some("o bluetooth está desligado")
+            Some(t("o bluetooth está desligado"))
         } else {
             state.error.as_deref()
         };
@@ -107,10 +108,10 @@ fn row(device: &Device, busy: bool, bt: &Rc<Bluetooth>) -> gtk::Button {
     name.set_ellipsize(pango::EllipsizeMode::End);
     text.append(&name);
     let detail = match (busy, device.connected, device.paired) {
-        (true, _, _) => "aguarde…",
-        (_, true, _) => "conectado",
-        (_, _, true) => "pareado",
-        _ => "toque pra parear",
+        (true, _, _) => t("aguarde…"),
+        (_, true, _) => t("conectado"),
+        (_, _, true) => t("pareado"),
+        _ => t("toque pra parear"),
     };
     let label = gtk::Label::new(Some(detail));
     label.add_css_class("dim");
