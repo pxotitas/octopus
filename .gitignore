@@ -2,3 +2,4 @@ companion/target/
 waybar/colors.css
 config/colors.css
 __pycache__/
+waybar/layout.css

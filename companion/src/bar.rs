@@ -1,0 +1,222 @@
+use serde_json::{json, Map, Value};
+
+use crate::config::Bar;
+use crate::exec;
+
+/// The bar's modules by the names the settings use.
+pub const MODULES: [(&str, &str); 6] = [
+    ("logo", "logo do arch"),
+    ("workspaces", "workspaces"),
+    ("clock", "relógio"),
+    ("tray", "bandeja"),
+    ("battery", "bateria"),
+    ("controls", "controles"),
+];
+
+fn waybar_name(module: &str) -> Option<&'static str> {
+    Some(match module {
+        "logo" => "custom/launcher",
+        "workspaces" => "niri/workspaces",
+        "clock" => "clock",
+        "tray" => "custom/tray",
+        "battery" => "custom/battery",
+        "controls" => "group/controls",
+        _ => return None,
+    })
+}
+
+fn icon_module(format: &str, tooltip: &str, click: &str) -> Value {
+    json!({ "icon-size": 0, "icon-spacing": 0, "format": format, "tooltip-format": tooltip, "on-click": click })
+}
+
+/// Waybar's config, generated from octopus.toml so the settings window can
+/// move things around.
+pub fn waybar_config(bar: &Bar) -> String {
+    let names = |list: &[String]| -> Vec<Value> {
+        list.iter()
+            .filter_map(|m| waybar_name(m))
+            .map(Value::from)
+            .collect()
+    };
+    let side_margin = if bar.position == "right" {
+        "margin-right"
+    } else {
+        "margin-left"
+    };
+    let mut config = Map::new();
+    config.insert("layer".into(), json!("top"));
+    config.insert("position".into(), json!(bar.position));
+    config.insert("width".into(), json!(bar.width));
+    config.insert("margin-top".into(), json!(8));
+    config.insert("margin-bottom".into(), json!(8));
+    config.insert(side_margin.into(), json!(8));
+    config.insert("spacing".into(), json!(4));
+    config.insert("reload_style_on_change".into(), json!(true));
+    config.insert("modules-left".into(), Value::Array(names(&bar.top)));
+    config.insert("modules-center".into(), Value::Array(names(&bar.center)));
+    config.insert("modules-right".into(), Value::Array(names(&bar.bottom)));
+
+    let mut launcher = icon_module("\u{f303}", "", "~/.config/octopus/scripts/launcher.sh");
+    launcher["tooltip"] = json!(false);
+    config.insert("custom/launcher".into(), launcher);
+    config.insert(
+        "niri/workspaces".into(),
+        json!({ "format": "{icon}", "format-icons": { "default": "", "active": "" } }),
+    );
+    config.insert(
+        "clock".into(),
+        json!({
+            "format": "{:%H\n%M}",
+            "justify": "center",
+            "locale": "pt_BR.UTF-8",
+            "tooltip-format": "{:%A, %d de %B}",
+            "on-click": "octopus toggle dash"
+        }),
+    );
+    config.insert(
+        "custom/tray".into(),
+        json!({
+            "icon-size": 0,
+            "icon-spacing": 0,
+            "exec": "octopus tray-status",
+            "return-type": "json",
+            "signal": 8,
+            "interval": "once",
+            "format": "{}",
+            "on-click": "octopus toggle tray"
+        }),
+    );
+    config.insert(
+        "custom/battery".into(),
+        json!({
+            "icon-size": 0,
+            "icon-spacing": 0,
+            "exec": "~/.config/octopus/scripts/battery.sh",
+            "return-type": "json",
+            "interval": 20,
+            "signal": 9,
+            "format": "{}"
+        }),
+    );
+    config.insert(
+        "group/controls".into(),
+        json!({
+            "orientation": "inherit",
+            "drawer": {
+                "transition-duration": 320,
+                "children-class": "control-child",
+                "transition-left-to-right": false
+            },
+            "modules": ["custom/control-center", "network", "bluetooth", "wireplumber", "custom/power"]
+        }),
+    );
+    config.insert(
+        "custom/control-center".into(),
+        icon_module(
+            "tune",
+            "central de controle",
+            "octopus toggle control-center",
+        ),
+    );
+    config.insert(
+        "network".into(),
+        json!({
+            "format-wifi": "{icon}",
+            "format-ethernet": "lan",
+            "format-disconnected": "wifi_off",
+            "format-disabled": "wifi_off",
+            "format-icons": ["network_wifi_1_bar", "network_wifi_2_bar", "network_wifi_3_bar", "signal_wifi_4_bar"],
+            "tooltip-format-wifi": "{essid} · {signalStrength}%",
+            "tooltip-format-disconnected": "desconectado",
+            "on-click": "octopus toggle wifi"
+        }),
+    );
+    config.insert(
+        "bluetooth".into(),
+        json!({
+            "format": "bluetooth",
+            "format-disabled": "bluetooth_disabled",
+            "format-off": "bluetooth_disabled",
+            "format-connected": "bluetooth_connected",
+            "tooltip-format-connected": "{device_alias}",
+            "on-click": "octopus toggle bluetooth"
+        }),
+    );
+    config.insert(
+        "wireplumber".into(),
+        json!({
+            "format": "{icon}",
+            "format-muted": "volume_off",
+            "format-icons": ["volume_mute", "volume_down", "volume_up"],
+            "tooltip-format": "{volume}% · {node_name}",
+            "on-click": "octopus toggle audio",
+            "scroll-step": 5
+        }),
+    );
+    config.insert(
+        "custom/power".into(),
+        icon_module("power_settings_new", "energia", "octopus toggle power"),
+    );
+
+    let mut text = String::from(
+        "// Generated by octopus from octopus.toml [bar]; change it in `octopus settings`.\n",
+    );
+    text.push_str(&serde_json::to_string_pretty(&Value::Object(config)).unwrap_or_default());
+    text.push('\n');
+    text
+}
+
+/// Everything in the bar that depends on its width: each module fills the
+/// column (margins + min-width = width) so its glyph sits centered.
+pub fn layout_css(bar: &Bar) -> String {
+    let w = bar.width as i32;
+    let side = |inner: i32| ((w - inner) / 2).max(0);
+    format!(
+        "/* generated by octopus from octopus.toml [bar] */\n\
+#custom-launcher, #custom-control-center, #custom-tray, #network, #bluetooth, #wireplumber, #custom-power {{ min-width: {icon}px; margin-left: 8px; margin-right: 8px; }}\n\
+#workspaces button {{ margin: 3px {ws}px; }}\n\
+#clock {{ margin-left: {clock}px; margin-right: {clock}px; }}\n\
+#custom-battery {{ margin: 4px {bat}px; }}\n",
+        icon = (w - 16).max(0),
+        ws = side(10),
+        clock = side(32),
+        bat = side(14),
+    )
+}
+
+/// Writes Waybar's generated files and asks it to reload them.
+pub fn apply(bar: &Bar) {
+    let dir = gtk::glib::user_config_dir().join("waybar");
+    let _ = std::fs::create_dir_all(&dir);
+    let _ = std::fs::write(dir.join("config.jsonc"), waybar_config(bar));
+    let _ = std::fs::write(dir.join("layout.css"), layout_css(bar));
+    exec::spawn("pkill", &["-SIGUSR2", "-x", "waybar"]);
+}
+
+/// Creates the layout stylesheet on first run, so Waybar's import resolves.
+pub fn ensure(bar: &Bar) {
+    let path = gtk::glib::user_config_dir()
+        .join("waybar")
+        .join("layout.css");
+    if !path.exists() {
+        let _ = std::fs::write(path, layout_css(bar));
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn default_config_is_valid_json() {
+        let bar = crate::config::Bar::default();
+        let text = super::waybar_config(&bar);
+        let body: String = text
+            .lines()
+            .filter(|l| !l.trim_start().starts_with("//"))
+            .collect::<Vec<_>>()
+            .join("\n");
+        let parsed: serde_json::Value = serde_json::from_str(&body).expect("valid json");
+        assert_eq!(parsed["width"], 52);
+        std::fs::write("/tmp/waybar-default.jsonc", &text).unwrap();
+        std::fs::write("/tmp/waybar-layout.css", super::layout_css(&bar)).unwrap();
+    }
+}

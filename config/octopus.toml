@@ -1,4 +1,12 @@
-# Octopus companion settings. Everything is optional.
+# Octopus companion settings. Everything is optional; `octopus settings`
+# edits this file.
+
+[bar]
+position = "left"
+width = 52
+top = ["logo", "workspaces"]
+center = ["clock"]
+bottom = ["tray", "battery", "controls"]
 
 [weather]
 # A city, postcode or airport code for wttr.in; empty locates by IP.

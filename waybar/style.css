@@ -1,7 +1,9 @@
 @import "colors.css";
+@import "layout.css";
 
-/* Octopus bar: one opaque tonal column, 52px wide. Every module fills the
-   column's width (min-width + margins = 52) so its glyph sits centered. */
+/* Octopus bar: one opaque tonal column. layout.css (generated from
+   octopus.toml) sizes every module to fill the column's width, so each glyph
+   sits centered. */
 
 * {
   font-family: "Rubik", sans-serif;
@@ -40,6 +42,7 @@ tooltip label {
 
 #custom-launcher,
 #custom-control-center,
+#custom-tray,
 #network,
 #bluetooth,
 #wireplumber,
@@ -47,15 +50,13 @@ tooltip label {
   font-family: "Material Symbols Rounded";
   font-size: 16px;
   color: @on_surface;
-  min-width: 36px;
-  margin: 0 8px;
   padding: 6px 0;
   border-radius: 12px;
   transition: background 180ms ease, color 180ms ease;
 }
 
 #custom-launcher {
-  font-family: "JetBrainsMono Nerd Font", "Symbols Nerd Font";
+  font-family: "Symbols Nerd Font Mono", "JetBrainsMono Nerd Font Mono", "JetBrainsMono Nerd Font";
   font-size: 17px;
   color: @primary;
   padding: 4px 0 8px;
@@ -63,6 +64,7 @@ tooltip label {
 
 #custom-launcher:hover,
 #custom-control-center:hover,
+#custom-tray:hover,
 #network:hover,
 #bluetooth:hover,
 #wireplumber:hover,
@@ -87,7 +89,6 @@ tooltip label {
 
 #workspaces button {
   padding: 0;
-  margin: 3px 21px;
   min-width: 10px;
   min-height: 9px;
   border-radius: 999px;
@@ -122,7 +123,6 @@ tooltip label {
   background: @primary_container;
   border-radius: 12px;
   min-width: 32px;
-  margin: 0 10px;
   padding: 6px 0;
   transition: background 180ms ease, color 180ms ease;
 }
@@ -132,19 +132,9 @@ tooltip label {
   color: @on_primary;
 }
 
-#tray {
-  margin: 2px 0;
-}
-
-#tray > .needs-attention {
-  background: @error;
-  border-radius: 999px;
-}
-
 /* battery: a pill that fills from the bottom */
 
 #custom-battery {
-  margin: 4px 19px;
   min-width: 14px;
   min-height: 30px;
   border-radius: 6px;
