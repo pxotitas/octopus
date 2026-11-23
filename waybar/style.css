@@ -1,14 +1,22 @@
 @import "colors.css";
 
-/* Octopus bar: one opaque tonal column, Material Symbols for glyphs. */
+/* Octopus bar: one opaque tonal column, 52px wide. Every module fills the
+   column's width (min-width + margins = 52) so its glyph sits centered. */
 
 * {
   font-family: "Rubik", sans-serif;
-  font-size: 13px;
+  font-size: 11px;
   min-height: 0;
   border: none;
   border-radius: 0;
   box-shadow: none;
+}
+
+/* the GTK theme pads module buttons; the column has no room for it */
+button,
+label {
+  padding: 0;
+  min-width: 0;
 }
 
 window#waybar {
@@ -17,13 +25,13 @@ window#waybar {
 
 window#waybar > box {
   background: @surface_container;
-  border-radius: 24px;
-  padding: 10px 0;
+  border-radius: 18px;
+  padding: 8px 0;
 }
 
 tooltip {
   background: @surface_container_highest;
-  border-radius: 12px;
+  border-radius: 10px;
 }
 
 tooltip label {
@@ -37,19 +45,20 @@ tooltip label {
 #wireplumber,
 #custom-power {
   font-family: "Material Symbols Rounded";
-  font-size: 20px;
+  font-size: 16px;
   color: @on_surface;
-  padding: 8px 0;
+  min-width: 36px;
   margin: 0 8px;
-  border-radius: 14px;
+  padding: 6px 0;
+  border-radius: 12px;
   transition: background 180ms ease, color 180ms ease;
 }
 
 #custom-launcher {
   font-family: "JetBrainsMono Nerd Font", "Symbols Nerd Font";
-  font-size: 22px;
+  font-size: 17px;
   color: @primary;
-  padding: 6px 0 10px;
+  padding: 4px 0 8px;
 }
 
 #custom-launcher:hover,
@@ -73,20 +82,22 @@ tooltip label {
 /* workspaces: dots, the focused one stretched into a pill */
 
 #workspaces {
-  margin: 4px 0;
+  margin: 2px 0;
 }
 
 #workspaces button {
   padding: 0;
-  margin: 4px 26px;
-  min-height: 12px;
+  margin: 3px 21px;
+  min-width: 10px;
+  min-height: 9px;
   border-radius: 999px;
   background: @outline_variant;
-  transition: min-height 260ms cubic-bezier(0.2, 0, 0, 1), background 200ms ease;
+  transition: min-height 280ms cubic-bezier(0.05, 0.7, 0.1, 1), background 200ms ease;
 }
 
 #workspaces button label {
-  font-size: 0;
+  font-size: 1px;
+  color: transparent;
 }
 
 #workspaces button:hover {
@@ -94,7 +105,7 @@ tooltip label {
 }
 
 #workspaces button.active {
-  min-height: 32px;
+  min-height: 24px;
   background: @primary;
 }
 
@@ -102,24 +113,18 @@ tooltip label {
   background: @error;
 }
 
-#window {
-  margin: 6px 0;
-}
-
-window#waybar.empty #window {
-  margin: 0;
-}
-
 /* clock: hours over minutes */
 
 #clock {
-  font-size: 15px;
+  font-size: 12px;
   font-weight: 600;
   color: @on_primary_container;
   background: @primary_container;
-  border-radius: 16px;
-  margin: 0 8px;
-  padding: 8px 0;
+  border-radius: 12px;
+  min-width: 32px;
+  margin: 0 10px;
+  padding: 6px 0;
+  transition: background 180ms ease, color 180ms ease;
 }
 
 #clock:hover {
@@ -128,7 +133,7 @@ window#waybar.empty #window {
 }
 
 #tray {
-  margin: 4px 0;
+  margin: 2px 0;
 }
 
 #tray > .needs-attention {
@@ -139,10 +144,10 @@ window#waybar.empty #window {
 /* battery: a pill that fills from the bottom */
 
 #custom-battery {
-  margin: 6px 24px;
-  min-width: 20px;
-  min-height: 40px;
-  border-radius: 8px;
+  margin: 4px 19px;
+  min-width: 14px;
+  min-height: 30px;
+  border-radius: 6px;
   font-size: 1px;
   color: transparent;
   background-color: @surface_container_highest;
