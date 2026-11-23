@@ -1,0 +1,278 @@
+use std::collections::HashMap;
+use std::rc::Rc;
+use std::time::Duration;
+
+use gtk::glib;
+use gtk::prelude::*;
+
+use crate::config;
+use crate::exec;
+use crate::icons;
+use crate::panels::{self, dash::Dash, osd::Osd, toasts::Toasts};
+use crate::popup::{self, Place, Popup};
+use crate::services::audio::Kind;
+use crate::services::Services;
+
+pub struct Shell {
+    services: Rc<Services>,
+    popups: HashMap<&'static str, Rc<Popup>>,
+    backdrop: gtk::Window,
+    osd: Rc<Osd>,
+    _toasts: Rc<Toasts>,
+}
+
+impl Shell {
+    pub fn new(app: &gtk::Application) -> Rc<Self> {
+        crate::theme::install();
+        let config = config::load();
+        let services = Services::new(&config);
+
+        Rc::new_cyclic(|weak: &std::rc::Weak<Shell>| {
+            let open: Rc<dyn Fn(&str)> = {
+                let weak = weak.clone();
+                Rc::new(move |name: &str| {
+                    if let Some(shell) = weak.upgrade() {
+                        shell.handle(&format!("open {name}"));
+                    }
+                })
+            };
+
+            let cc = panels::control_center::build(&services, open.clone());
+            let dash = Dash::new(&services, config.media.lyrics, {
+                let open = open.clone();
+                move || open("wallpapers")
+            });
+
+            let mut popups = HashMap::new();
+            popups.insert(
+                "control-center",
+                Popup::new(app, "control-center", Place::BarBottom, true, &cc),
+            );
+            popups.insert(
+                "dash",
+                Popup::new(app, "dash", Place::BarMiddle, true, &dash.root),
+            );
+            popups.insert(
+                "wifi",
+                Popup::new(
+                    app,
+                    "wifi",
+                    Place::BarBottom,
+                    true,
+                    &panels::wifi::build(&services.wifi),
+                ),
+            );
+            popups.insert(
+                "bluetooth",
+                Popup::new(
+                    app,
+                    "bluetooth",
+                    Place::BarBottom,
+                    true,
+                    &panels::bluetooth::build(&services.bluetooth),
+                ),
+            );
+            popups.insert(
+                "audio",
+                Popup::new(
+                    app,
+                    "audio",
+                    Place::BarBottom,
+                    true,
+                    &panels::audio::build(&services.audio),
+                ),
+            );
+
+            let backdrop = popup::backdrop(app, {
+                let weak = weak.clone();
+                move || {
+                    if let Some(shell) = weak.upgrade() {
+                        shell.close_all();
+                    }
+                }
+            });
+
+            for (name, popup) in &popups {
+                let s = services.clone();
+                let weak = weak.clone();
+                let dash = dash.clone();
+                let name = *name;
+                popup.on_visibility(move |open| {
+                    match name {
+                        "control-center" => {
+                            s.cava.watch(open);
+                            s.media.watch(open);
+                            if open {
+                                s.wifi.refresh();
+                                s.bluetooth.refresh();
+                                s.screen.refresh();
+                                s.keyboard.refresh();
+                            }
+                        }
+                        "dash" => {
+                            s.media.watch(open);
+                            dash.set_open(open);
+                        }
+                        "wifi" if open => {
+                            s.wifi.refresh();
+                            s.wifi.rescan();
+                        }
+                        "bluetooth" if open => s.bluetooth.refresh(),
+                        _ => {}
+                    }
+                    if let Some(shell) = weak.upgrade() {
+                        shell.sync_backdrop();
+                    }
+                });
+            }
+
+            let osd = Osd::new(app);
+            let toasts = Toasts::new(
+                app,
+                &services.notifications,
+                config.notifications.timeout_ms,
+                config.notifications.max_popups,
+            );
+
+            Shell {
+                services,
+                popups,
+                backdrop,
+                osd,
+                _toasts: toasts,
+            }
+        })
+    }
+
+    fn sync_backdrop(&self) {
+        let any = self.popups.values().any(|p| p.is_open());
+        self.backdrop.set_visible(any);
+    }
+
+    fn close_all(&self) {
+        for popup in self.popups.values() {
+            popup.hide();
+        }
+    }
+
+    fn toggle(&self, name: &str) -> String {
+        let Some(popup) = self.popups.get(name) else {
+            return format!("unknown panel: {name}");
+        };
+        let opening = !popup.is_open();
+        self.close_all();
+        if opening {
+            popup.show();
+        }
+        String::new()
+    }
+
+    pub fn handle(&self, command: &str) -> String {
+        let words: Vec<&str> = command.split_whitespace().collect();
+        let audio = &self.services.audio;
+        match words.as_slice() {
+            ["toggle", name] => self.toggle(alias(name)),
+            ["open", "power"] => {
+                self.close_all();
+                exec::spawn(&exec::script("powermenu.sh"), &[]);
+                String::new()
+            }
+            ["open", "wallpapers"] => {
+                self.close_all();
+                exec::spawn(&exec::script("wallpaper.sh"), &[]);
+                String::new()
+            }
+            ["open", name] => {
+                let name = alias(name);
+                if self.popups.get(name).is_some_and(|p| p.is_open()) {
+                    return String::new();
+                }
+                self.toggle(name)
+            }
+            ["close"] => {
+                self.close_all();
+                String::new()
+            }
+            ["volume", dir @ ("up" | "down")] => {
+                audio.step(Kind::Sink, if *dir == "up" { 5 } else { -5 });
+                self.show_volume();
+                String::new()
+            }
+            ["volume", "mute"] => {
+                audio.toggle_mute(Kind::Sink);
+                let (volume, muted) = audio
+                    .state
+                    .get()
+                    .sink()
+                    .map(|d| (d.volume, !d.muted))
+                    .unwrap_or((0, true));
+                self.osd
+                    .show(icons::volume(volume, muted), if muted { 0 } else { volume });
+                String::new()
+            }
+            ["mic", "mute"] => {
+                audio.toggle_mute(Kind::Source);
+                let (volume, muted) = audio
+                    .state
+                    .get()
+                    .source()
+                    .map(|d| (d.volume, !d.muted))
+                    .unwrap_or((0, true));
+                self.osd.show(
+                    if muted { "mic_off" } else { "mic" },
+                    if muted { 0 } else { volume },
+                );
+                String::new()
+            }
+            [which @ ("brightness" | "kbd"), dir @ ("up" | "down")] => {
+                let (light, icon) = if *which == "brightness" {
+                    (&self.services.screen, "brightness_6")
+                } else {
+                    (&self.services.keyboard, "keyboard")
+                };
+                light.step(if *dir == "up" { 5 } else { -5 });
+                if let Some(p) = *light.percent.get() {
+                    self.osd.show(icon, p);
+                }
+                String::new()
+            }
+            ["dnd"] => {
+                let on = !*self.services.notifications.dnd.get();
+                self.services.notifications.dnd.set(on);
+                if on { "on" } else { "off" }.to_owned()
+            }
+            ["reload"] => String::new(),
+            _ => format!("unknown command: {command}"),
+        }
+    }
+
+    fn show_volume(&self) {
+        if let Some(d) = self.services.audio.state.get().sink() {
+            self.osd.show(icons::volume(d.volume, d.muted), d.volume);
+        }
+    }
+}
+
+fn alias(name: &str) -> &str {
+    match name {
+        "cc" | "control-center" | "controlcenter" => "control-center",
+        "sound" | "volume" => "audio",
+        "bt" => "bluetooth",
+        "network" => "wifi",
+        other => other,
+    }
+}
+
+/// Calls `f` now and at the start of every minute.
+pub fn every_minute(f: impl Fn(chrono::DateTime<chrono::Local>) + 'static) {
+    let f = Rc::new(f);
+    f(chrono::Local::now());
+    let seconds = chrono::Timelike::second(&chrono::Local::now());
+    glib::timeout_add_local_once(Duration::from_secs(60 - seconds as u64), move || {
+        f(chrono::Local::now());
+        glib::timeout_add_local(Duration::from_secs(60), move || {
+            f(chrono::Local::now());
+            glib::ControlFlow::Continue
+        });
+    });
+}

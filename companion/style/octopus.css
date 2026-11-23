@@ -1,0 +1,622 @@
+/* Octopus: M3 tonal surfaces, opaque, no blur. Colors come from colors.css (matugen). */
+
+window.octopus-popup,
+window.octopus-backdrop,
+window.octopus-popup > decoration,
+window.octopus-backdrop > decoration {
+  background: none;
+  background-color: transparent;
+  box-shadow: none;
+  border: none;
+  outline: none;
+  margin: 0;
+  padding: 0;
+}
+
+* {
+  font-family: "Rubik", "Inter", sans-serif;
+  font-size: 13px;
+  color: @on_surface;
+}
+
+.icon {
+  font-family: "Material Symbols Rounded";
+  font-size: 20px;
+  font-variation-settings: "FILL" 0, "wght" 400, "opsz" 24;
+  font-feature-settings: "liga";
+}
+
+.dim {
+  color: @on_surface_variant;
+  font-size: 12px;
+}
+
+/* surfaces */
+
+.surface {
+  background: @surface_container;
+  border-radius: 28px;
+  padding: 16px;
+  border: 1px solid @outline_variant;
+}
+
+.card {
+  background: @surface_container_high;
+  border-radius: 20px;
+  padding: 14px;
+}
+
+.heading label:first-child {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+/* buttons */
+
+button {
+  background: none;
+  border: none;
+  box-shadow: none;
+  border-radius: 999px;
+  padding: 6px 12px;
+  transition: background 180ms cubic-bezier(0.2, 0, 0, 1), color 180ms ease;
+}
+
+button:hover {
+  background: alpha(@on_surface, 0.08);
+}
+
+button:active {
+  background: alpha(@on_surface, 0.14);
+}
+
+.icon-button {
+  padding: 6px;
+  min-width: 24px;
+  min-height: 24px;
+}
+
+button.pill {
+  background: @surface_container_highest;
+  padding: 8px 16px;
+}
+
+button.pill:hover {
+  background: mix(@surface_container_highest, @on_surface, 0.08);
+}
+
+button.pill.filled {
+  background: @primary;
+}
+
+button.pill.filled label {
+  color: @on_primary;
+}
+
+/* switch */
+
+switch {
+  background: @surface_container_highest;
+  border: 2px solid @outline;
+  border-radius: 999px;
+  min-width: 48px;
+  min-height: 24px;
+  transition: all 200ms cubic-bezier(0.2, 0, 0, 1);
+}
+
+switch slider {
+  background: @outline;
+  border-radius: 999px;
+  min-width: 16px;
+  min-height: 16px;
+  margin: 2px;
+  box-shadow: none;
+  border: none;
+}
+
+switch:checked {
+  background: @primary;
+  border-color: @primary;
+}
+
+switch:checked slider {
+  background: @on_primary;
+  min-width: 20px;
+  min-height: 20px;
+  margin: 0;
+}
+
+/* scales */
+
+scale {
+  padding: 8px 0;
+}
+
+scale trough {
+  border: none;
+  outline: none;
+  background: @surface_container_highest;
+  border-radius: 999px;
+  min-height: 14px;
+}
+
+scale highlight {
+  background: @primary;
+  border-radius: 999px;
+  min-height: 14px;
+}
+
+scale slider {
+  background: @primary;
+  min-width: 4px;
+  min-height: 22px;
+  margin: -4px 0;
+  border-radius: 2px;
+  box-shadow: none;
+  border: none;
+}
+
+.slider-row.muted scale highlight,
+.slider-row.muted scale slider {
+  background: @outline;
+}
+
+.slider-row .percent,
+.osd .percent {
+  min-width: 34px;
+  color: @on_surface_variant;
+}
+
+levelbar trough {
+  background: @surface_container_highest;
+  border-radius: 999px;
+  min-height: 8px;
+  border: none;
+}
+
+levelbar block.filled {
+  background: @primary;
+  border-radius: 999px;
+}
+
+levelbar block.empty {
+  background: none;
+}
+
+/* control center */
+
+.control-center {
+  min-width: 400px;
+}
+
+.cc-time {
+  font-size: 34px;
+  font-weight: 600;
+}
+
+.cc-date {
+  color: @on_surface_variant;
+}
+
+.cc-weather label {
+  color: @on_surface_variant;
+}
+
+.cc-weather .icon {
+  font-size: 16px;
+}
+
+.cava {
+  color: @primary;
+}
+
+.cc-power {
+  background: @surface_container_highest;
+  padding: 10px;
+}
+
+.cc-power .icon {
+  color: @error;
+}
+
+.tile {
+  background: @surface_container_high;
+  border-radius: 20px;
+  transition: background 200ms cubic-bezier(0.2, 0, 0, 1);
+}
+
+.tile .tile-toggle {
+  border-radius: 20px;
+  padding: 12px;
+}
+
+.tile .tile-more {
+  border-radius: 0 20px 20px 0;
+  padding: 0 8px;
+}
+
+.tile .tile-icon {
+  background: @surface_container_highest;
+  border-radius: 999px;
+  padding: 8px;
+}
+
+.tile-title {
+  font-weight: 600;
+}
+
+.tile-subtitle {
+  font-size: 12px;
+  color: @on_surface_variant;
+}
+
+.tile.on {
+  background: @primary_container;
+}
+
+.tile.on label {
+  color: @on_primary_container;
+}
+
+.tile.on .tile-icon {
+  background: @primary;
+  color: @on_primary;
+  font-variation-settings: "FILL" 1, "wght" 400, "opsz" 24;
+}
+
+.sliders {
+  padding: 8px 14px;
+}
+
+/* media */
+
+.media-art {
+  border-radius: 16px;
+  background: @surface_container_highest;
+}
+
+.media-hero .media-art {
+  border-radius: 28px;
+}
+
+.art-fallback {
+  font-size: 32px;
+  color: @on_surface_variant;
+}
+
+.media-title {
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.media-hero .media-title {
+  font-size: 20px;
+}
+
+.media-artist {
+  color: @on_surface_variant;
+}
+
+.media-progress trough,
+.media-progress highlight {
+  min-height: 6px;
+}
+
+.media-progress slider {
+  min-height: 14px;
+  margin: -4px 0;
+}
+
+.media-controls button {
+  background: @surface_container_highest;
+  padding: 8px;
+}
+
+.media-controls .media-play {
+  background: @primary_container;
+  padding: 8px 18px;
+  border-radius: 16px;
+  transition: border-radius 220ms cubic-bezier(0.2, 0, 0, 1), background 200ms ease;
+}
+
+.media-controls .media-play.playing {
+  border-radius: 999px;
+}
+
+.media-controls .media-play label {
+  color: @on_primary_container;
+  font-variation-settings: "FILL" 1, "wght" 400, "opsz" 24;
+}
+
+.media-idle {
+  color: @on_surface_variant;
+  padding: 4px;
+}
+
+/* notifications */
+
+.notification {
+  background: @surface_container_highest;
+  border-radius: 18px;
+  padding: 12px;
+}
+
+.notification.activatable:hover {
+  background: mix(@surface_container_highest, @on_surface, 0.05);
+}
+
+.notification.critical {
+  background: @error;
+}
+
+.notification.critical label {
+  color: @on_error;
+}
+
+.notification-avatar {
+  border-radius: 999px;
+}
+
+.notification-icon {
+  background: @surface_container;
+  border-radius: 999px;
+  min-width: 48px;
+  min-height: 48px;
+}
+
+.notification-badge {
+  background: @surface_container_highest;
+  border-radius: 999px;
+  padding: 2px;
+}
+
+.notification-app {
+  font-size: 11px;
+  color: @on_surface_variant;
+}
+
+.notification-summary {
+  font-weight: 600;
+}
+
+.notification-body {
+  color: @on_surface_variant;
+}
+
+.notification-close {
+  padding: 2px;
+  min-width: 20px;
+  min-height: 20px;
+}
+
+.notification-close .icon {
+  font-size: 16px;
+}
+
+.notification-actions {
+  margin-top: 6px;
+}
+
+.notification button.pill {
+  background: @surface_container;
+}
+
+.toasts {
+  min-width: 380px;
+}
+
+.toast {
+  background: @surface_container_high;
+  border: 1px solid @outline_variant;
+  border-radius: 24px;
+  margin-bottom: 8px;
+}
+
+.empty {
+  color: @on_surface_variant;
+  padding: 24px;
+}
+
+.empty-icon {
+  font-size: 32px;
+  color: @on_surface_variant;
+}
+
+/* menus */
+
+.menu {
+  min-width: 340px;
+}
+
+.menu-header label {
+  font-size: 16px;
+}
+
+.menu-row {
+  border-radius: 16px;
+  padding: 10px 12px;
+}
+
+.menu-row.active {
+  background: @secondary_container;
+}
+
+.menu-row.active label {
+  color: @on_secondary_container;
+}
+
+.menu-status {
+  color: @on_surface_variant;
+  padding: 0 4px;
+}
+
+.password-form {
+  background: @surface_container_high;
+  border-radius: 20px;
+  padding: 12px;
+}
+
+entry,
+passwordentry {
+  background: @surface_container_highest;
+  border: none;
+  border-radius: 14px;
+  padding: 8px 12px;
+  box-shadow: none;
+}
+
+/* osd */
+
+.osd {
+  min-width: 280px;
+  padding: 12px 18px;
+}
+
+/* dash */
+
+.dash {
+  min-width: 820px;
+}
+
+.dash-tabs {
+  margin-bottom: 2px;
+}
+
+.dash-tab {
+  border-radius: 18px;
+  padding: 8px;
+}
+
+.dash-tab:checked {
+  background: @secondary_container;
+}
+
+.dash-tab:checked label {
+  color: @on_secondary_container;
+}
+
+.dash-tab:checked .dash-tab-icon {
+  font-variation-settings: "FILL" 1, "wght" 400, "opsz" 24;
+}
+
+.dash-tab label {
+  font-size: 12px;
+}
+
+.dash-tab label.dash-tab-icon {
+  font-size: 22px;
+}
+
+.dash-clock {
+  background: @primary_container;
+  padding: 18px;
+}
+
+.dash-clock label {
+  color: @on_primary_container;
+}
+
+.dash-time {
+  font-size: 56px;
+  font-weight: 700;
+}
+
+.dash-temp {
+  font-size: 30px;
+  font-weight: 600;
+}
+
+.big-icon {
+  font-size: 34px;
+}
+
+calendar {
+  border: none;
+}
+
+calendar > header {
+  border: none;
+  background: none;
+}
+
+calendar > grid > label.day-name {
+  color: @on_surface_variant;
+  font-size: 11px;
+}
+
+calendar > grid > label.day-number {
+  border-radius: 12px;
+  padding: 6px;
+  margin: 2px;
+  background: @surface_container_highest;
+}
+
+calendar > grid > label.day-number.other-month {
+  background: none;
+  color: @outline;
+}
+
+calendar > grid > label.day-number:selected {
+  background: @primary;
+  color: @on_primary;
+}
+
+calendar > grid > label.today {
+  box-shadow: inset 0 0 0 2px @primary;
+}
+
+.lyric {
+  font-size: 20px;
+  font-weight: 600;
+  color: @outline;
+  transition: color 260ms cubic-bezier(0.2, 0, 0, 1);
+}
+
+.lyric.current {
+  color: @on_surface;
+}
+
+.plain .lyric {
+  font-size: 15px;
+  color: @on_surface_variant;
+}
+
+.weather-hero {
+  padding: 22px;
+}
+
+.hero-icon {
+  font-size: 72px;
+  color: @primary;
+}
+
+.hero-temp {
+  font-size: 52px;
+  font-weight: 700;
+}
+
+.hour {
+  background: @surface_container_highest;
+  border-radius: 16px;
+  padding: 10px 4px;
+}
+
+.hour .rain {
+  color: @primary;
+  font-size: 11px;
+}
+
+scrollbar {
+  background: none;
+}
+
+scrollbar slider {
+  background: @outline_variant;
+  border-radius: 999px;
+  min-width: 4px;
+}
+
+tooltip {
+  background: @surface_container_highest;
+  border-radius: 10px;
+}
