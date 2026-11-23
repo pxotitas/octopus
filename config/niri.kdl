@@ -12,7 +12,7 @@ binds {
     Mod+D hotkey-overlay-title="apps" { spawn-sh "~/.config/octopus/scripts/launcher.sh"; }
     Mod+Space hotkey-overlay-title="apps" { spawn-sh "~/.config/octopus/scripts/launcher.sh"; }
     Mod+Shift+V hotkey-overlay-title="clipboard" { spawn "octopus" "toggle" "clipboard"; }
-    Mod+Period hotkey-overlay-title="emoji" { spawn-sh "~/.config/octopus/scripts/emoji.sh"; }
+    Mod+Period hotkey-overlay-title="emoji" { spawn "octopus" "toggle" "emoji"; }
     Mod+Shift+W hotkey-overlay-title="wallpapers" { spawn-sh "~/.config/octopus/scripts/wallpaper.sh"; }
     Mod+Shift+E hotkey-overlay-title="energia" { spawn "octopus" "toggle" "power"; }
     Mod+Comma hotkey-overlay-title="configurações" { spawn "octopus" "settings"; }
