@@ -1,3 +1,4 @@
+use crate::i18n::t;
 use std::cell::RefCell;
 use std::rc::Rc;
 
@@ -35,7 +36,7 @@ impl TrayPanel {
         stack.set_interpolate_size(true);
 
         let items_page = gtk::Box::new(gtk::Orientation::Vertical, 10);
-        items_page.append(&widgets::heading("bandeja", None));
+        items_page.append(&widgets::heading(t("bandeja"), None));
         let grid = gtk::FlowBox::new();
         grid.set_selection_mode(gtk::SelectionMode::None);
         grid.set_max_children_per_line(5);
@@ -43,14 +44,14 @@ impl TrayPanel {
         grid.set_column_spacing(6);
         grid.set_row_spacing(6);
         items_page.append(&grid);
-        let empty = gtk::Label::new(Some("nenhum app na bandeja"));
+        let empty = gtk::Label::new(Some(t("nenhum app na bandeja")));
         empty.add_css_class("dim");
         items_page.append(&empty);
         stack.add_named(&items_page, Some("items"));
 
         let menu_page = gtk::Box::new(gtk::Orientation::Vertical, 8);
         let header = gtk::Box::new(gtk::Orientation::Horizontal, 6);
-        let back = icons::button("arrow_back", "voltar");
+        let back = icons::button("arrow_back", t("voltar"));
         let title = gtk::Label::new(None);
         title.add_css_class("tray-title");
         title.set_xalign(0.0);

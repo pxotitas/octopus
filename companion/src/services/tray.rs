@@ -211,10 +211,11 @@ async fn read(proxy: &zbus::Proxy<'_>, bus: &str, path: &str) -> Item {
         .await
         .ok()
         .and_then(|list| list.into_iter().max_by_key(|(w, h, _)| w * h));
+    let raw = if title.is_empty() { id } else { title };
     Item {
         bus: bus.to_owned(),
         path: path.to_owned(),
-        title: if title.is_empty() { id } else { title },
+        title: app_name(&raw, bus).await,
         icon_name: text(proxy.get_property::<String>("IconName").await),
         icon_theme_path: text(proxy.get_property::<String>("IconThemePath").await),
         pixmap,
@@ -230,6 +231,83 @@ async fn read(proxy: &zbus::Proxy<'_>, bus: &str, path: &str) -> Item {
             .unwrap_or(false),
         passive: text(proxy.get_property::<String>("Status").await) == "Passive",
     }
+}
+
+/// Apps often name their tray item like `goofcord_status_icon_1`. Turns that
+/// into the app's real name: from its desktop entry when one matches, else a
+/// tidied-up version of the tag.
+async fn app_name(raw: &str, bus: &str) -> String {
+    let looks_named =
+        raw.contains(' ') || raw.chars().any(char::is_uppercase) && !raw.contains('_');
+    if looks_named && !raw.is_empty() {
+        return raw.to_owned();
+    }
+    const NOISE: [&str; 11] = [
+        "status",
+        "icon",
+        "tray",
+        "indicator",
+        "applet",
+        "notifier",
+        "item",
+        "sni",
+        "client",
+        "statusicon",
+        "app",
+    ];
+    let words: Vec<String> = raw
+        .split(['_', '-', '.', ' '])
+        .map(str::to_lowercase)
+        .filter(|w| {
+            !w.is_empty() && !NOISE.contains(&w.as_str()) && !w.chars().all(|c| c.is_ascii_digit())
+        })
+        .collect();
+    let mut key = words.join(" ");
+    if key.is_empty() {
+        key = process_name(bus).await.unwrap_or_default();
+    }
+    if let Some(name) = desktop_name(&key) {
+        return name;
+    }
+    key.split(' ')
+        .map(|w| {
+            let mut c = w.chars();
+            c.next()
+                .map(|f| f.to_uppercase().collect::<String>() + c.as_str())
+                .unwrap_or_default()
+        })
+        .collect::<Vec<_>>()
+        .join(" ")
+}
+
+fn desktop_name(key: &str) -> Option<String> {
+    let first = key.split(' ').next()?;
+    if first.is_empty() {
+        return None;
+    }
+    use gtk::prelude::AppInfoExt;
+    gtk::gio::AppInfo::all()
+        .into_iter()
+        .find(|info| {
+            let id = info.id().map(|i| i.to_lowercase()).unwrap_or_default();
+            let exe = info
+                .executable()
+                .map(|e| e.to_string_lossy().to_lowercase())
+                .unwrap_or_default();
+            id.trim_end_matches(".desktop").split('.').next_back() == Some(first)
+                || exe.ends_with(first)
+        })
+        .map(|info| info.name().to_string())
+}
+
+async fn process_name(bus: &str) -> Option<String> {
+    let connection = zbus::Connection::session().await.ok()?;
+    let dbus = zbus::fdo::DBusProxy::new(&connection).await.ok()?;
+    let name = zbus::names::BusName::try_from(bus).ok()?;
+    let pid = dbus.get_connection_unix_process_id(name).await.ok()?;
+    std::fs::read_to_string(format!("/proc/{pid}/comm"))
+        .ok()
+        .map(|c| c.trim().to_lowercase())
 }
 
 fn node(s: &Structure) -> Option<MenuNode> {
