@@ -73,7 +73,11 @@ impl Dock {
         let mode = config.mode.as_str();
         let icon = config.size.clamp(24, 72) as i32;
         let magnify = if config.magnify { MAGNIFY } else { 1.0 };
-        let headroom = ((icon as f64) * (magnify - 1.0)).ceil() as i32;
+        // Room around the capsule for the icons to swell into: they grow from
+        // their bottom centre, by their whole height (icon, padding, dots).
+        let item = icon as f64 + 16.0;
+        let headroom = (item * (magnify - 1.0)).ceil() as i32 + 2;
+        let sides = (item * (magnify - 1.0) / 2.0).ceil() as i32 + 2;
         let window = gtk::Window::builder()
             .application(app)
             .decorated(false)
@@ -87,6 +91,8 @@ impl Dock {
         let capsule = gtk::Box::new(gtk::Orientation::Horizontal, 0);
         capsule.add_css_class("dock-capsule");
         capsule.set_margin_top(headroom);
+        capsule.set_margin_start(sides);
+        capsule.set_margin_end(sides);
         capsule.set_halign(gtk::Align::Center);
         let shelf = Shelf::new(4, magnify);
         capsule.append(&shelf);
