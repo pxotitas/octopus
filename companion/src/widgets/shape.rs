@@ -15,9 +15,36 @@ pub enum Kind {
     #[default]
     Circle,
     Clover4,
+    Clover8,
+    Cookie4,
     Cookie6,
+    Cookie7,
     Cookie9,
+    Cookie12,
+    Pentagon,
     Sunny,
+}
+
+/// The shapes that read as shapes (the circle is the morph's midpoint).
+pub const VARIETY: [Kind; 9] = [
+    Kind::Clover4,
+    Kind::Clover8,
+    Kind::Cookie4,
+    Kind::Cookie6,
+    Kind::Cookie7,
+    Kind::Cookie9,
+    Kind::Cookie12,
+    Kind::Pentagon,
+    Kind::Sunny,
+];
+
+/// A random shape other than `not`.
+pub fn random_kind(not: &[Kind]) -> Kind {
+    let choices: Vec<Kind> = VARIETY.into_iter().filter(|k| !not.contains(k)).collect();
+    if choices.is_empty() {
+        return Kind::Cookie9;
+    }
+    choices[glib::random_int_range(0, choices.len() as i32) as usize]
 }
 
 impl Kind {
@@ -25,8 +52,13 @@ impl Kind {
         match self {
             Kind::Circle => (0.0, 0.0),
             Kind::Clover4 => (4.0, 0.16),
+            Kind::Clover8 => (8.0, 0.11),
+            Kind::Cookie4 => (4.0, 0.07),
             Kind::Cookie6 => (6.0, 0.085),
+            Kind::Cookie7 => (7.0, 0.07),
             Kind::Cookie9 => (9.0, 0.055),
+            Kind::Cookie12 => (12.0, 0.035),
+            Kind::Pentagon => (5.0, 0.09),
             Kind::Sunny => (8.0, 0.04),
         }
     }
@@ -178,6 +210,24 @@ impl Shape {
 
     pub fn kind(&self) -> Kind {
         self.imp().kind.get()
+    }
+
+    /// Mahoraga's wheel: clicks round by a random number of notches, either
+    /// way, and becomes another shape.
+    pub fn adapt(&self, avoid: &[Kind]) -> Kind {
+        let mut not = avoid.to_vec();
+        not.push(self.kind());
+        let kind = random_kind(&not);
+        self.morph(kind);
+        let notches = glib::random_int_range(1, 4) as f64;
+        let direction = if glib::random_int_range(0, 2) == 0 {
+            -1.0
+        } else {
+            1.0
+        };
+        let ms = glib::random_int_range(420, 700) as u32;
+        self.turn(direction * notches * std::f64::consts::TAU / 16.0, ms);
+        kind
     }
 
     /// Turns by `radians` and settles past the mark, like a ratchet.

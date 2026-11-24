@@ -1,6 +1,5 @@
 use crate::i18n::t;
 use std::cell::{Cell, RefCell};
-use std::f64::consts::TAU;
 use std::rc::Rc;
 use std::time::Duration;
 
@@ -15,7 +14,6 @@ use crate::widgets::shape::{Kind, Shape};
 
 const RESTING_WIDTH: i32 = 300;
 const TYPING_WIDTH: i32 = 380;
-const KINDS: [Kind; 4] = [Kind::Cookie9, Kind::Clover4, Kind::Cookie6, Kind::Sunny];
 
 /// One monitor's lock: the blurred wallpaper, the clock with hours and
 /// minutes in two M3 shapes that turn and change at every key, the password
@@ -252,27 +250,11 @@ impl Surface {
         self.background.set_paintable(Some(texture));
     }
 
-    /// Mahoraga's wheel: at every key each shape clicks round by its own
-    /// random number of notches and becomes another shape.
+    /// At every key each shape adapts on its own, never into its neighbour.
     fn adapt(&self) {
-        let mut taken: Vec<Kind> = self.shapes.iter().map(|s| s.kind()).collect();
+        let mut taken = Vec::new();
         for shape in &self.shapes {
-            let choices: Vec<Kind> = KINDS.into_iter().filter(|k| !taken.contains(k)).collect();
-            if let Some(kind) = choices
-                .get(glib::random_int_range(0, choices.len().max(1) as i32) as usize)
-                .copied()
-            {
-                taken.push(kind);
-                shape.morph(kind);
-            }
-            let notches = glib::random_int_range(1, 4) as f64;
-            let direction = if glib::random_int_range(0, 2) == 0 {
-                -1.0
-            } else {
-                1.0
-            };
-            let ms = glib::random_int_range(420, 700) as u32;
-            shape.turn(direction * notches * TAU / 16.0, ms);
+            taken.push(shape.adapt(&taken));
         }
     }
 

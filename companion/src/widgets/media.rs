@@ -47,7 +47,12 @@ pub fn player(media: &Rc<Media>, size: Size, cava: Option<&Rc<Cava>>) -> gtk::Ov
     );
     let spinner = if hero {
         cover.remove_css_class("media-art-hero");
-        let shape = Shape::new(Kind::Cookie9, 240, false, Some(&cover));
+        let shape = Shape::new(
+            crate::widgets::shape::random_kind(&[]),
+            240,
+            true,
+            Some(&cover),
+        );
         shape.add_css_class("media-art-hero");
         root.append(&shape);
         Some(shape)
@@ -124,6 +129,7 @@ pub fn player(media: &Rc<Media>, size: Size, cava: Option<&Rc<Cava>>) -> gtk::Ov
     {
         let stack = stack.clone();
         let wave = wave.clone();
+        let song = std::cell::RefCell::new(String::new());
         media.track.subscribe(move |track| {
             let _ = &wave;
             let Some(t) = track else {
@@ -145,6 +151,13 @@ pub fn player(media: &Rc<Media>, size: Size, cava: Option<&Rc<Cava>>) -> gtk::Ov
             });
             if let Some(shape) = &spinner {
                 shape.set_spinning(t.playing);
+                let now = format!("{}\n{}\n{}", t.player, t.artist, t.title);
+                if *song.borrow() != now {
+                    if !song.borrow().is_empty() {
+                        shape.morph(crate::widgets::shape::random_kind(&[shape.kind()]));
+                    }
+                    *song.borrow_mut() = now;
+                }
             }
             if let Some(bars) = &bars {
                 bars.set_visible(t.playing);

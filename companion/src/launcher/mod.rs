@@ -138,10 +138,14 @@ impl Launcher {
         }
 
         let weak = Rc::downgrade(&launcher);
-        entry.connect_changed(move |_| {
-            if let Some(l) = weak.upgrade() {
-                l.query();
+        let length = Cell::new(0usize);
+        entry.connect_changed(move |entry| {
+            let Some(l) = weak.upgrade() else { return };
+            let now = entry.text().chars().count();
+            if now > length.replace(now) {
+                l.badge.adapt(&[]);
             }
+            l.query();
         });
         let weak = Rc::downgrade(&launcher);
         entry.connect_activate(move |_| {
@@ -182,6 +186,7 @@ impl Launcher {
             *self.apps.borrow_mut() = Some(Apps::load());
         }
         self.entry.set_text("");
+        self.badge.morph(Kind::Cookie9);
         self.query();
         self.entry.grab_focus_without_selecting();
     }
@@ -205,8 +210,10 @@ impl Launcher {
             return;
         }
         let (kind, glyph) = mode.look();
-        self.badge.morph(kind);
-        self.badge.turn(TAU / 4.0, 520);
+        if self.entry.text().is_empty() {
+            self.badge.morph(kind);
+            self.badge.turn(TAU / 4.0, 520);
+        }
         self.glyph.set_label(glyph);
     }
 
