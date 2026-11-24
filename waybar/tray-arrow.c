@@ -28,13 +28,29 @@ typedef struct {
   guint tick;
   gint64 last;
   gboolean right;
+  // Waybar destroys the widgets on every reload while a status request may
+  // still be on its way, so the state outlives them until the last answer.
+  int refs;
+  gboolean dead;
 } Arrow;
+
+static void unref(Arrow *a) {
+  if (--a->refs == 0) g_free(a);
+}
+
+static void gone(GtkWidget *widget, gpointer data) {
+  Arrow *a = data;
+  a->dead = TRUE;
+  a->tick = 0;
+  a->events = a->box = a->area = NULL;
+}
 
 static const double STIFFNESS = 420.0;
 static const double DAMPING = 17.0;
 
 static gboolean step(GtkWidget *widget, GdkFrameClock *clock, gpointer data) {
   Arrow *a = data;
+  if (a->dead) return G_SOURCE_REMOVE;
   gint64 now = gdk_frame_clock_get_frame_time(clock);
   double dt = a->last ? (now - a->last) / 1e6 : 0.0;
   a->last = now;
@@ -56,6 +72,7 @@ static gboolean step(GtkWidget *widget, GdkFrameClock *clock, gpointer data) {
 }
 
 static void turn(Arrow *a, gboolean open) {
+  if (a->dead) return;
   double target = open ? (a->right ? M_PI / 2 : -M_PI / 2) : 0.0;
   if (target == a->target) return;
   a->target = target;
@@ -64,6 +81,7 @@ static void turn(Arrow *a, gboolean open) {
 
 static gboolean draw(GtkWidget *widget, cairo_t *cr, gpointer data) {
   Arrow *a = data;
+  if (a->dead) return FALSE;
   int w = gtk_widget_get_allocated_width(widget);
   int h = gtk_widget_get_allocated_height(widget);
   GtkStyleContext *style = gtk_widget_get_style_context(a->box);
@@ -88,6 +106,7 @@ static gboolean draw(GtkWidget *widget, cairo_t *cr, gpointer data) {
 }
 
 static void apply(Arrow *a, const char *json) {
+  if (a->dead) return;
   if (!json || strstr(json, "\"text\":\"\"") || strstr(json, "\"text\": \"\"")) {
     gtk_widget_hide(a->events);
     return;
@@ -112,12 +131,15 @@ static void answered(GObject *source, GAsyncResult *result, gpointer data) {
   if (g_subprocess_communicate_utf8_finish(G_SUBPROCESS(source), result, &out, NULL, NULL))
     apply(a, out);
   g_free(out);
+  unref(a);
 }
 
 static void ask(Arrow *a) {
+  if (a->dead) return;
   GSubprocess *process = g_subprocess_new(G_SUBPROCESS_FLAGS_STDOUT_PIPE | G_SUBPROCESS_FLAGS_STDERR_SILENCE,
                                           NULL, "octopus", "tray-status", NULL);
   if (!process) return;
+  a->refs++;
   g_subprocess_communicate_utf8_async(process, NULL, NULL, answered, a);
   g_object_unref(process);
 }
@@ -132,6 +154,7 @@ static gboolean pressed(GtkWidget *widget, GdkEventButton *event, gpointer data)
 
 static gboolean crossed(GtkWidget *widget, GdkEventCrossing *event, gpointer data) {
   Arrow *a = data;
+  if (a->dead) return FALSE;
   GtkStyleContext *style = gtk_widget_get_style_context(a->box);
   if (event->type == GDK_ENTER_NOTIFY)
     gtk_style_context_add_class(style, "hover");
@@ -143,6 +166,7 @@ static gboolean crossed(GtkWidget *widget, GdkEventCrossing *event, gpointer dat
 
 void *wbcffi_init(const wbcffi_init_info *info, const wbcffi_config_entry *entries, size_t count) {
   Arrow *a = g_new0(Arrow, 1);
+  a->refs = 1;
   for (size_t i = 0; i < count; i++)
     if (!strcmp(entries[i].key, "position")) a->right = strstr(entries[i].value, "right") != NULL;
 
@@ -157,6 +181,7 @@ void *wbcffi_init(const wbcffi_init_info *info, const wbcffi_config_entry *entri
   gtk_container_add(info->get_root_widget(info->obj), a->events);
 
   g_signal_connect(a->area, "draw", G_CALLBACK(draw), a);
+  g_signal_connect(a->events, "destroy", G_CALLBACK(gone), a);
   g_signal_connect(a->events, "button-press-event", G_CALLBACK(pressed), a);
   g_signal_connect(a->events, "enter-notify-event", G_CALLBACK(crossed), a);
   g_signal_connect(a->events, "leave-notify-event", G_CALLBACK(crossed), a);
@@ -168,8 +193,9 @@ void *wbcffi_init(const wbcffi_init_info *info, const wbcffi_config_entry *entri
 
 void wbcffi_deinit(void *instance) {
   Arrow *a = instance;
-  if (a->tick) gtk_widget_remove_tick_callback(a->area, a->tick);
-  g_free(a);
+  if (!a->dead && a->tick) gtk_widget_remove_tick_callback(a->area, a->tick);
+  a->dead = TRUE;
+  unref(a);
 }
 
 void wbcffi_refresh(void *instance, int signal) { ask(instance); }
