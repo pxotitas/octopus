@@ -422,6 +422,13 @@ impl Shell {
                 self.services.notifications.dnd.set(on);
                 if on { "on" } else { "off" }.to_owned()
             }
+            ["wofi-list"] => crate::launcher::wofi::list(),
+            ["wofi-launch", line] => {
+                if let Ok(line) = line.parse() {
+                    crate::launcher::wofi::launch(line);
+                }
+                String::new()
+            }
             ["restart"] => {
                 crate::restart(&self.app);
                 String::new()

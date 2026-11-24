@@ -162,6 +162,21 @@ impl Apps {
         found.into_iter().take(limit).map(|(i, _)| i).collect()
     }
 
+    /// Every app (not their actions): the most opened first, then by name.
+    pub fn ranked(&self) -> Vec<usize> {
+        let mut list: Vec<usize> = (0..self.entries.len())
+            .filter(|i| self.entries[*i].action.is_none())
+            .collect();
+        list.sort_by_cached_key(|i| {
+            let e = &self.entries[*i];
+            (
+                std::cmp::Reverse(self.counts.get(&e.id).copied().unwrap_or(0)),
+                fold(&e.name),
+            )
+        });
+        list
+    }
+
     pub fn get(&self, index: usize) -> &Entry {
         &self.entries[index]
     }

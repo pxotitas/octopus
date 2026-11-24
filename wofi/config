@@ -10,3 +10,5 @@ no_actions=true
 hide_scroll=true
 term=foot
 key_expand=Tab
+parse_search=true
+dmenu-print_line_num=true
