@@ -9,8 +9,8 @@ spawn-at-startup "wl-paste" "--type" "text" "--watch" "cliphist" "store"
 spawn-at-startup "wl-paste" "--type" "image" "--watch" "cliphist" "store"
 
 binds {
-    Mod+D hotkey-overlay-title="apps" { spawn-sh "~/.config/octopus/scripts/launcher.sh"; }
-    Mod+Space hotkey-overlay-title="apps" { spawn-sh "~/.config/octopus/scripts/launcher.sh"; }
+    Mod+D hotkey-overlay-title="apps" { spawn "octopus" "toggle" "launcher"; }
+    Mod+Space hotkey-overlay-title="apps" { spawn "octopus" "toggle" "launcher"; }
     Mod+Shift+V hotkey-overlay-title="clipboard" { spawn "octopus" "toggle" "clipboard"; }
     Mod+Period hotkey-overlay-title="emoji" { spawn "octopus" "toggle" "emoji"; }
     Mod+Shift+W hotkey-overlay-title="wallpapers" { spawn-sh "~/.config/octopus/scripts/wallpaper.sh"; }

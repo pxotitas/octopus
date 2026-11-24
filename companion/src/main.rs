@@ -4,6 +4,8 @@ mod exec;
 mod i18n;
 mod icons;
 mod ipc;
+mod launcher;
+mod lazy;
 mod lock;
 mod memory;
 mod panels;
@@ -20,7 +22,7 @@ use gtk::{gio, glib};
 const APP_ID: &str = "dev.pxota.Octopus";
 
 const USAGE: &str = "usage: octopus [daemon]
-       octopus toggle <control-center|dash|wifi|bluetooth|audio|tray|clipboard|power>
+       octopus toggle <control-center|dash|wifi|bluetooth|audio|tray|clipboard|emoji|power|launcher>
        octopus settings
        octopus close
        octopus lock
@@ -30,7 +32,8 @@ const USAGE: &str = "usage: octopus [daemon]
        octopus kbd <up|down>
        octopus dnd
        octopus luma <image>
-       octopus reload";
+       octopus reload
+       octopus restart";
 
 fn main() -> glib::ExitCode {
     let args: Vec<String> = std::env::args().skip(1).collect();
@@ -94,5 +97,21 @@ fn run_daemon() -> glib::ExitCode {
         });
     });
 
-    app.run_with_args::<&str>(&[])
+    let code = app.run_with_args::<&str>(&[]);
+    if RESTART.load(std::sync::atomic::Ordering::Relaxed) {
+        use std::os::unix::process::CommandExt;
+        if let Ok(exe) = std::env::current_exe() {
+            let err = std::process::Command::new(exe).exec();
+            eprintln!("octopus: cannot restart: {err}");
+        }
+    }
+    code
+}
+
+static RESTART: std::sync::atomic::AtomicBool = std::sync::atomic::AtomicBool::new(false);
+
+/// Starts the daemon over, for what is only read at startup (the language).
+pub fn restart(app: &gtk::Application) {
+    RESTART.store(true, std::sync::atomic::Ordering::Relaxed);
+    app.quit();
 }

@@ -1057,3 +1057,122 @@ gridview.emoji-grid > child:selected {
   font-family: "Noto Color Emoji", "Twemoji", sans-serif;
   font-size: 26px;
 }
+
+/* launcher */
+
+.launcher {
+  min-width: 620px;
+  padding: 14px;
+}
+
+.launcher-bar {
+  padding: 2px 4px 4px;
+}
+
+.launcher-badge {
+  color: @primary_container;
+}
+
+.launcher-badge .icon {
+  color: @on_primary_container;
+  font-size: 22px;
+}
+
+.launcher-entry {
+  font-size: 20px;
+  color: @on_surface;
+  caret-color: @primary;
+}
+
+.launcher-list {
+  background: none;
+}
+
+.launcher-row {
+  border-radius: 18px;
+  padding: 8px 12px;
+  margin-top: 2px;
+  animation: launcher-in 240ms cubic-bezier(0.05, 0.7, 0.1, 1) both;
+  transition: background 120ms ease;
+}
+
+.launcher-row:hover {
+  background: @surface_container_high;
+}
+
+.launcher-row:selected {
+  background: @secondary_container;
+}
+
+.launcher-row.d1 { animation-delay: 18ms; }
+.launcher-row.d2 { animation-delay: 36ms; }
+.launcher-row.d3 { animation-delay: 54ms; }
+.launcher-row.d4 { animation-delay: 72ms; }
+.launcher-row.d5 { animation-delay: 90ms; }
+.launcher-row.d6 { animation-delay: 108ms; }
+.launcher-row.d7 { animation-delay: 126ms; }
+
+@keyframes launcher-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: none; }
+}
+
+.launcher-title {
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.launcher-row:selected .launcher-title {
+  color: @on_secondary_container;
+}
+
+.launcher-detail {
+  font-size: 12px;
+  color: @on_surface_variant;
+}
+
+.launcher-row.calc .launcher-title {
+  font-size: 26px;
+  font-weight: 600;
+}
+
+.launcher-enter {
+  opacity: 0;
+  font-size: 18px;
+  color: @on_secondary_container;
+  transition: opacity 120ms ease;
+}
+
+.launcher-row:selected .launcher-enter {
+  opacity: 1;
+}
+
+.launcher-glyph {
+  color: @tertiary_container;
+}
+
+.launcher-glyph .icon {
+  font-size: 18px;
+  color: @on_tertiary_container;
+}
+
+.launcher-chips {
+  padding: 2px 4px 0;
+}
+
+.launcher-chip {
+  background: @surface_container_high;
+  border-radius: 999px;
+  padding: 4px 12px;
+  min-height: 0;
+  font-size: 12px;
+}
+
+.launcher-chip:hover {
+  background: @surface_container_highest;
+}
+
+.launcher-key {
+  color: @primary;
+  font-weight: 700;
+}

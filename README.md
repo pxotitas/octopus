@@ -8,15 +8,15 @@ Superfícies opacas e tonais, sem blur (só a tela de bloqueio desfoca). Portugu
 
 | Parte | O quê |
 |---|---|
-| `waybar/` | barra vertical: launcher, workspaces, relógio, bandeja, bateria em pílula com o percentual e o grupo com drawer |
-| `companion/` | `octopus`, o daemon: control center, dash, menus (wi-fi, bluetooth, som, bandeja, clipboard, emoji, energia), configurações, notificações, OSD e a tela de bloqueio |
-| `scripts/` | launcher (fuzzel), Matuwall, bateria, tema, emoji, clima e letras |
+| `waybar/` | barra vertical (e `tray-arrow.c`, o botão da bandeja animado): launcher, workspaces, relógio, bandeja, bateria em pílula com o percentual e o grupo com drawer |
+| `companion/` | `octopus`, o daemon: control center, dash, spotlight (apps e ações, calculadora, `/` arquivos, `>` energia), menus (wi-fi, bluetooth, som, bandeja, clipboard, emoji, energia), configurações, notificações, OSD e a tela de bloqueio |
+| `scripts/` | Matuwall, bateria, tema, emoji, clima e letras |
 | `matugen/` | templates de cores pro companion, Waybar, fuzzel e Matuwall |
 | `niri.kdl` | autostart, binds e layer rules, incluído no config do niri |
 
 ## Instalar
 
-Depende de: `pam waybar fuzzel matugen matuwall awww cliphist wl-clipboard wtype playerctl cava brightnessctl networkmanager bluez-utils libpulse python unicode-emoji unicode-cldr gtk4 gtk4-layer-shell ttf-material-symbols-variable rust`.
+Depende de: `pam waybar matugen matuwall awww cliphist wl-clipboard wtype playerctl cava brightnessctl networkmanager bluez-utils libpulse python unicode-emoji unicode-cldr fd gcc gtk4 gtk4-layer-shell ttf-material-symbols-variable rust`.
 
 O repo mora no próprio `~/.config/octopus`:
 
@@ -37,7 +37,7 @@ include "~/.config/octopus/niri.kdl"
 
 ```
 octopus                      # o daemon
-octopus toggle <control-center|dash|wifi|bluetooth|audio|tray|clipboard|emoji|power>
+octopus toggle <control-center|dash|wifi|bluetooth|audio|tray|clipboard|emoji|power|launcher>
 octopus settings
 octopus close
 octopus lock

@@ -25,7 +25,7 @@ pub fn t(text: &'static str) -> &'static str {
     }
     static TABLE: OnceLock<HashMap<&'static str, &'static str>> = OnceLock::new();
     TABLE
-        .get_or_init(|| HashMap::from(ENTRIES))
+        .get_or_init(|| ENTRIES.iter().copied().collect())
         .get(text)
         .copied()
         .unwrap_or(text)
@@ -50,7 +50,18 @@ pub fn date(now: &chrono::DateTime<chrono::Local>) -> String {
         .to_string()
 }
 
-const ENTRIES: [(&str, &str); 111] = [
+const ENTRIES: &[(&str, &str)] = &[
+    (
+        "buscar apps, arquivos e contas",
+        "search apps, files and math",
+    ),
+    ("calcular", "calculate"),
+    ("arquivos", "files"),
+    ("ação", "action"),
+    ("enter copia o resultado", "enter copies the result"),
+    ("sessão", "session"),
+    ("digite o nome de um arquivo", "type a file name"),
+    ("busca na sua pasta pessoal", "searches your home folder"),
     ("energia", "power"),
     ("wallpapers", "wallpapers"),
     ("wi-fi", "wi-fi"),

@@ -8,6 +8,8 @@ use gtk::prelude::*;
 use crate::config;
 use crate::exec;
 use crate::icons;
+use crate::launcher::Launcher;
+use crate::lazy::Lazy;
 use crate::panels::{
     self, clipboard::Clipboard, dash::Dash, osd::Osd, settings::Settings, toasts::Toasts,
     tray::TrayPanel,
@@ -19,7 +21,7 @@ use crate::services::Services;
 pub struct Shell {
     app: gtk::Application,
     config: Rc<std::cell::RefCell<config::Config>>,
-    settings: std::cell::RefCell<Option<Rc<Settings>>>,
+    settings: Rc<std::cell::RefCell<Option<Rc<Settings>>>>,
     services: Rc<Services>,
     popups: HashMap<&'static str, Rc<Popup>>,
     backdrop: gtk::Window,
@@ -105,27 +107,57 @@ impl Shell {
                 "tray",
                 Popup::new(app, "tray", Place::BarBottom, true, &tray.root),
             );
-            let emoji = panels::emoji::Emoji::new(close.clone());
+            let emoji = Lazy::new(
+                {
+                    let close = close.clone();
+                    move || panels::emoji::Emoji::new(close.clone())
+                },
+                |e| e.root.clone().upcast(),
+            );
             popups.insert(
                 "emoji",
-                Popup::new(app, "emoji", Place::Center, true, &emoji.root),
+                Popup::new(app, "emoji", Place::Center, true, &emoji.holder),
             );
-            let clipboard = Clipboard::new(close.clone());
+            let clipboard = Lazy::new(
+                {
+                    let close = close.clone();
+                    move || Clipboard::new(close.clone())
+                },
+                |c| c.root.clone().upcast(),
+            );
             popups.insert(
                 "clipboard",
-                Popup::new(app, "clipboard", Place::Center, true, &clipboard.root),
+                Popup::new(app, "clipboard", Place::Center, true, &clipboard.holder),
             );
-            let power = panels::power::build({
+            let run_power: Rc<dyn Fn(&str)> = {
                 let weak = weak.clone();
                 Rc::new(move |action: &str| {
                     if let Some(shell) = weak.upgrade() {
                         shell.power(action);
                     }
                 })
-            });
+            };
+            let power = Lazy::new(
+                {
+                    let run = run_power.clone();
+                    move || Rc::new(panels::power::build(run.clone()))
+                },
+                |b: &gtk::Box| b.clone().upcast(),
+            );
             popups.insert(
                 "power",
-                Popup::new(app, "power", Place::Center, true, &power),
+                Popup::new(app, "power", Place::Center, true, &power.holder),
+            );
+            let launcher = Lazy::new(
+                {
+                    let (close, run) = (close.clone(), run_power.clone());
+                    move || Launcher::new(close.clone(), run.clone())
+                },
+                |l| l.root.clone().upcast(),
+            );
+            popups.insert(
+                "launcher",
+                Popup::new(app, "launcher", Place::Top, true, &launcher.holder),
             );
             for popup in popups.values() {
                 popup.set_side(config.bar.right());
@@ -152,6 +184,8 @@ impl Shell {
                 let tray = tray.clone();
                 let clipboard = clipboard.clone();
                 let emoji = emoji.clone();
+                let power = power.clone();
+                let launcher = launcher.clone();
                 let name = *name;
                 popup.on_visibility(move |open| {
                     match name {
@@ -184,10 +218,22 @@ impl Shell {
                         }
                         "bluetooth" if open => s.bluetooth.refresh(),
                         "tray" if open => tray.reset(),
-                        "clipboard" if open => clipboard.load(),
-                        "clipboard" => clipboard.unload(),
-                        "emoji" if open => emoji.open(),
-                        "emoji" => emoji.unload(),
+                        "clipboard" if open => clipboard.get().load(),
+                        "clipboard" => {
+                            clipboard.get().unload();
+                            clipboard.release_later();
+                        }
+                        "emoji" if open => emoji.get().open(),
+                        "emoji" => {
+                            emoji.get().unload();
+                            emoji.release_later();
+                        }
+                        "power" if open => {
+                            power.get();
+                        }
+                        "power" => power.release_later(),
+                        "launcher" if open => launcher.get().open(),
+                        "launcher" => launcher.release_later(),
                         _ => {}
                     }
                     if !open {
@@ -222,7 +268,7 @@ impl Shell {
             Shell {
                 app: app.clone(),
                 config: Rc::new(std::cell::RefCell::new(config.clone())),
-                settings: std::cell::RefCell::new(None),
+                settings: Rc::default(),
                 services,
                 popups,
                 backdrop,
@@ -356,6 +402,10 @@ impl Shell {
                 self.services.notifications.dnd.set(on);
                 if on { "on" } else { "off" }.to_owned()
             }
+            ["restart"] => {
+                crate::restart(&self.app);
+                String::new()
+            }
             ["reload"] => {
                 crate::bar::apply(&self.config.borrow().bar);
                 String::new()
@@ -383,9 +433,14 @@ impl Shell {
             None => {
                 let popups: Vec<Rc<Popup>> = self.popups.values().cloned().collect();
                 let current = self.config.clone();
+                let app = self.app.clone();
                 let apply: Rc<dyn Fn(config::Config)> = Rc::new(move |next: config::Config| {
                     if let Err(err) = config::save(&next) {
                         eprintln!("octopus: cannot save settings: {err}");
+                    }
+                    if next.language != current.borrow().language {
+                        crate::restart(&app);
+                        return;
                     }
                     crate::bar::apply(&next.bar);
                     for popup in &popups {
@@ -400,6 +455,12 @@ impl Shell {
                     apply,
                 );
                 *self.settings.borrow_mut() = Some(s.clone());
+                let slot = self.settings.clone();
+                s.window.connect_close_request(move |_| {
+                    slot.borrow_mut().take();
+                    crate::memory::release_soon();
+                    glib::Propagation::Proceed
+                });
                 s
             }
         };
