@@ -3,3 +3,4 @@ companion/target/
 waybar/colors.css
 waybar/layout.css
 __pycache__/
+wofi/style.css
