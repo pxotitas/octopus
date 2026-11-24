@@ -1,3 +1,5 @@
+//! The system behind the panels; each service owns its state in a Store the UI subscribes to.
+
 pub mod audio;
 pub mod bluetooth;
 pub mod brightness;
@@ -5,6 +7,7 @@ pub mod cava;
 pub mod lyrics;
 pub mod media;
 pub mod network;
+pub mod niri;
 pub mod notifications;
 pub mod theme;
 pub mod tray;

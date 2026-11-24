@@ -1,3 +1,5 @@
+//! octopus.toml: what can be changed without touching code, with defaults for everything missing.
+
 use serde::{Deserialize, Serialize};
 
 use crate::exec;
@@ -12,6 +14,7 @@ pub struct Config {
     pub brightness: Brightness,
     pub notifications: Notifications,
     pub media: Media,
+    pub dock: Dock,
 }
 
 impl Default for Config {
@@ -23,6 +26,7 @@ impl Default for Config {
             brightness: Brightness::default(),
             notifications: Notifications::default(),
             media: Media::default(),
+            dock: Dock::default(),
         }
     }
 }
@@ -36,6 +40,9 @@ pub struct Bar {
     pub top: Vec<String>,
     pub center: Vec<String>,
     pub bottom: Vec<String>,
+    /// "floating" (a rounded column with gaps) or "flush" (against the
+    /// screen's edge, with concave corners).
+    pub style: String,
 }
 
 impl Default for Bar {
@@ -46,6 +53,28 @@ impl Default for Bar {
             top: vec!["logo".into(), "workspaces".into()],
             center: vec!["clock".into()],
             bottom: vec!["tray".into(), "battery".into(), "controls".into()],
+            style: "floating".into(),
+        }
+    }
+}
+
+#[derive(Debug, Clone, Deserialize, Serialize, PartialEq)]
+#[serde(default)]
+pub struct Dock {
+    pub enabled: bool,
+    /// "fixed" keeps its space, "autohide" shows on the screen's bottom edge,
+    /// "smart" hides only while a window would sit under it.
+    pub mode: String,
+    /// Desktop ids, in order.
+    pub pinned: Vec<String>,
+}
+
+impl Default for Dock {
+    fn default() -> Self {
+        Self {
+            enabled: false,
+            mode: "smart".into(),
+            pinned: Vec::new(),
         }
     }
 }
