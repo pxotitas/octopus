@@ -16,7 +16,7 @@ Superfícies opacas e tonais, sem blur (só a tela de bloqueio desfoca). Portugu
 
 ## Instalar
 
-Depende de: `hyprlock waybar fuzzel matugen matuwall awww cliphist wl-clipboard wtype playerctl cava brightnessctl networkmanager bluez-utils libpulse python unicode-emoji unicode-cldr gtk4 gtk4-layer-shell librsvg imagemagick ttf-material-symbols-variable rust`.
+Depende de: `pam waybar fuzzel matugen matuwall awww cliphist wl-clipboard wtype playerctl cava brightnessctl networkmanager bluez-utils libpulse python unicode-emoji unicode-cldr gtk4 gtk4-layer-shell ttf-material-symbols-variable rust`.
 
 O repo mora no próprio `~/.config/octopus`:
 

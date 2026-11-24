@@ -24,7 +24,7 @@ pub struct Shell {
     popups: HashMap<&'static str, Rc<Popup>>,
     backdrop: gtk::Window,
     osd: Rc<Osd>,
-    lock: Rc<crate::locker::Locker>,
+    lock: Rc<crate::lock::Lock>,
     _toasts: Rc<Toasts>,
 }
 
@@ -217,7 +217,7 @@ impl Shell {
                 }
             }
 
-            let lock = crate::locker::Locker::new(&services.media, config.media.lyrics);
+            let lock = crate::lock::Lock::new(app, &services, config.media.lyrics);
 
             Shell {
                 app: app.clone(),
@@ -304,7 +304,6 @@ impl Shell {
                 self.lock.start();
                 String::new()
             }
-            ["now", field] => self.lock.field(field),
             ["close"] => {
                 self.close_all();
                 String::new()
@@ -432,6 +431,29 @@ pub fn every_minute(f: impl Fn(chrono::DateTime<chrono::Local>) + 'static) {
     glib::timeout_add_local_once(Duration::from_secs(60 - seconds as u64), move || {
         f(chrono::Local::now());
         glib::timeout_add_local(Duration::from_secs(60), move || {
+            f(chrono::Local::now());
+            glib::ControlFlow::Continue
+        });
+    });
+}
+
+/// Like `every_minute`, but stops once `owner` is gone.
+pub fn every_minute_for(
+    owner: &impl IsA<gtk::Widget>,
+    f: impl Fn(chrono::DateTime<chrono::Local>) + 'static,
+) {
+    let owner = owner.upcast_ref::<gtk::Widget>().downgrade();
+    f(chrono::Local::now());
+    let seconds = chrono::Timelike::second(&chrono::Local::now());
+    glib::timeout_add_local_once(Duration::from_secs(60 - seconds as u64), move || {
+        if owner.upgrade().is_none() {
+            return;
+        }
+        f(chrono::Local::now());
+        glib::timeout_add_local(Duration::from_secs(60), move || {
+            if owner.upgrade().is_none() {
+                return glib::ControlFlow::Break;
+            }
             f(chrono::Local::now());
             glib::ControlFlow::Continue
         });

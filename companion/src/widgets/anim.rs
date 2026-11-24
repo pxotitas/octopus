@@ -10,6 +10,7 @@ pub struct Curve(f64, f64, f64, f64);
 pub const EMPHASIZED_DECELERATE: Curve = Curve(0.05, 0.7, 0.1, 1.0);
 pub const EMPHASIZED_ACCELERATE: Curve = Curve(0.3, 0.0, 0.8, 0.15);
 pub const STANDARD: Curve = Curve(0.2, 0.0, 0.0, 1.0);
+pub const OVERSHOOT: Curve = Curve(0.34, 1.5, 0.64, 1.0);
 
 impl Curve {
     pub fn at(self, t: f64) -> f64 {

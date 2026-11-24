@@ -661,6 +661,189 @@ tooltip {
   border-radius: 10px;
 }
 
+/* lock: tonal M3 islands over the blurred wallpaper */
+
+window.octopus-lock {
+  background: @surface;
+}
+
+.lock-scrim {
+  background: alpha(@surface, 0.35);
+}
+
+.octopus-lock label {
+  color: @on_surface;
+}
+
+.lock-date {
+  font-size: 22px;
+  font-weight: 500;
+  margin-bottom: 18px;
+}
+
+.lock-hours {
+  color: @primary_container;
+}
+
+.lock-minutes {
+  color: @tertiary_container;
+}
+
+.octopus-lock .lock-digits {
+  font-size: 92px;
+  font-weight: 600;
+  letter-spacing: -2px;
+}
+
+.octopus-lock .lock-hours .lock-digits {
+  color: @on_primary_container;
+}
+
+.octopus-lock .lock-minutes .lock-digits {
+  color: @on_tertiary_container;
+}
+
+.lock-pill {
+  background: @surface_container_high;
+  border: 2px solid @surface_container_high;
+  border-radius: 999px;
+  padding: 0 8px 0 6px;
+  transition: border-color 140ms ease;
+}
+
+.lock-pill.typing {
+  border-color: @primary;
+}
+
+.lock-pill.failed {
+  border-color: @error;
+}
+
+.lock-avatar {
+  border-radius: 999px;
+  background: @primary_container;
+}
+
+.octopus-lock .lock-avatar label {
+  color: @on_primary_container;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.lock-name {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.octopus-lock .lock-hint {
+  font-size: 13px;
+  color: @on_surface_variant;
+}
+
+.lock-field {
+  font-size: 11px;
+  letter-spacing: 3px;
+  color: @on_surface;
+  caret-color: @primary;
+  margin-right: 4px;
+}
+
+.lock-send {
+  background: @primary;
+  border-radius: 999px;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0;
+  transition: opacity 200ms ease;
+}
+
+.lock-send .icon {
+  color: @on_primary;
+}
+
+.octopus-lock .lock-status {
+  font-size: 12px;
+  color: @error;
+}
+
+.lock-cover {
+  border-radius: 22px;
+  margin-bottom: 6px;
+}
+
+.octopus-lock .lock-line {
+  font-size: 22px;
+  font-weight: 600;
+  color: @primary;
+}
+
+.octopus-lock .lock-song {
+  font-size: 12px;
+  color: @on_surface_variant;
+}
+
+.lock-weather,
+.lock-battery {
+  background: @surface_container;
+  border-radius: 999px;
+  padding: 8px 14px;
+}
+
+.lock-weather .icon,
+.lock-battery .icon {
+  font-size: 18px;
+  color: @primary;
+}
+
+.octopus-lock .lock-weather label:not(.icon) {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.lock-chip {
+  background: @surface_container;
+  border-radius: 999px;
+  min-height: 40px;
+  min-width: 40px;
+  padding: 0;
+  transition: background 140ms ease, padding 140ms ease;
+}
+
+.lock-chip.armed {
+  padding: 0 14px;
+}
+
+.lock-chip:hover {
+  background: @surface_container_highest;
+}
+
+.lock-chip .icon {
+  font-size: 18px;
+  color: @on_surface_variant;
+}
+
+.lock-chip.armed {
+  background: @error_container;
+}
+
+.octopus-lock .lock-chip.armed .icon,
+.octopus-lock .lock-chip-name {
+  color: @on_error_container;
+}
+
+.octopus-lock .lock-chip-name {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.icon-button.on {
+  background: @secondary_container;
+}
+
+.icon-button.on .icon {
+  color: @on_secondary_container;
+}
+
 /* clipboard */
 
 .clipboard {

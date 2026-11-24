@@ -44,6 +44,7 @@ mod imp {
         pub fill: Cell<bool>,
         pub spin: RefCell<Option<gtk::TickCallbackId>>,
         pub tween: RefCell<Option<Rc<Tween>>>,
+        pub turn: RefCell<Option<Rc<Tween>>>,
     }
 
     #[glib::object_subclass]
@@ -170,6 +171,35 @@ impl Shape {
                 imp.kind.set(current);
                 imp.depth.set(depth);
                 s.queue_draw();
+            },
+            || {},
+        );
+    }
+
+    pub fn kind(&self) -> Kind {
+        self.imp().kind.get()
+    }
+
+    /// Turns by `radians` and settles past the mark, like a ratchet.
+    pub fn turn(&self, radians: f64, ms: u32) {
+        let imp = self.imp();
+        let tween = imp
+            .turn
+            .borrow_mut()
+            .get_or_insert_with(|| Tween::new(0.0))
+            .clone();
+        tween.set(imp.angle.get());
+        let weak = self.downgrade();
+        tween.animate(
+            self,
+            imp.angle.get() + radians,
+            ms,
+            anim::OVERSHOOT,
+            move |a| {
+                if let Some(s) = weak.upgrade() {
+                    s.imp().angle.set(a);
+                    s.queue_draw();
+                }
             },
             || {},
         );
