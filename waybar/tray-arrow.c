@@ -2,6 +2,8 @@
 // the tray is closed and turns sideways, on a spring, when it opens.
 // Built by install.sh into ~/.cache/octopus/tray-arrow.so.
 
+#define _GNU_SOURCE
+#include <dlfcn.h>
 #include <gtk/gtk.h>
 #include <math.h>
 #include <string.h>
@@ -43,6 +45,15 @@ static void gone(GtkWidget *widget, gpointer data) {
   a->dead = TRUE;
   a->tick = 0;
   a->events = a->box = a->area = NULL;
+  unref(a);
+}
+
+// Waybar may unload the module on reload while an answer is still due;
+// staying loaded keeps that callback's code around.
+static void stay_loaded(void) {
+  Dl_info info;
+  if (dladdr((void *)stay_loaded, &info) && info.dli_fname)
+    dlopen(info.dli_fname, RTLD_NOW | RTLD_NOLOAD | RTLD_NODELETE);
 }
 
 static const double STIFFNESS = 420.0;
@@ -165,8 +176,10 @@ static gboolean crossed(GtkWidget *widget, GdkEventCrossing *event, gpointer dat
 }
 
 void *wbcffi_init(const wbcffi_init_info *info, const wbcffi_config_entry *entries, size_t count) {
+  stay_loaded();
   Arrow *a = g_new0(Arrow, 1);
-  a->refs = 1;
+  // One for Waybar's instance, one for the widgets.
+  a->refs = 2;
   for (size_t i = 0; i < count; i++)
     if (!strcmp(entries[i].key, "position")) a->right = strstr(entries[i].value, "right") != NULL;
 
