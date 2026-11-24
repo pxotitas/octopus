@@ -67,9 +67,11 @@ pub fn player(media: &Rc<Media>, size: Size, cava: Option<&Rc<Cava>>) -> gtk::Ov
     let title = gtk::Label::new(None);
     title.add_css_class("media-title");
     title.set_ellipsize(pango::EllipsizeMode::End);
+    title.set_max_width_chars(1);
     let artist = gtk::Label::new(None);
     artist.add_css_class("media-artist");
     artist.set_ellipsize(pango::EllipsizeMode::End);
+    artist.set_max_width_chars(1);
     for label in [&title, &artist] {
         label.set_xalign(if hero { 0.5 } else { 0.0 });
         side.append(label);

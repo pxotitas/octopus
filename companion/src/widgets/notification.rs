@@ -37,6 +37,7 @@ pub fn card(
     app.set_xalign(0.0);
     app.set_hexpand(true);
     app.set_ellipsize(pango::EllipsizeMode::End);
+    app.set_max_width_chars(1);
     let close = icons::button("close", t("dispensar"));
     close.add_css_class("notification-close");
     header.append(&app);
@@ -51,6 +52,7 @@ pub fn card(
         summary.set_wrap_mode(pango::WrapMode::WordChar);
         summary.set_lines(2);
         summary.set_ellipsize(pango::EllipsizeMode::End);
+        summary.set_max_width_chars(1);
         text.append(&summary);
     }
     if !n.body.is_empty() {
@@ -66,6 +68,7 @@ pub fn card(
         body.set_wrap_mode(pango::WrapMode::WordChar);
         body.set_lines(3);
         body.set_ellipsize(pango::EllipsizeMode::End);
+        body.set_max_width_chars(1);
         text.append(&body);
     }
 
