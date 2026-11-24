@@ -278,20 +278,34 @@ impl Dock {
         button.set_child(Some(&column));
 
         let item = Rc::new(item);
+        // The button keeps the left click for itself, so that one goes
+        // through `clicked`; the gesture only takes the middle and right.
+        let weak = Rc::downgrade(self);
+        let target = item.clone();
+        button.connect_clicked(move |_| {
+            if let Some(dock) = weak.upgrade() {
+                dock.activate(&target);
+            }
+        });
         let click = gtk::GestureClick::new();
         click.set_button(0);
         let weak = Rc::downgrade(self);
         let target = item.clone();
-        click.connect_released(move |gesture, _, _, _| {
+        click.connect_pressed(move |gesture, _, _, _| {
             let Some(dock) = weak.upgrade() else { return };
-            gesture.set_state(gtk::EventSequenceState::Claimed);
             let Some(button) = gesture.widget().and_downcast::<gtk::Button>() else {
                 return;
             };
             match gesture.current_button() {
-                gdk::BUTTON_SECONDARY => dock.menu(&button, &target),
-                gdk::BUTTON_MIDDLE => dock.launch(&target),
-                _ => dock.activate(&target),
+                gdk::BUTTON_SECONDARY => {
+                    gesture.set_state(gtk::EventSequenceState::Claimed);
+                    dock.menu(&button, &target);
+                }
+                gdk::BUTTON_MIDDLE => {
+                    gesture.set_state(gtk::EventSequenceState::Claimed);
+                    dock.launch(&target);
+                }
+                _ => {}
             }
         });
         button.add_controller(click);
