@@ -1,44 +1,57 @@
-# octopus
+# Octopus
 
-Shell M3 cozy pro niri: uma barra vertical minimalista na Waybar, com tudo que é maior (control center, dash, menus, notificações) num companion em Rust + GTK4.
+[![GitHub repo](https://img.shields.io/badge/GitHub-pxotitas%2Foctopus-blue?logo=github)](https://github.com/pxotitas/octopus)
+[![License](https://img.shields.io/github/license/pxotitas/octopus)](https://github.com/pxotitas/octopus/blob/main/LICENSE)
+[![Rust](https://img.shields.io/badge/Made%20with-Rust-orange?logo=rust)](https://github.com/pxotitas/octopus)
+[![GitHub stars](https://img.shields.io/github/stars/pxotitas/octopus?style=social)](https://github.com/pxotitas/octopus/stargazers)
 
-Superfícies opacas e tonais, sem blur (só a tela de bloqueio desfoca). Português ou inglês. As cores saem do wallpaper via matugen.
+A cozy, minimalist desktop shell for [Niri](https://github.com/YaLTeR/niri), built around a vertical Waybar and a Rust + GTK4 companion app.
 
-## Peças
+Octopus combines a control center, dashboard, launcher, menus, notifications, and lock screen into a consistent interface. Its surfaces are opaque and tinted, with blur reserved for the lock screen. The theme is generated from your wallpaper through Matugen, and the interface is available in Portuguese and English.
 
-| Parte | O quê |
+## What's included
+
+| Component | Description |
 |---|---|
-| `waybar/` | barra vertical (e `tray-arrow.c`, o botão da bandeja animado): launcher, workspaces, relógio, bandeja, bateria em pílula com o percentual e o grupo com drawer |
-| `companion/` | `octopus`, o daemon: control center, dash, spotlight (apps e ações, calculadora, `/` arquivos, `>` energia), menus (wi-fi, bluetooth, som, bandeja, clipboard, emoji, energia), configurações, notificações, OSD e a tela de bloqueio |
-| `scripts/` | Matuwall, bateria, tema, emoji, clima e letras |
-| `matugen/` | templates de cores pro companion, Waybar, fuzzel e Matuwall |
-| `niri.kdl` | autostart, binds e layer rules, incluído no config do niri |
+| `waybar/` | Vertical bar with workspaces, launcher, clock, tray, battery, and expandable groups. Includes `tray-arrow.c`, an animated tray button. |
+| `companion/` | Rust/GTK4 daemon that provides the control center, dashboard, Spotlight-style launcher, menus, notifications, clipboard, emoji picker, power menu, and lock screen. |
+| `scripts/` | Helpers for wallpaper colors, battery, themes, emoji, weather, and lyrics. |
+| `matugen/` | Matugen templates for the companion, Waybar, Fuzzel, and Matuwall. |
+| `niri.kdl` | Niri autostart entries, key bindings, and layer rules, ready to include in your configuration. |
 
-Mais detalhes em [`docs/`](docs/README.md).
+More details are available in [`docs/README.md`](docs/README.md).
 
-## Instalar
+## Installation
 
-Depende de: `pam waybar matugen matuwall awww cliphist wl-clipboard wtype playerctl cava brightnessctl networkmanager bluez-utils libpulse python unicode-emoji unicode-cldr fd gcc gtk4 gtk4-layer-shell ttf-material-symbols-variable rust`.
+Octopus expects the following tools and libraries:
 
-O repo mora no próprio `~/.config/octopus`:
+```text
+pam waybar matugen matuwall awww cliphist wl-clipboard wtype playerctl cava
+brightnessctl networkmanager bluez-utils libpulse python unicode-emoji unicode-cldr
+fd gcc gtk4 gtk4-layer-shell rustup jq curl
+```
+
+The repository should live in `~/.config/octopus`:
 
 ```sh
-git clone <repo> ~/.config/octopus
+git clone https://github.com/pxotitas/octopus.git ~/.config/octopus
 ~/.config/octopus/install.sh
 ```
 
-O build fica em `~/.cache/octopus/target`.
+Build output is written to `~/.cache/octopus/target`.
 
-Depois, no fim do `~/.config/niri/config.kdl`:
+Then add the following line to the end of `~/.config/niri/config.kdl`:
 
 ```kdl
 include "~/.config/octopus/niri.kdl"
 ```
 
-## Comandos
+Restart Niri or log out and back in to apply the configuration.
 
-```
-octopus                      # o daemon
+## Commands
+
+```text
+octopus                      # Start the daemon
 octopus toggle <control-center|dash|wifi|bluetooth|audio|tray|clipboard|emoji|power|launcher>
 octopus settings
 octopus close
@@ -48,9 +61,21 @@ octopus mic mute
 octopus brightness <up|down>
 octopus kbd <up|down>
 octopus dnd
-octopus luma <imagem>         # dark ou light, usado pelo modo automático
+octopus luma <image>         # Choose dark or light mode for automatic theming
 ```
 
-## Configuração
+## Configuration
 
-`octopus.toml` (ou `octopus settings`): idioma, barra, lugar do clima, dispositivos de brilho, notificações e letras. Pra sobrescrever estilos sem mexer no CSS embutido, crie um `~/.config/octopus/style.css`; ele recarrega sozinho.
+Edit `octopus.toml`, or use:
+
+```sh
+octopus settings
+```
+
+You can configure the language, bar, weather location, brightness devices, notifications, and lyrics.
+
+To override the built-in styles without modifying the embedded CSS, create a `~/.config/octopus/user.css` file.
+
+## Documentation
+
+See the [`docs/`](docs/README.md) directory for configuration details, key bindings, theming, and troubleshooting.
