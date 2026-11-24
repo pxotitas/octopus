@@ -17,6 +17,9 @@ pub enum Origin {
     Right,
     /// Slides fully out past the bottom edge, for surfaces docked to it.
     BottomEdge,
+    /// Fades with a short rise that stays inside the window's margin, so
+    /// nothing is cut at the window's edge.
+    Fade,
 }
 
 mod imp {
@@ -72,6 +75,7 @@ mod imp {
                 Origin::Right => (28.0 * rest, 0.0),
                 Origin::Bottom => (0.0, 28.0 * rest),
                 Origin::BottomEdge => (0.0, h * rest),
+                Origin::Fade => (0.0, 10.0 * rest),
             };
             snapshot.translate(&graphene::Point::new(dx.round(), dy.round()));
             widget.snapshot_child(&child, snapshot);

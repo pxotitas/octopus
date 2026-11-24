@@ -19,8 +19,11 @@ const KEEP: Duration = Duration::from_secs(60);
 
 impl<T: 'static> Lazy<T> {
     pub fn new(build: impl Fn() -> Rc<T> + 'static, root: fn(&T) -> gtk::Widget) -> Rc<Self> {
+        let holder = gtk::Box::new(gtk::Orientation::Vertical, 0);
+        // Room for the fade's short slide, inside the window.
+        holder.set_margin_bottom(12);
         Rc::new(Self {
-            holder: gtk::Box::new(gtk::Orientation::Vertical, 0),
+            holder,
             value: RefCell::new(None),
             build: Box::new(build),
             root,

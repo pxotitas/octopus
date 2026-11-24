@@ -73,11 +73,11 @@ impl Popup {
                     Origin::Left
                 }
             }
-            Place::Center => Origin::Bottom,
+            Place::Center => Origin::Fade,
             Place::Top => {
                 window.set_anchor(Edge::Top, true);
-                window.set_margin(Edge::Top, 160);
-                Origin::Bottom
+                window.set_margin(Edge::Top, 148);
+                Origin::Fade
             }
             Place::BottomEdge => {
                 window.set_anchor(Edge::Bottom, true);
@@ -278,9 +278,13 @@ pub fn backdrop(app: &gtk::Application, on_click: impl Fn() + 'static) -> gtk::W
 /// Layer windows grow with their content but never shrink back on their own:
 /// asking for the smallest size lets them take the content's size again.
 pub fn fit(widget: &impl IsA<gtk::Widget>) {
-    if let Some(window) = widget.root().and_downcast::<gtk::Window>() {
-        window.set_default_size(1, 1);
-    }
+    let Some(window) = widget.root().and_downcast::<gtk::Window>() else {
+        return;
+    };
+    let Some(child) = window.child() else { return };
+    let (_, width, _, _) = child.measure(gtk::Orientation::Horizontal, -1);
+    let (_, height, _, _) = child.measure(gtk::Orientation::Vertical, width);
+    window.set_default_size(width, height);
 }
 
 /// Follows a stack's size on every frame while it changes page.
