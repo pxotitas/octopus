@@ -574,7 +574,7 @@ fn music(s: &Rc<Services>, enabled: bool, compact: Rc<dyn Fn(bool)>) -> gtk::Box
         });
     }
 
-    // Four times a second is plenty for a progress line and a lyric.
+    // Often enough for the words to light on time.
     let media = s.media.clone();
     let widgets = (
         row.downgrade(),
@@ -582,7 +582,7 @@ fn music(s: &Rc<Services>, enabled: bool, compact: Rc<dyn Fn(bool)>) -> gtk::Box
         at.downgrade(),
         sheet.downgrade(),
     );
-    glib::timeout_add_local(Duration::from_millis(250), move || {
+    glib::timeout_add_local(Duration::from_millis(80), move || {
         let (Some(row), Some(progress), Some(at), Some(sheet)) = (
             widgets.0.upgrade(),
             widgets.1.upgrade(),
@@ -607,14 +607,21 @@ fn music(s: &Rc<Services>, enabled: bool, compact: Rc<dyn Fn(bool)>) -> gtk::Box
         if let Some(l) = lyrics.as_ref() {
             let index = l.current(now);
             for (slot, label) in lines.iter().enumerate() {
-                let text = index
+                let at = index
                     .and_then(|i| (i + slot).checked_sub(1))
-                    .or(if slot == 2 { Some(0) } else { None })
+                    .or(if slot == 2 { Some(0) } else { None });
+                let text = at
                     .and_then(|i| l.lines.get(i))
                     .map(|line| line.text.as_str())
                     .unwrap_or("");
-                if label.label() != text {
-                    label.set_label(text);
+                let markup = match (slot, at) {
+                    (1, Some(i)) if index.is_some() => {
+                        crate::widgets::karaoke::markup(text, l.progress(i, now))
+                    }
+                    _ => glib::markup_escape_text(text).to_string(),
+                };
+                if label.label() != markup {
+                    label.set_markup(&markup);
                 }
             }
         }

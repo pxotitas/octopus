@@ -609,7 +609,7 @@ calendar > grid > label.today {
   font-size: 20px;
   font-weight: 600;
   color: @outline;
-  transition: color 260ms cubic-bezier(0.2, 0, 0, 1);
+  transition: color 260ms cubic-bezier(0.2, 0, 0, 1), font-size 260ms cubic-bezier(0.2, 0, 0, 1);
 }
 
 .lyric.near {
@@ -617,7 +617,9 @@ calendar > grid > label.today {
 }
 
 .lyric.current {
-  color: @on_surface;
+  color: @primary;
+  font-size: 23px;
+  font-weight: 700;
 }
 
 .plain .lyric {
@@ -843,9 +845,9 @@ progressbar.lock-progress progress {
 }
 
 .octopus-lock .lock-line {
-  font-size: 20px;
+  font-size: 24px;
   font-weight: 700;
-  color: @on_surface;
+  color: @primary;
 }
 
 .octopus-lock .lock-line-dim {
