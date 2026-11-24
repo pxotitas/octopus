@@ -309,9 +309,9 @@ impl Surface {
     pub fn busy(&self, on: bool) {
         self.field.set_sensitive(!on);
         self.send.set_sensitive(!on);
-        if on {
-            self.status.set_label(t("verificando…"));
-        }
+        self.status.remove_css_class("error");
+        self.status
+            .set_label(if on { t("verificando…") } else { "" });
     }
 
     pub fn fail(&self, message: &str) {
@@ -319,6 +319,7 @@ impl Surface {
         self.field.set_text("");
         self.focus();
         self.status.set_label(message);
+        self.status.add_css_class("error");
         self.pill.add_css_class("failed");
         let pill = self.pill.clone();
         let shake = self.shake.clone();
@@ -329,6 +330,7 @@ impl Surface {
 
     /// Fades everything out, then reports so the session can unlock.
     pub fn leave(&self, done: impl FnOnce() + 'static) {
+        self.status.set_label("");
         let content = self.content.clone();
         self.shown.animate(
             &self.content,

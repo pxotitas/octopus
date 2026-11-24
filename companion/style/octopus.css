@@ -763,6 +763,10 @@ window.octopus-lock {
 
 .octopus-lock .lock-status {
   font-size: 12px;
+  color: @on_surface_variant;
+}
+
+.octopus-lock .lock-status.error {
   color: @error;
 }
 
