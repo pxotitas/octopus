@@ -61,9 +61,6 @@ tooltip label {
   font-size: 34px;
   color: @primary;
   padding: 2px 0 6px;
-  margin-left: 0;
-  margin-right: 0;
-  min-width: 0;
 }
 
 #custom-launcher:hover,
