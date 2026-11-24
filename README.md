@@ -1,5 +1,3 @@
-
-
 # octopus
 
 [![GitHub repo](https://img.shields.io/badge/GitHub-pxotitas%2Foctopus-blue?logo=github)](https://github.com/pxotitas/octopus)
@@ -7,57 +5,35 @@
 [![Rust](https://img.shields.io/badge/Made%20with-Rust-orange?logo=rust)](https://github.com/pxotitas/octopus)
 [![GitHub stars](https://img.shields.io/github/stars/pxotitas/octopus?style=social)](https://github.com/pxotitas/octopus/stargazers)
 
-Shell M3 cozy pro niri: uma barra vertical minimalista na Waybar, com tudo que é maior (control center, dash, menus, notificações) num companion em Rust + GTK4.
+a cozy m3 shell for niri. / um shell m3 cozy pro niri.
 
-Superfícies opacas e tonais, sem blur (só a tela de bloqueio desfoca). Português ou inglês. As cores saem do wallpaper via matugen.
+this branch is the shell itself: the companion, the scripts, the waybar and
+the niri config. the docs live in branches of their own.
 
-## Peças
+essa branch é o shell em si: o companion, os scripts, a waybar e o config do
+niri. as docs moram em branches próprias.
 
-| Parte | O quê |
+| branch | what / o quê |
 |---|---|
-| `waybar/` | barra vertical (e `tray-arrow.c`, o botão da bandeja animado): launcher, workspaces, relógio, bandeja, bateria em pílula com o percentual e o grupo com drawer |
-| `companion/` | `octopus`, o daemon: control center, dash, spotlight (apps e ações, calculadora, `/` arquivos, `>` energia), menus (wi-fi, bluetooth, som, bandeja, clipboard, emoji, energia), configurações, notificações, OSD e a tela de bloqueio |
-| `scripts/` | Matuwall, bateria, tema, emoji, clima e letras |
-| `matugen/` | templates de cores pro companion, Waybar, fuzzel e Matuwall |
-| `niri.kdl` | autostart, binds e layer rules, incluído no config do niri |
+| [`main`](https://github.com/pxotitas/octopus/tree/main) | the code / o código |
+| [`eng`](https://github.com/pxotitas/octopus/tree/eng) | readme and docs in english |
+| [`pt-br`](https://github.com/pxotitas/octopus/tree/pt-br) | readme e docs em português |
+| [`website`](https://github.com/pxotitas/octopus/tree/website) | the project's site / o site do projeto |
 
-Mais detalhes em [`docs/`](docs/README.md).
-
-## Instalar
-
-Depende de: `pam waybar matugen matuwall awww cliphist wl-clipboard wtype playerctl cava brightnessctl networkmanager bluez-utils libpulse python unicode-emoji unicode-cldr fd gcc gtk4 gtk4-layer-shell ttf-material-symbols-variable rust`.
-
-O repo mora no próprio `~/.config/octopus`:
+## install / instalar
 
 ```sh
-git clone <repo> ~/.config/octopus
+git clone https://github.com/pxotitas/octopus ~/.config/octopus
 ~/.config/octopus/install.sh
 ```
 
-O build fica em `~/.cache/octopus/target`.
-
-Depois, no fim do `~/.config/niri/config.kdl`:
+then / depois, at the end of / no fim do `~/.config/niri/config.kdl`:
 
 ```kdl
 include "~/.config/octopus/niri.kdl"
 ```
 
-## Comandos
+## license / licença
 
-```
-octopus                      # o daemon
-octopus toggle <control-center|dash|wifi|bluetooth|audio|tray|clipboard|emoji|power|launcher>
-octopus settings
-octopus close
-octopus lock
-octopus volume <up|down|mute>
-octopus mic mute
-octopus brightness <up|down>
-octopus kbd <up|down>
-octopus dnd
-octopus luma <imagem>         # dark ou light, usado pelo modo automático
-```
-
-## Configuração
-
-`octopus.toml` (ou `octopus settings`): idioma, barra, lugar do clima, dispositivos de brilho, notificações e letras. Pra sobrescrever estilos sem mexer no CSS embutido, crie um `~/.config/octopus/style.css`; ele recarrega sozinho.
+gpl-3.0-or-later. some parts come from [impasto](https://github.com/andreumassanet/impasto)
+and [velatura](https://github.com/pxdritz1/velatura); see [`NOTICE.md`](NOTICE.md).
