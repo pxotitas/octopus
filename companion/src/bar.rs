@@ -20,7 +20,7 @@ fn waybar_name(module: &str) -> Option<&'static str> {
         "workspaces" => "niri/workspaces",
         "clock" => "clock",
         "tray" => "custom/tray",
-        "battery" => "group/battery",
+        "battery" => "group/charge",
         "controls" => "group/controls",
         _ => return None,
     })
@@ -88,7 +88,7 @@ pub fn waybar_config(bar: &Bar) -> String {
         }),
     );
     config.insert(
-        "group/battery".into(),
+        "group/charge".into(),
         json!({ "orientation": "inherit", "modules": ["custom/battery", "battery"] }),
     );
     config.insert(
