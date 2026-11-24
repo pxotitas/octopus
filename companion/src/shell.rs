@@ -38,6 +38,7 @@ impl Shell {
         let config = config::load();
         let shared = Rc::new(std::cell::RefCell::new(config.clone()));
         crate::i18n::init(&config.language);
+        crate::services::lyrics::set_offset(config.media.lyrics_offset_ms);
         crate::bar::apply(&config.bar);
         let services = Services::new(&config);
 
@@ -481,6 +482,7 @@ impl Shell {
                         crate::restart(&app);
                         return;
                     }
+                    crate::services::lyrics::set_offset(next.media.lyrics_offset_ms);
                     crate::bar::apply(&next.bar);
                     for popup in &popups {
                         popup.set_side(next.bar.right());

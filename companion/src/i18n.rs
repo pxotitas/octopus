@@ -51,6 +51,8 @@ pub fn date(now: &chrono::DateTime<chrono::Local>) -> String {
 }
 
 const ENTRIES: &[(&str, &str)] = &[
+    ("adiantar (+) ou atrasar (-) as letras, se não baterem com a música", "move the lyrics earlier (+) or later (-) if they drift from the music"),
+    ("tempo da letra", "lyrics timing"),
     ("os ícones crescem embaixo do ponteiro", "icons swell under the pointer"),
     ("magnificação", "magnification"),
     ("tamanho dos ícones", "icon size"),

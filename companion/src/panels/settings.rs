@@ -338,6 +338,28 @@ impl Settings {
                 s.draft.borrow_mut().media.lyrics = sw.is_active();
             }
         });
+        let offset = gtk::Scale::with_range(gtk::Orientation::Horizontal, -1.5, 1.5, 0.05);
+        offset.set_value(config.media.lyrics_offset_ms as f64 / 1000.0);
+        offset.set_hexpand(true);
+        offset.set_draw_value(false);
+        offset.add_mark(0.0, gtk::PositionType::Bottom, None);
+        let shown = gtk::Label::new(Some(&format!(
+            "{:+.2}s",
+            config.media.lyrics_offset_ms as f64 / 1000.0
+        )));
+        shown.add_css_class("percent");
+        let offset_row = gtk::Box::new(gtk::Orientation::Horizontal, 8);
+        offset_row.append(&offset);
+        offset_row.append(&shown);
+        let weak = Rc::downgrade(self);
+        offset.connect_value_changed(move |scale| {
+            let ms = (scale.value() * 20.0).round() as i64 * 50;
+            shown.set_label(&format!("{:+.2}s", ms as f64 / 1000.0));
+            crate::services::lyrics::set_offset(ms);
+            if let Some(s) = weak.upgrade() {
+                s.draft.borrow_mut().media.lyrics_offset_ms = ms;
+            }
+        });
         column.append(&group(&[
             stacked(
                 "location_on",
@@ -358,6 +380,13 @@ impl Settings {
                 t("letras"),
                 t("no dash e na tela de bloqueio"),
                 &lyrics,
+            )
+            .upcast_ref(),
+            stacked(
+                "sync",
+                t("tempo da letra"),
+                t("adiantar (+) ou atrasar (-) as letras, se não baterem com a música"),
+                &offset_row,
             )
             .upcast_ref(),
         ]));

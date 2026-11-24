@@ -126,11 +126,16 @@ impl Default for Notifications {
 #[serde(default)]
 pub struct Media {
     pub lyrics: bool,
+    /// Moves the lyrics earlier (positive) or later (negative).
+    pub lyrics_offset_ms: i64,
 }
 
 impl Default for Media {
     fn default() -> Self {
-        Self { lyrics: true }
+        Self {
+            lyrics: true,
+            lyrics_offset_ms: 0,
+        }
     }
 }
 

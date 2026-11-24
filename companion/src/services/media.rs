@@ -99,9 +99,12 @@ impl Media {
         let position = self.position.clone();
         let read_at = self.read_at.clone();
         glib::spawn_future_local(async move {
+            let asked = glib::monotonic_time();
             if let Some(out) = exec::output("playerctl", &["-p", &player, "position"]).await {
                 if let Ok(seconds) = out.trim().parse::<f64>() {
-                    read_at.set(glib::monotonic_time());
+                    // The player answered somewhere in the round trip; its
+                    // middle is closer than its end.
+                    read_at.set(asked + (glib::monotonic_time() - asked) / 2);
                     position.set(seconds);
                 }
             }
