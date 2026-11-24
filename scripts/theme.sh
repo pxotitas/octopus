@@ -10,3 +10,4 @@ if [ "$mode" = auto ]; then
 fi
 matugen image "$image" -m "$mode" --source-color-index 0 -c "$HOME/.config/octopus/matugen/config.toml"
 [ -f "$HOME/.config/matugen/config.toml" ] && matugen image "$image" -m "$mode" --source-color-index 0
+python3 "$HOME/.config/octopus/scripts/lock.py" "$image" &

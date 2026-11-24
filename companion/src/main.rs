@@ -4,7 +4,7 @@ mod exec;
 mod i18n;
 mod icons;
 mod ipc;
-mod lock;
+mod locker;
 mod memory;
 mod panels;
 mod popup;
