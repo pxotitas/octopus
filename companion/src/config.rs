@@ -67,6 +67,10 @@ pub struct Dock {
     pub mode: String,
     /// Desktop ids, in order.
     pub pinned: Vec<String>,
+    /// Icon size in pixels.
+    pub size: u32,
+    /// Icons swell under the pointer, after Velatura's dock.
+    pub magnify: bool,
 }
 
 impl Default for Dock {
@@ -75,6 +79,8 @@ impl Default for Dock {
             enabled: false,
             mode: "smart".into(),
             pinned: Vec::new(),
+            size: 44,
+            magnify: true,
         }
     }
 }

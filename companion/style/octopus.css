@@ -1419,3 +1419,7 @@ gridview.wallpaper-grid > child:selected {
   color: @on_primary;
   font-size: 16px;
 }
+
+.dock-capsule.magnify .dock-item:hover {
+  transform: none;
+}

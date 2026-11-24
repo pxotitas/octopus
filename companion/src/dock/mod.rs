@@ -1,4 +1,8 @@
+//! Ported from Velatura's dock (github.com/pxdritz1/velatura), itself from impasto
+//! (github.com/andreumassanet/impasto), GPL-3.0.
+
 mod apps;
+mod shelf;
 
 use std::cell::{Cell, RefCell};
 use std::rc::Rc;
@@ -13,8 +17,10 @@ use crate::services::niri::{Niri, Window};
 use crate::widgets::anim::{self, Tween};
 use crate::widgets::motion::{Motion, Origin};
 use apps::Apps;
+use shelf::Shelf;
 
-const ICON: i32 = 40;
+/// How large the icon under the pointer grows.
+const MAGNIFY: f64 = 1.55;
 const HIDE_DELAY: Duration = Duration::from_millis(500);
 
 /// One app on the dock: pinned, running, or both.
@@ -42,6 +48,10 @@ pub struct Dock {
     motion: Motion,
     tween: Rc<Tween>,
     capsule: gtk::Box,
+    shelf: Shelf,
+    swell: Rc<Tween>,
+    icon: i32,
+    headroom: i32,
     niri: Rc<Niri>,
     apps: Apps,
     pinned: RefCell<Vec<String>>,
@@ -57,10 +67,13 @@ pub struct Dock {
 impl Dock {
     pub fn new(
         app: &gtk::Application,
-        mode: &str,
-        pinned: Vec<String>,
+        config: &crate::config::Dock,
         save: Rc<dyn Fn(Vec<String>)>,
     ) -> Rc<Self> {
+        let mode = config.mode.as_str();
+        let icon = config.size.clamp(24, 72) as i32;
+        let magnify = if config.magnify { MAGNIFY } else { 1.0 };
+        let headroom = ((icon as f64) * (magnify - 1.0)).ceil() as i32;
         let window = gtk::Window::builder()
             .application(app)
             .decorated(false)
@@ -71,12 +84,15 @@ impl Dock {
         window.set_layer(Layer::Top);
         window.set_keyboard_mode(KeyboardMode::None);
         window.set_anchor(Edge::Bottom, true);
-        if mode == "fixed" {
-            window.auto_exclusive_zone_enable();
-        }
-
-        let capsule = gtk::Box::new(gtk::Orientation::Horizontal, 4);
+        let capsule = gtk::Box::new(gtk::Orientation::Horizontal, 0);
         capsule.add_css_class("dock-capsule");
+        capsule.set_margin_top(headroom);
+        capsule.set_halign(gtk::Align::Center);
+        let shelf = Shelf::new(4, magnify);
+        capsule.append(&shelf);
+        if magnify > 1.0 {
+            capsule.add_css_class("magnify");
+        }
         let motion = Motion::new(&capsule, Origin::BottomEdge);
         window.set_child(Some(&motion));
 
@@ -85,9 +101,13 @@ impl Dock {
             motion,
             tween: Tween::new(0.0),
             capsule,
+            shelf: shelf.clone(),
+            swell: Tween::new(0.0),
+            icon,
+            headroom,
             niri: Niri::new(),
             apps: Apps::load(),
-            pinned: RefCell::new(pinned),
+            pinned: RefCell::new(config.pinned.clone()),
             mode: mode.to_owned(),
             shown: Cell::new(false),
             hovered: Cell::new(false),
@@ -103,6 +123,7 @@ impl Dock {
             if let Some(d) = weak.upgrade() {
                 d.hovered.set(true);
                 d.settle(Duration::ZERO);
+                d.refresh_input();
             }
         });
         let weak = Rc::downgrade(&dock);
@@ -110,9 +131,34 @@ impl Dock {
             if let Some(d) = weak.upgrade() {
                 d.hovered.set(false);
                 d.settle(HIDE_DELAY);
+                d.refresh_input();
             }
         });
         dock.window.add_controller(pointer);
+
+        if dock.shelf.magnifies() {
+            let swelling = gtk::EventControllerMotion::new();
+            let weak = Rc::downgrade(&dock);
+            swelling.connect_enter(move |_, x, _| {
+                if let Some(d) = weak.upgrade() {
+                    d.shelf.set_pointer(x);
+                    d.set_swell(1.0);
+                }
+            });
+            let weak = Rc::downgrade(&dock);
+            swelling.connect_motion(move |_, x, _| {
+                if let Some(d) = weak.upgrade() {
+                    d.shelf.set_pointer(x);
+                }
+            });
+            let weak = Rc::downgrade(&dock);
+            swelling.connect_leave(move |_| {
+                if let Some(d) = weak.upgrade() {
+                    d.set_swell(0.0);
+                }
+            });
+            dock.shelf.add_controller(swelling);
+        }
 
         let weak = Rc::downgrade(&dock);
         dock.niri.windows.subscribe(move |_| {
@@ -186,21 +232,23 @@ impl Dock {
             return;
         }
         *self.signature.borrow_mut() = signature;
-        while let Some(child) = self.capsule.first_child() {
-            self.capsule.remove(&child);
-        }
+        self.shelf.clear();
         let pinned_count = items.iter().filter(|i| i.pinned).count();
         for (index, item) in items.into_iter().enumerate() {
             if index == pinned_count && pinned_count > 0 {
                 let divider = gtk::Separator::new(gtk::Orientation::Vertical);
                 divider.add_css_class("dock-divider");
-                self.capsule.append(&divider);
+                self.shelf.append(&divider);
             }
-            self.capsule.append(&self.button(item));
+            self.shelf.append(&self.button(item));
         }
-        self.window
-            .set_visible(self.capsule.first_child().is_some());
+        self.window.set_visible(self.shelf.first_child().is_some());
         crate::popup::fit(&self.capsule);
+        if self.mode == "fixed" {
+            let (_, height, _, _) = self.capsule.measure(gtk::Orientation::Vertical, -1);
+            self.window
+                .set_exclusive_zone(height - self.headroom + self.capsule.margin_bottom());
+        }
     }
 
     fn button(self: &Rc<Self>, item: Item) -> gtk::Button {
@@ -211,12 +259,7 @@ impl Dock {
         }
         button.set_tooltip_text(Some(&item.name));
         let column = gtk::Box::new(gtk::Orientation::Vertical, 4);
-        let image = match &item.icon {
-            Some(icon) => gtk::Image::from_gicon(icon),
-            None => gtk::Image::from_icon_name(item.key.trim_start_matches("class:")),
-        };
-        image.set_pixel_size(ICON);
-        column.append(&image);
+        column.append(&self.icon_of(&item));
         let dots = gtk::Box::new(gtk::Orientation::Horizontal, 3);
         dots.set_halign(gtk::Align::Center);
         dots.add_css_class("dock-dots");
@@ -247,6 +290,37 @@ impl Dock {
         });
         button.add_controller(click);
         button
+    }
+
+    /// The icon loaded at its magnified size and drawn smaller at rest, so
+    /// it stays sharp when it swells.
+    fn icon_of(&self, item: &Item) -> gtk::Widget {
+        let picture = gtk::Picture::new();
+        picture.set_can_shrink(true);
+        picture.set_content_fit(gtk::ContentFit::Contain);
+        picture.set_size_request(self.icon, self.icon);
+        let large = (self.icon as f64 * MAGNIFY).ceil() as i32;
+        let theme = gtk::IconTheme::for_display(&WidgetExt::display(&self.window));
+        let scale = self.window.scale_factor();
+        let paintable = match &item.icon {
+            Some(icon) => theme.lookup_by_gicon(
+                icon,
+                large,
+                scale,
+                gtk::TextDirection::None,
+                gtk::IconLookupFlags::empty(),
+            ),
+            None => theme.lookup_icon(
+                item.key.trim_start_matches("class:"),
+                &["application-x-executable"],
+                large,
+                scale,
+                gtk::TextDirection::None,
+                gtk::IconLookupFlags::empty(),
+            ),
+        };
+        picture.set_paintable(Some(&paintable));
+        picture.upcast()
     }
 
     /// Opens it if nothing runs, focuses it if it is not focused, otherwise
@@ -414,8 +488,12 @@ impl Dock {
         };
         let geometry = monitor.geometry();
         let (sw, sh) = (geometry.width() as f64, geometry.height() as f64);
-        let (w, h) = (self.window.width() as f64, self.window.height() as f64);
-        let dock = [(sw - w) / 2.0, sh - h, w, h];
+        let Some(bounds) = self.capsule.compute_bounds(&self.window) else {
+            return false;
+        };
+        let (w, h) = (bounds.width() as f64, bounds.height() as f64);
+        let below = self.window.height() as f64 - (bounds.y() as f64 + h);
+        let dock = [(sw - w) / 2.0, sh - h - below, w, h];
         let connector = monitor
             .connector()
             .map(|c| c.to_string())
@@ -484,20 +562,43 @@ impl Dock {
             move |p| motion.set_progress(p),
             || {},
         );
-        self.set_input(on);
+        self.refresh_input();
+    }
+
+    fn set_swell(&self, to: f64) {
+        let shelf = self.shelf.clone();
+        self.swell.animate(
+            &self.shelf,
+            to,
+            if to > 0.5 { 180 } else { 240 },
+            anim::STANDARD,
+            move |v| shelf.set_swell(v),
+            || {},
+        );
     }
 
     /// Hidden, only a sliver along the screen's edge takes the pointer, so
-    /// what is under the dock stays clickable.
-    fn set_input(&self, full: bool) {
+    /// what is under the dock stays clickable. Shown, the capsule does; under
+    /// the pointer, the room above it too, where the magnified icons grow.
+    fn refresh_input(&self) {
         let Some(surface) = self.window.surface() else {
             return;
         };
-        let (w, h) = (self.window.width(), self.window.height());
-        let rect = if full {
-            gtk::cairo::RectangleInt::new(0, 0, w.max(1), h.max(1))
+        let (w, h) = (self.window.width().max(1), self.window.height().max(1));
+        let rect = if !self.shown.get() {
+            gtk::cairo::RectangleInt::new(0, (h - 3).max(0), w, 3)
+        } else if self.hovered.get() || self.menu_open.get() {
+            gtk::cairo::RectangleInt::new(0, 0, w, h)
         } else {
-            gtk::cairo::RectangleInt::new(0, (h - 3).max(0), w.max(1), 3)
+            match self.capsule.compute_bounds(&self.window) {
+                Some(b) => gtk::cairo::RectangleInt::new(
+                    b.x() as i32,
+                    b.y() as i32,
+                    b.width().ceil() as i32,
+                    h - b.y() as i32,
+                ),
+                None => gtk::cairo::RectangleInt::new(0, 0, w, h),
+            }
         };
         surface.set_input_region(Some(&gtk::cairo::Region::create_rectangle(&rect)));
     }

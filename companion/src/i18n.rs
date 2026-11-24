@@ -51,6 +51,9 @@ pub fn date(now: &chrono::DateTime<chrono::Local>) -> String {
 }
 
 const ENTRIES: &[(&str, &str)] = &[
+    ("os ícones crescem embaixo do ponteiro", "icons swell under the pointer"),
+    ("magnificação", "magnification"),
+    ("tamanho dos ícones", "icon size"),
     ("buscar wallpaper", "search wallpapers"),
     ("widgets", "widgets"),
     ("dock", "dock"),

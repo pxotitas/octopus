@@ -270,8 +270,7 @@ impl Shell {
                 let shared = shared.clone();
                 crate::dock::Dock::new(
                     app,
-                    &config.dock.mode,
-                    config.dock.pinned.clone(),
+                    &config.dock,
                     Rc::new(move |pinned: Vec<String>| {
                         let mut config = shared.borrow_mut();
                         config.dock.pinned = pinned;
@@ -466,6 +465,8 @@ impl Shell {
                     if next.language != old_language
                         || next.dock.enabled != old_dock.enabled
                         || next.dock.mode != old_dock.mode
+                        || next.dock.size != old_dock.size
+                        || next.dock.magnify != old_dock.magnify
                     {
                         crate::restart(&app);
                         return;

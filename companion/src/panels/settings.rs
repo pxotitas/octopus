@@ -258,8 +258,38 @@ impl Settings {
                 }
             },
         );
+        let size = gtk::Scale::with_range(gtk::Orientation::Horizontal, 28.0, 64.0, 2.0);
+        size.set_value(config.dock.size as f64);
+        size.set_hexpand(true);
+        size.set_draw_value(false);
+        let value = gtk::Label::new(Some(&format!("{}px", config.dock.size)));
+        value.add_css_class("percent");
+        let holder = gtk::Box::new(gtk::Orientation::Horizontal, 8);
+        holder.append(&size);
+        holder.append(&value);
+        let weak = Rc::downgrade(self);
+        size.connect_value_changed(move |scale| {
+            let px = (scale.value() / 2.0).round() as u32 * 2;
+            value.set_label(&format!("{px}px"));
+            if let Some(s) = weak.upgrade() {
+                s.draft.borrow_mut().dock.size = px;
+            }
+        });
+        let magnify = gtk::Switch::new();
+        magnify.set_active(config.dock.magnify);
+        magnify.set_valign(gtk::Align::Center);
+        let weak = Rc::downgrade(self);
+        magnify.connect_active_notify(move |sw| {
+            if let Some(s) = weak.upgrade() {
+                s.draft.borrow_mut().dock.magnify = sw.is_active();
+            }
+        });
         column.append(&group(&[
             inline("dock_to_bottom", t("mostrar a dock"), t("reinicia o octopus ao aplicar"), &enabled)
+                .upcast_ref(),
+            stacked("photo_size_select_small", t("tamanho dos ícones"), t("em pixels"), &holder)
+                .upcast_ref(),
+            inline("zoom_in", t("magnificação"), t("os ícones crescem embaixo do ponteiro"), &magnify)
                 .upcast_ref(),
             stacked(
                 "visibility",
