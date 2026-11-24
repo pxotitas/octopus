@@ -1,13 +1,6 @@
 #!/usr/bin/env python3
 
-# ╭──────────────────────────────────────────────────────────────────────────╮
-# │                                                                          │
-# │   L Y R I C S                                                            │
-# │   the playing track's lyrics · lrclib.net, cached                        │
-# │                                                                          │
-# │   github.com/pxdritz1/velatura                                      │
-# │                                                                          │
-# ╰──────────────────────────────────────────────────────────────────────────╯
+# from velatura (github.com/pxdritz1/velatura), itself built on impasto, GPL-3.0
 
 """One track's lyrics from lrclib.net, timed per line when it has them.
 
@@ -34,7 +27,7 @@ import urllib.request
 
 ENDPOINT = "https://lrclib.net/api"
 TIMEOUT = 8
-AGENT = "octopus (github.com/pxdritz1/velatura)"
+AGENT = "octopus (github.com/pxotitas/octopus)"
 MISS_TTL = 7 * 24 * 3600
 # A busy lrclib is asked once more, this long after, before giving up.
 RETRY_AFTER = 2

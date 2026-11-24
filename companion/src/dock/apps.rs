@@ -1,3 +1,6 @@
+//! Ported from Velatura's dock (github.com/pxdritz1/velatura), itself from impasto
+//! (github.com/andreumassanet/impasto), GPL-3.0.
+
 use std::collections::HashMap;
 
 use gio_unix::prelude::*;

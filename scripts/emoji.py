@@ -1,13 +1,6 @@
 #!/usr/bin/env python3
 
-# ╭──────────────────────────────────────────────────────────────────────────╮
-# │                                                                          │
-# │   E M O J I                                                              │
-# │   emoji index for the launcher · read from the unicode data files        │
-# │                                                                          │
-# │   github.com/andreumassanet/impasto                                      │
-# │                                                                          │
-# ╰──────────────────────────────────────────────────────────────────────────╯
+# from impasto (github.com/andreumassanet/impasto), GPL-3.0
 
 """List every emoji with its name, keywords, group and skin tones.
 

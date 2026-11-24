@@ -1,13 +1,6 @@
 #!/usr/bin/env python3
 
-# ╭──────────────────────────────────────────────────────────────────────────╮
-# │                                                                          │
-# │   W E A T H E R                                                          │
-# │   current weather and forecast                                           │
-# │                                                                          │
-# │   github.com/pxdritz1/velatura                                      │
-# │                                                                          │
-# ╰──────────────────────────────────────────────────────────────────────────╯
+# from velatura (github.com/pxdritz1/velatura), itself built on impasto, GPL-3.0
 
 """One wttr.in reading, reduced to what the weather card shows.
 
