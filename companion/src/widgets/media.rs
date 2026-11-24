@@ -17,8 +17,8 @@ pub enum Size {
 }
 
 /// Cover, title, artist, transport and the wave timeline. A placeholder
-/// takes its place when nothing is playing. With `cava`, a thin visualizer
-/// runs along the card's bottom edge while music plays.
+/// takes its place when nothing is playing. With `cava`, a small visualizer
+/// sits in the card's bottom-right corner while music plays.
 pub fn player(media: &Rc<Media>, size: Size, cava: Option<&Rc<Cava>>) -> gtk::Overlay {
     let hero = matches!(size, Size::Hero);
     let stack = gtk::Stack::new();
@@ -118,9 +118,10 @@ pub fn player(media: &Rc<Media>, size: Size, cava: Option<&Rc<Cava>>) -> gtk::Ov
     let bars = cava.map(|cava| {
         let bars = crate::widgets::cava::bars(cava);
         bars.add_css_class("media-cava");
-        bars.set_content_height(10);
+        bars.set_content_width(48);
+        bars.set_content_height(14);
         bars.set_valign(gtk::Align::End);
-        bars.set_hexpand(true);
+        bars.set_halign(gtk::Align::End);
         bars.set_can_target(false);
         overlay.add_overlay(&bars);
         bars

@@ -398,12 +398,18 @@ fn music(s: &Rc<Services>, enabled: bool) -> gtk::Box {
     column.set_halign(gtk::Align::Center);
     column.set_valign(gtk::Align::End);
     column.set_margin_bottom(36);
+    // A picture asks for its image's full size; the shape holds it to 76px.
     let cover = gtk::Picture::new();
-    cover.add_css_class("lock-cover");
     cover.set_content_fit(gtk::ContentFit::Cover);
-    cover.set_size_request(72, 72);
-    cover.set_halign(gtk::Align::Center);
-    cover.set_overflow(gtk::Overflow::Hidden);
+    cover.set_can_shrink(true);
+    let frame = Shape::new(
+        crate::widgets::shape::random_kind(&[]),
+        76,
+        true,
+        Some(&cover),
+    );
+    frame.add_css_class("lock-cover");
+    frame.set_halign(gtk::Align::Center);
     let line = gtk::Label::new(None);
     line.add_css_class("lock-line");
     line.set_ellipsize(gtk::pango::EllipsizeMode::End);
@@ -412,7 +418,7 @@ fn music(s: &Rc<Services>, enabled: bool) -> gtk::Box {
     song.add_css_class("lock-song");
     song.set_ellipsize(gtk::pango::EllipsizeMode::End);
     song.set_max_width_chars(56);
-    column.append(&cover);
+    column.append(&frame);
     column.append(&line);
     column.append(&song);
 
@@ -449,7 +455,9 @@ fn music(s: &Rc<Services>, enabled: bool) -> gtk::Box {
                     .as_deref()
                     .map(|p| p.strip_prefix("file://").unwrap_or(p)),
             );
-            cover.set_visible(track.art.is_some());
+            if let Some(frame) = cover.parent() {
+                frame.set_visible(track.art.is_some());
+            }
             if !enabled || last.replace(text.clone()) == text {
                 return;
             }

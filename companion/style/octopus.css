@@ -323,8 +323,8 @@ shape.tile-icon label {
 }
 
 .media-cava {
-  color: alpha(@primary, 0.45);
-  margin: 0 18px 1px;
+  color: alpha(@primary, 0.55);
+  margin: 0 14px 10px 0;
 }
 
 .art-fallback {
@@ -775,7 +775,7 @@ window.octopus-lock {
 }
 
 .lock-cover {
-  border-radius: 22px;
+  color: @surface_container_high;
   margin-bottom: 6px;
 }
 
