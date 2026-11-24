@@ -33,7 +33,6 @@ impl Settings {
             .default_height(760)
             .build();
         window.add_css_class("octopus-settings");
-        window.set_hide_on_close(true);
 
         let column = gtk::Box::new(gtk::Orientation::Vertical, 14);
         column.add_css_class("settings-column");
