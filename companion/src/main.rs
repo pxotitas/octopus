@@ -1,5 +1,6 @@
 mod bar;
 mod config;
+mod dock;
 mod exec;
 mod i18n;
 mod icons;

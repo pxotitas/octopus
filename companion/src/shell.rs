@@ -28,12 +28,15 @@ pub struct Shell {
     osd: Rc<Osd>,
     lock: Rc<crate::lock::Lock>,
     _toasts: Rc<Toasts>,
+    _dock: Option<Rc<crate::dock::Dock>>,
+    dash: Rc<Dash>,
 }
 
 impl Shell {
     pub fn new(app: &gtk::Application) -> Rc<Self> {
         crate::theme::install();
         let config = config::load();
+        let shared = Rc::new(std::cell::RefCell::new(config.clone()));
         crate::i18n::init(&config.language);
         crate::bar::apply(&config.bar);
         let services = Services::new(&config);
@@ -49,10 +52,7 @@ impl Shell {
             };
 
             let cc = panels::control_center::build(&services, open.clone());
-            let dash = Dash::new(&services, config.media.lyrics, {
-                let open = open.clone();
-                move || open("wallpapers")
-            });
+            let dash = Dash::new(&services, config.media.lyrics);
 
             let mut popups = HashMap::new();
             popups.insert(
@@ -265,9 +265,25 @@ impl Shell {
 
             let lock = crate::lock::Lock::new(app, &services, config.media.lyrics);
 
+            let dock = config.dock.enabled.then(|| {
+                let shared = shared.clone();
+                crate::dock::Dock::new(
+                    app,
+                    &config.dock.mode,
+                    config.dock.pinned.clone(),
+                    Rc::new(move |pinned: Vec<String>| {
+                        let mut config = shared.borrow_mut();
+                        config.dock.pinned = pinned;
+                        if let Err(err) = config::save(&config) {
+                            eprintln!("octopus: cannot save the dock: {err}");
+                        }
+                    }),
+                )
+            });
+
             Shell {
                 app: app.clone(),
-                config: Rc::new(std::cell::RefCell::new(config.clone())),
+                config: shared.clone(),
                 settings: Rc::default(),
                 services,
                 popups,
@@ -275,6 +291,8 @@ impl Shell {
                 osd,
                 lock,
                 _toasts: toasts,
+                _dock: dock,
+                dash: dash.clone(),
             }
         })
     }
@@ -334,8 +352,10 @@ impl Shell {
                 }
             }
             ["open", "wallpapers"] => {
-                self.close_all();
-                exec::spawn(&exec::script("wallpaper.sh"), &[]);
+                self.dash.select("wallpapers");
+                if !self.popups.get("dash").is_some_and(|p| p.is_open()) {
+                    self.toggle("dash");
+                }
                 String::new()
             }
             ["open", name] => {
@@ -438,7 +458,14 @@ impl Shell {
                     if let Err(err) = config::save(&next) {
                         eprintln!("octopus: cannot save settings: {err}");
                     }
-                    if next.language != current.borrow().language {
+                    let (old_language, old_dock) = {
+                        let current = current.borrow();
+                        (current.language.clone(), current.dock.clone())
+                    };
+                    if next.language != old_language
+                        || next.dock.enabled != old_dock.enabled
+                        || next.dock.mode != old_dock.mode
+                    {
                         crate::restart(&app);
                         return;
                     }

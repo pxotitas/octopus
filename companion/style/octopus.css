@@ -311,7 +311,11 @@ shape.tile-icon label {
 }
 
 .media-art-hero {
-  background: @surface_container_highest;
+  color: @surface_container_highest;
+}
+
+.media-art-hero .art-fallback {
+  color: @on_surface_variant;
 }
 
 .wave {
@@ -963,22 +967,163 @@ window.octopus-settings {
   background: @surface;
 }
 
-.settings-column {
-  padding: 24px;
+.settings-rail {
+  background: @surface_container;
+  padding: 20px 10px;
+  min-width: 88px;
+}
+
+.settings-badge {
+  color: @primary_container;
+}
+
+.settings-badge .icon {
+  color: @on_primary_container;
+  font-size: 24px;
+}
+
+.rail-item {
+  background: none;
+  padding: 4px 0;
+  border-radius: 16px;
+}
+
+.rail-item label:not(.icon) {
+  font-size: 12px;
+  font-weight: 500;
+  color: @on_surface_variant;
+}
+
+.rail-pill {
+  min-width: 56px;
+  min-height: 32px;
+  border-radius: 999px;
+  transition: background 220ms cubic-bezier(0.2, 0, 0, 1);
+}
+
+.rail-item:hover .rail-pill {
+  background: @surface_container_highest;
+}
+
+.rail-item:checked .rail-pill {
+  background: @secondary_container;
+}
+
+.rail-item:checked .rail-pill .icon {
+  color: @on_secondary_container;
+  font-variation-settings: "FILL" 1, "wght" 400, "opsz" 24;
+}
+
+.rail-item:checked label:not(.icon) {
+  color: @on_surface;
+  font-weight: 600;
+}
+
+.settings-page {
+  padding: 28px 32px 96px;
 }
 
 .settings-title {
-  font-size: 26px;
-  font-weight: 700;
-  margin-bottom: 4px;
+  font-size: 30px;
+  font-weight: 600;
 }
 
-.settings-row {
-  min-height: 40px;
+.settings-subtitle {
+  color: @on_surface_variant;
+  margin-bottom: 18px;
 }
 
-.settings-module {
-  padding: 4px 0;
+.settings-group {
+  margin-bottom: 12px;
+}
+
+.settings-item {
+  background: @surface_container_low;
+  padding: 16px 18px;
+  border-radius: 6px;
+}
+
+.settings-group > .settings-item:first-child {
+  border-radius: 24px 24px 6px 6px;
+}
+
+.settings-group > .settings-item:last-child {
+  border-radius: 6px 6px 24px 24px;
+}
+
+.settings-group > .settings-item:only-child {
+  border-radius: 24px;
+}
+
+.settings-icon {
+  color: @primary;
+  font-size: 22px;
+}
+
+.settings-item-title {
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.settings-item-sub {
+  font-size: 12px;
+  color: @on_surface_variant;
+}
+
+.settings-hint {
+  font-size: 12px;
+  color: @on_surface_variant;
+  margin: 4px 8px;
+}
+
+.settings-fab {
+  background: @primary_container;
+  border-radius: 18px;
+  padding: 16px 22px;
+  transition: background 150ms ease;
+}
+
+.settings-fab:hover {
+  background: mix(@primary_container, @on_primary_container, 0.08);
+}
+
+.settings-fab label {
+  color: @on_primary_container;
+  font-weight: 600;
+}
+
+.octopus-settings entry {
+  background: @surface_container_highest;
+  border-radius: 14px;
+  border: none;
+  box-shadow: none;
+  padding: 10px 14px;
+}
+
+.octopus-settings switch {
+  background: @surface_container_highest;
+  border: 2px solid @outline;
+  border-radius: 999px;
+  min-width: 48px;
+  min-height: 26px;
+}
+
+.octopus-settings switch:checked {
+  background: @primary;
+  border-color: @primary;
+}
+
+.octopus-settings switch slider {
+  background: @outline;
+  border-radius: 999px;
+  min-width: 18px;
+  min-height: 18px;
+  margin: 2px;
+  box-shadow: none;
+}
+
+.octopus-settings switch:checked slider {
+  background: @on_primary;
 }
 
 .segmented {
@@ -1175,4 +1320,102 @@ gridview.emoji-grid > child:selected {
 .launcher-key {
   color: @primary;
   font-weight: 700;
+}
+
+/* dock */
+
+.dock-capsule {
+  background: @surface_container;
+  border-radius: 26px;
+  padding: 8px 10px 6px;
+  margin: 0 8px 8px;
+}
+
+.dock-item {
+  padding: 4px 4px 2px;
+  border-radius: 18px;
+  background: none;
+  transition: transform 220ms cubic-bezier(0.2, 0, 0, 1), background 150ms ease;
+}
+
+.dock-item:hover {
+  transform: translateY(-4px);
+  background: @surface_container_high;
+}
+
+.dock-item:active {
+  transform: translateY(-1px);
+}
+
+.dock-dots {
+  min-height: 5px;
+}
+
+.dock-dot {
+  min-width: 5px;
+  min-height: 5px;
+  border-radius: 999px;
+  background: @outline;
+  transition: min-width 220ms cubic-bezier(0.2, 0, 0, 1), background 150ms ease;
+}
+
+.dock-item.active .dock-dot {
+  min-width: 14px;
+  background: @primary;
+}
+
+.dock-divider {
+  background: @outline_variant;
+  min-width: 1px;
+  margin: 12px 4px;
+}
+
+.dock-menu > contents {
+  background: @surface_container_high;
+  border-radius: 20px;
+  padding: 6px;
+  box-shadow: none;
+}
+
+/* wallpapers, in the dash */
+
+.wallpapers entry {
+  background: @surface_container_high;
+  border-radius: 16px;
+  border: none;
+  box-shadow: none;
+  padding: 8px 12px;
+}
+
+gridview.wallpaper-grid {
+  background: none;
+}
+
+gridview.wallpaper-grid > child {
+  padding: 4px;
+  border-radius: 22px;
+  background: none;
+}
+
+.wallpaper-thumb {
+  border-radius: 18px;
+  background: @surface_container_highest;
+  transition: border-radius 220ms cubic-bezier(0.2, 0, 0, 1);
+}
+
+gridview.wallpaper-grid > child:hover .wallpaper-thumb {
+  border-radius: 28px;
+}
+
+gridview.wallpaper-grid > child:selected {
+  background: @secondary_container;
+}
+
+.wallpaper-check {
+  color: @primary;
+}
+
+.wallpaper-check .icon {
+  color: @on_primary;
+  font-size: 16px;
 }
