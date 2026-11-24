@@ -33,6 +33,12 @@ cargo build --release --manifest-path "$repo/companion/Cargo.toml"
 mkdir -p "$bin"
 install -m 755 "$CARGO_TARGET_DIR/release/octopus" "$bin/octopus"
 
+echo ":: building the tray button"
+cache=${XDG_CACHE_HOME:-$HOME/.cache}/octopus
+mkdir -p "$cache"
+gcc -shared -fPIC -O2 -o "$cache/tray-arrow.so" "$repo/waybar/tray-arrow.c" \
+  $(pkg-config --cflags --libs gtk+-3.0) -lm || echo "  skipped: needs gcc and gtk3"
+
 echo ":: linking"
 link "$repo/waybar" "$config/waybar"
 link "$repo/scripts/theme.sh" "$bin/octopus-theme"
