@@ -9,10 +9,8 @@ use crate::services::lyrics::{self, Lyrics};
 use crate::services::media::{Media, Track};
 use crate::widgets;
 use crate::widgets::anim::{self, Tween};
-use crate::widgets::karaoke;
 
-/// Synced lyrics that follow the playing line, lit word by word; plain
-/// lyrics just scroll.
+/// Synced lyrics that follow the playing line; plain lyrics just scroll.
 pub struct LyricsView {
     pub root: gtk::Stack,
     column: gtk::Box,
@@ -70,7 +68,7 @@ impl LyricsView {
             }
         });
         let weak = Rc::downgrade(&view);
-        glib::timeout_add_local(std::time::Duration::from_millis(80), move || {
+        glib::timeout_add_local(std::time::Duration::from_millis(100), move || {
             let Some(v) = weak.upgrade() else {
                 return glib::ControlFlow::Break;
             };
@@ -161,30 +159,16 @@ impl LyricsView {
     }
 
     fn follow(&self, position: f64) {
-        let lyrics = self.lyrics.borrow();
-        let Some(lyrics) = lyrics.as_ref() else {
-            return;
-        };
-        let Some(index) = lyrics.current(position) else {
-            return;
-        };
-        if let Some(label) = nth(&self.column, index).and_downcast::<gtk::Label>() {
-            let markup =
-                karaoke::markup(&lyrics.lines[index].text, lyrics.progress(index, position));
-            if label.label() != markup {
-                label.set_markup(&markup);
-            }
-        }
-        let previous = self.current.replace(Some(index));
-        if previous == Some(index) {
+        let index = self
+            .lyrics
+            .borrow()
+            .as_ref()
+            .and_then(|l| l.current(position));
+        let Some(index) = index else { return };
+        if self.current.get() == Some(index) {
             return;
         }
-        if let Some(old) = previous
-            .and_then(|i| nth(&self.column, i))
-            .and_downcast::<gtk::Label>()
-        {
-            old.set_text(&lyrics.lines[previous.unwrap_or(0)].text);
-        }
+        self.current.set(Some(index));
         let mut child = self.column.first_child();
         let mut i = 0usize;
         while let Some(widget) = child {

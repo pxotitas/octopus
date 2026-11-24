@@ -1,7 +1,6 @@
 pub mod anim;
 pub mod art;
 pub mod cava;
-pub mod karaoke;
 pub mod media;
 pub mod motion;
 pub mod notification;

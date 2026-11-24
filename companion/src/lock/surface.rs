@@ -614,14 +614,8 @@ fn music(s: &Rc<Services>, enabled: bool, compact: Rc<dyn Fn(bool)>) -> gtk::Box
                     .and_then(|i| l.lines.get(i))
                     .map(|line| line.text.as_str())
                     .unwrap_or("");
-                let markup = match (slot, at) {
-                    (1, Some(i)) if index.is_some() => {
-                        crate::widgets::karaoke::markup(text, l.progress(i, now))
-                    }
-                    _ => glib::markup_escape_text(text).to_string(),
-                };
-                if label.label() != markup {
-                    label.set_markup(&markup);
+                if label.label() != text {
+                    label.set_label(text);
                 }
             }
         }
