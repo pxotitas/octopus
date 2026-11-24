@@ -23,6 +23,8 @@ pub enum Kind {
     Cookie12,
     Pentagon,
     Sunny,
+    /// A rounded square, for pictures that should read as pictures.
+    Rounded,
 }
 
 /// The shapes that read as shapes (the circle is the morph's midpoint).
@@ -60,6 +62,7 @@ impl Kind {
             Kind::Cookie12 => (12.0, 0.035),
             Kind::Pentagon => (5.0, 0.09),
             Kind::Sunny => (8.0, 0.04),
+            Kind::Rounded => (0.0, 0.0),
         }
     }
 }
@@ -74,6 +77,7 @@ mod imp {
         pub depth: Cell<f64>,
         pub angle: Cell<f64>,
         pub fill: Cell<bool>,
+        pub size: Cell<i32>,
         pub spin: RefCell<Option<gtk::TickCallbackId>>,
         pub tween: RefCell<Option<Rc<Tween>>>,
         pub turn: RefCell<Option<Rc<Tween>>>,
@@ -86,7 +90,6 @@ mod imp {
         type ParentType = gtk::Widget;
 
         fn class_init(klass: &mut Self::Class) {
-            klass.set_layout_manager_type::<gtk::BinLayout>();
             klass.set_css_name("shape");
         }
     }
@@ -103,14 +106,37 @@ mod imp {
     }
 
     impl WidgetImpl for Shape {
+        /// Always its own size: what it holds is clipped to it, never asked
+        /// how big it would like to be (a picture would say its image's size).
+        fn measure(&self, _orientation: gtk::Orientation, _for_size: i32) -> (i32, i32, i32, i32) {
+            let size = self.size.get();
+            (size, size, -1, -1)
+        }
+
+        fn size_allocate(&self, width: i32, height: i32, baseline: i32) {
+            if let Some(child) = self.obj().first_child() {
+                child.allocate(width, height, baseline, None);
+            }
+        }
+
         fn snapshot(&self, snapshot: &gtk::Snapshot) {
             let widget = self.obj();
             let (w, h) = (widget.width() as f32, widget.height() as f32);
             if w <= 0.0 || h <= 0.0 {
                 return;
             }
-            let (lobes, depth) = self.kind.get().params();
-            let path = outline(w, h, lobes, depth * self.depth.get(), self.angle.get());
+            let path = if self.kind.get() == Kind::Rounded {
+                let builder = gsk::PathBuilder::new();
+                let radius = w.min(h) * 0.22;
+                builder.add_rounded_rect(&gsk::RoundedRect::from_rect(
+                    graphene::Rect::new(0.0, 0.0, w, h),
+                    radius,
+                ));
+                builder.to_path()
+            } else {
+                let (lobes, depth) = self.kind.get().params();
+                outline(w, h, lobes, depth * self.depth.get(), self.angle.get())
+            };
             if self.fill.get() {
                 snapshot.append_fill(&path, gsk::FillRule::Winding, &widget.color());
             }
@@ -161,13 +187,20 @@ impl Shape {
         imp.kind.set(kind);
         imp.depth.set(1.0);
         imp.fill.set(fill);
-        shape.set_size_request(size, size);
+        imp.size.set(size);
         shape.set_halign(gtk::Align::Center);
         shape.set_valign(gtk::Align::Center);
         if let Some(child) = child {
             child.set_parent(&shape);
         }
         shape
+    }
+
+    /// A new size, for both sides.
+    pub fn set_size(&self, size: i32) {
+        if self.imp().size.replace(size) != size {
+            self.queue_resize();
+        }
     }
 
     /// Morphs through the circle into `kind`.

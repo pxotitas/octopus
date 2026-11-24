@@ -13,6 +13,9 @@ use crate::widgets::anim::{self, Tween};
 use crate::widgets::shape::{Kind, Shape};
 
 const RESTING_WIDTH: i32 = 300;
+const CLOCK: i32 = 220;
+const CLOCK_PLAYING: i32 = 132;
+const COVER: i32 = 168;
 const TYPING_WIDTH: i32 = 380;
 
 /// One monitor's lock: the blurred wallpaper, the clock with hours and
@@ -75,9 +78,9 @@ impl Surface {
         hours.add_css_class("lock-digits");
         let minutes = gtk::Label::new(None);
         minutes.add_css_class("lock-digits");
-        let first = Shape::new(Kind::Cookie9, 220, true, Some(&hours));
+        let first = Shape::new(Kind::Cookie9, CLOCK, true, Some(&hours));
         first.add_css_class("lock-hours");
-        let second = Shape::new(Kind::Clover4, 220, true, Some(&minutes));
+        let second = Shape::new(Kind::Clover4, CLOCK, true, Some(&minutes));
         second.add_css_class("lock-minutes");
         let clock = gtk::Box::new(gtk::Orientation::Horizontal, 14);
         clock.add_css_class("lock-clock");
@@ -85,6 +88,26 @@ impl Surface {
         clock.append(&first);
         clock.append(&second);
         center.append(&clock);
+
+        // Velatura's place for the music: between the clock and the account,
+        // the clock drawn smaller while it is there.
+        let compact: Rc<dyn Fn(bool)> = {
+            let (first, second, clock) = (first.downgrade(), second.downgrade(), clock.downgrade());
+            Rc::new(move |playing: bool| {
+                let size = if playing { CLOCK_PLAYING } else { CLOCK };
+                for shape in [first.upgrade(), second.upgrade()].into_iter().flatten() {
+                    shape.set_size(size);
+                }
+                if let Some(clock) = clock.upgrade() {
+                    if playing {
+                        clock.add_css_class("compact");
+                    } else {
+                        clock.remove_css_class("compact");
+                    }
+                }
+            })
+        };
+        center.append(&music(s, lyrics, compact));
 
         let pill = gtk::Box::new(gtk::Orientation::Horizontal, 14);
         pill.add_css_class("lock-pill");
@@ -137,7 +160,6 @@ impl Surface {
         center.append(&status);
         content.add_overlay(&center);
 
-        content.add_overlay(&music(s, lyrics));
         content.add_overlay(&weather(s));
         content.add_overlay(&battery());
         content.add_overlay(&session());
@@ -390,101 +412,227 @@ fn avatar() -> gtk::Widget {
     holder.upcast()
 }
 
-/// The cover, the lyric being sung and the song, at the bottom; gone when
-/// nothing plays.
-fn music(s: &Rc<Services>, enabled: bool) -> gtk::Box {
-    let column = gtk::Box::new(gtk::Orientation::Vertical, 8);
-    column.add_css_class("lock-music");
-    column.set_halign(gtk::Align::Center);
-    column.set_valign(gtk::Align::End);
-    column.set_margin_bottom(36);
-    // A picture asks for its image's full size; the shape holds it to 76px.
-    let cover = gtk::Picture::new();
-    cover.set_content_fit(gtk::ContentFit::Cover);
-    cover.set_can_shrink(true);
-    let frame = Shape::new(
-        crate::widgets::shape::random_kind(&[]),
-        76,
-        true,
-        Some(&cover),
-    );
-    frame.add_css_class("lock-cover");
-    frame.set_halign(gtk::Align::Center);
-    let line = gtk::Label::new(None);
-    line.add_css_class("lock-line");
-    line.set_ellipsize(gtk::pango::EllipsizeMode::End);
-    line.set_max_width_chars(48);
-    let song = gtk::Label::new(None);
-    song.add_css_class("lock-song");
-    song.set_ellipsize(gtk::pango::EllipsizeMode::End);
-    song.set_max_width_chars(56);
-    column.append(&frame);
-    column.append(&line);
-    column.append(&song);
+/// The player, after Velatura's: the cover, title, artist, a progress line
+/// with the times and the controls, with a few lines of the lyrics beside
+/// it when there are any. Gone when nothing plays.
+fn music(s: &Rc<Services>, enabled: bool, compact: Rc<dyn Fn(bool)>) -> gtk::Box {
+    let row = gtk::Box::new(gtk::Orientation::Horizontal, 44);
+    row.add_css_class("lock-music");
+    row.set_halign(gtk::Align::Center);
+    row.set_margin_top(26);
+    row.set_visible(false);
+
+    let player = gtk::Box::new(gtk::Orientation::Vertical, 8);
+    player.set_size_request(COVER, -1);
+    let picture = gtk::Picture::new();
+    picture.set_content_fit(gtk::ContentFit::Cover);
+    picture.set_can_shrink(true);
+    let art = icons::icon("music_note");
+    art.add_css_class("lock-art-fallback");
+    let cover_content = gtk::Overlay::new();
+    cover_content.set_child(Some(&art));
+    cover_content.add_overlay(&picture);
+    let cover = Shape::new(Kind::Rounded, COVER, true, Some(&cover_content));
+    cover.add_css_class("lock-cover");
+    player.append(&cover);
+
+    let title = gtk::Label::new(None);
+    title.add_css_class("lock-title");
+    title.set_ellipsize(gtk::pango::EllipsizeMode::End);
+    title.set_max_width_chars(1);
+    title.set_hexpand(true);
+    let artist = gtk::Label::new(None);
+    artist.add_css_class("lock-artist");
+    artist.set_ellipsize(gtk::pango::EllipsizeMode::End);
+    artist.set_max_width_chars(1);
+    let texts = gtk::Box::new(gtk::Orientation::Vertical, 1);
+    texts.set_margin_top(4);
+    texts.append(&title);
+    texts.append(&artist);
+    player.append(&texts);
+
+    let progress = gtk::ProgressBar::new();
+    progress.add_css_class("lock-progress");
+    let at = gtk::Label::new(Some("0:00"));
+    at.add_css_class("lock-time");
+    let total = gtk::Label::new(Some("0:00"));
+    total.add_css_class("lock-time");
+    total.set_hexpand(true);
+    total.set_xalign(1.0);
+    let times = gtk::Box::new(gtk::Orientation::Horizontal, 0);
+    times.append(&at);
+    times.append(&total);
+    let line = gtk::Box::new(gtk::Orientation::Vertical, 4);
+    line.append(&progress);
+    line.append(&times);
+    player.append(&line);
+
+    let controls = gtk::Box::new(gtk::Orientation::Horizontal, 14);
+    controls.set_halign(gtk::Align::Center);
+    let previous = control("skip_previous");
+    let play = control("pause");
+    play.add_css_class("main");
+    let next = control("skip_next");
+    controls.append(&previous);
+    controls.append(&play);
+    controls.append(&next);
+    player.append(&controls);
+    {
+        let m = s.media.clone();
+        previous.connect_clicked(move |_| m.previous());
+        let m = s.media.clone();
+        play.connect_clicked(move |_| m.play_pause());
+        let m = s.media.clone();
+        next.connect_clicked(move |_| m.next());
+    }
+    row.append(&player);
+
+    let sheet = gtk::Box::new(gtk::Orientation::Vertical, 10);
+    sheet.add_css_class("lock-sheet");
+    sheet.set_valign(gtk::Align::Center);
+    sheet.set_size_request(360, -1);
+    sheet.set_visible(false);
+    let lines: Vec<gtk::Label> = (0..3)
+        .map(|i| {
+            let label = gtk::Label::new(None);
+            label.add_css_class(if i == 1 { "lock-line" } else { "lock-line-dim" });
+            label.set_xalign(0.0);
+            label.set_wrap(true);
+            label.set_max_width_chars(28);
+            sheet.append(&label);
+            label
+        })
+        .collect();
+    row.append(&sheet);
 
     let current: Rc<RefCell<Option<Lyrics>>> = Rc::default();
     {
-        let (column, cover, song, line, current) = (
-            column.downgrade(),
-            cover.downgrade(),
-            song.downgrade(),
-            line.downgrade(),
-            current.clone(),
+        let widgets = (
+            row.downgrade(),
+            picture.downgrade(),
+            title.downgrade(),
+            artist.downgrade(),
+            total.downgrade(),
+            play.downgrade(),
+            sheet.downgrade(),
         );
+        let current = current.clone();
         let last = RefCell::new(String::new());
         s.media.track.subscribe(move |track| {
-            let (Some(column), Some(cover), Some(song), Some(line)) = (
-                column.upgrade(),
-                cover.upgrade(),
-                song.upgrade(),
-                line.upgrade(),
-            ) else {
+            let (
+                Some(row),
+                Some(picture),
+                Some(title),
+                Some(artist),
+                Some(total),
+                Some(play),
+                Some(sheet),
+            ) = (
+                widgets.0.upgrade(),
+                widgets.1.upgrade(),
+                widgets.2.upgrade(),
+                widgets.3.upgrade(),
+                widgets.4.upgrade(),
+                widgets.5.upgrade(),
+                widgets.6.upgrade(),
+            )
+            else {
                 return;
             };
-            column.set_visible(track.is_some());
+            let playing = track.is_some();
+            if row.is_visible() != playing {
+                row.set_visible(playing);
+                compact(playing);
+            }
             let Some(track) = track.as_ref() else { return };
-            let text = if track.artist.is_empty() {
-                track.title.clone()
-            } else {
-                format!("{} · {}", track.title, track.artist)
-            };
-            song.set_label(&text);
-            cover.set_filename(
+            title.set_label(&track.title);
+            artist.set_label(&track.artist);
+            artist.set_visible(!track.artist.is_empty());
+            total.set_label(&clock(track.length));
+            if let Some(glyph) = play.child().and_downcast::<gtk::Label>() {
+                glyph.set_label(if track.playing { "pause" } else { "play_arrow" });
+            }
+            picture.set_filename(
                 track
                     .art
                     .as_deref()
                     .map(|p| p.strip_prefix("file://").unwrap_or(p)),
             );
-            if let Some(frame) = cover.parent() {
-                frame.set_visible(track.art.is_some());
-            }
-            if !enabled || last.replace(text.clone()) == text {
+            picture.set_visible(track.art.is_some());
+            let key = format!("{}\n{}", track.title, track.artist);
+            if !enabled || last.replace(key.clone()) == key {
                 return;
             }
             current.borrow_mut().take();
-            line.set_label("");
+            sheet.set_visible(false);
             let (track, current) = (track.clone(), current.clone());
             glib::spawn_future_local(async move {
-                *current.borrow_mut() = lyrics::fetch(&track).await.filter(|l| l.available);
+                *current.borrow_mut() = lyrics::fetch(&track)
+                    .await
+                    .filter(|l| l.available && !l.instrumental && !l.lines.is_empty());
             });
         });
     }
+
+    // Four times a second is plenty for a progress line and a lyric.
     let media = s.media.clone();
-    line.add_tick_callback(move |line, _| {
-        let text = match current.borrow().as_ref() {
-            Some(l) if l.instrumental => "♪".to_owned(),
-            Some(l) => l
-                .current(media.now())
-                .map(|i| l.lines[i].text.clone())
-                .unwrap_or_default(),
-            None => String::new(),
+    let widgets = (
+        row.downgrade(),
+        progress.downgrade(),
+        at.downgrade(),
+        sheet.downgrade(),
+    );
+    glib::timeout_add_local(Duration::from_millis(250), move || {
+        let (Some(row), Some(progress), Some(at), Some(sheet)) = (
+            widgets.0.upgrade(),
+            widgets.1.upgrade(),
+            widgets.2.upgrade(),
+            widgets.3.upgrade(),
+        ) else {
+            return glib::ControlFlow::Break;
         };
-        if line.label() != text {
-            line.set_label(&text);
+        if !row.is_visible() {
+            return glib::ControlFlow::Continue;
+        }
+        let now = media.now();
+        let length = media.track.get().as_ref().map(|t| t.length).unwrap_or(0.0);
+        progress.set_fraction(if length > 0.0 {
+            (now / length).clamp(0.0, 1.0)
+        } else {
+            0.0
+        });
+        at.set_label(&clock(now));
+        let lyrics = current.borrow();
+        sheet.set_visible(lyrics.is_some());
+        if let Some(l) = lyrics.as_ref() {
+            let index = l.current(now);
+            for (slot, label) in lines.iter().enumerate() {
+                let text = index
+                    .and_then(|i| (i + slot).checked_sub(1))
+                    .or(if slot == 2 { Some(0) } else { None })
+                    .and_then(|i| l.lines.get(i))
+                    .map(|line| line.text.as_str())
+                    .unwrap_or("");
+                if label.label() != text {
+                    label.set_label(text);
+                }
+            }
         }
         glib::ControlFlow::Continue
     });
-    column
+    row
+}
+
+fn control(glyph: &str) -> gtk::Button {
+    let button = gtk::Button::new();
+    button.add_css_class("lock-control");
+    button.set_child(Some(&icons::icon(glyph)));
+    button
+}
+
+fn clock(seconds: f64) -> String {
+    let total = seconds.max(0.0) as u64;
+    format!("{}:{:02}", total / 60, total % 60)
 }
 
 fn weather(s: &Rc<Services>) -> gtk::Box {
