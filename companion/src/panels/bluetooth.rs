@@ -1,3 +1,5 @@
+//! The bluetooth menu: the adapter switch and the known devices.
+
 use crate::i18n::t;
 use std::rc::Rc;
 

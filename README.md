@@ -14,6 +14,8 @@ Superfícies opacas e tonais, sem blur (só a tela de bloqueio desfoca). Portugu
 | `matugen/` | templates de cores pro companion, Waybar, fuzzel e Matuwall |
 | `niri.kdl` | autostart, binds e layer rules, incluído no config do niri |
 
+Mais detalhes em [`docs/`](docs/README.md).
+
 ## Instalar
 
 Depende de: `pam waybar matugen matuwall awww cliphist wl-clipboard wtype playerctl cava brightnessctl networkmanager bluez-utils libpulse python unicode-emoji unicode-cldr fd gcc gtk4 gtk4-layer-shell ttf-material-symbols-variable rust`.

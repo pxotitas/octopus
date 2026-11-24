@@ -1,3 +1,5 @@
+//! The control socket: `octopus <command>` talks to the daemon over $XDG_RUNTIME_DIR/octopus.sock.
+
 use std::io::{BufRead, BufReader, Read, Write};
 use std::os::unix::net::{UnixListener, UnixStream};
 use std::path::PathBuf;

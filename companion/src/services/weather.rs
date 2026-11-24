@@ -1,3 +1,5 @@
+//! The weather from scripts/weather.py, refreshed every so often.
+
 use std::rc::Rc;
 use std::time::Duration;
 

@@ -1,3 +1,5 @@
+//! The wi-fi menu: the radio switch, the networks around and their passwords.
+
 use crate::i18n::t;
 use std::cell::RefCell;
 use std::rc::Rc;

@@ -1,3 +1,5 @@
+//! The sound menu: output and input volume, and which device each one uses.
+
 use crate::i18n::t;
 use std::rc::Rc;
 

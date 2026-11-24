@@ -1,3 +1,5 @@
+//! The control center: header with clock and weather, quick tiles, sliders, media and notifications.
+
 use crate::i18n::t;
 use std::rc::Rc;
 

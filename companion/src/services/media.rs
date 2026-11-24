@@ -1,3 +1,5 @@
+//! What is playing, through playerctl, with the position run forward between reads.
+
 use std::cell::{Cell, RefCell};
 use std::hash::{Hash, Hasher};
 use std::rc::Rc;

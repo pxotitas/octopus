@@ -1,3 +1,5 @@
+//! PulseAudio/PipeWire through pactl: volumes, mutes and devices, followed with `pactl subscribe`.
+
 use std::rc::Rc;
 
 use gtk::glib;

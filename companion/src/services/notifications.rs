@@ -1,3 +1,5 @@
+//! The notification server (org.freedesktop.Notifications) and its history.
+
 use std::cell::RefCell;
 use std::collections::HashMap;
 use std::rc::Rc;
