@@ -1,7 +1,11 @@
 use crate::i18n::t;
+use std::cell::{Cell, RefCell};
 use std::rc::Rc;
 
+use gtk::glib;
 use gtk::prelude::*;
+
+use crate::panels::wallpapers::Wallpapers;
 
 use crate::icons;
 use crate::panels::lyrics::LyricsView;
@@ -13,11 +17,14 @@ pub struct Dash {
     pub root: gtk::Box,
     stack: gtk::Stack,
     lyrics: Rc<LyricsView>,
+    walls: gtk::Box,
+    tabs: gtk::Box,
+    picker: RefCell<Option<Rc<Wallpapers>>>,
+    release: Cell<Option<glib::SourceId>>,
 }
 
 impl Dash {
-    /// `wallpapers` opens Matuwall; the dash closes itself around it.
-    pub fn new(s: &Rc<Services>, lyrics: bool, wallpapers: impl Fn() + 'static) -> Rc<Self> {
+    pub fn new(s: &Rc<Services>, lyrics: bool) -> Rc<Self> {
         let root = gtk::Box::new(gtk::Orientation::Vertical, 14);
         root.add_css_class("surface");
         root.add_css_class("dash");
@@ -32,6 +39,8 @@ impl Dash {
         stack.add_named(&overview(s), Some("overview"));
         stack.add_named(&media_tab(s, &lyrics), Some("media"));
         stack.add_named(&weather_tab(s), Some("weather"));
+        let walls = gtk::Box::new(gtk::Orientation::Vertical, 0);
+        stack.add_named(&walls, Some("wallpapers"));
 
         let tabs = gtk::Box::new(gtk::Orientation::Horizontal, 4);
         tabs.add_css_class("dash-tabs");
@@ -41,8 +50,10 @@ impl Dash {
             ("overview", "dashboard", t("visão geral")),
             ("media", "music_note", t("mídia")),
             ("weather", "partly_cloudy_day", t("clima")),
+            ("wallpapers", "wallpaper", t("wallpapers")),
         ] {
             let button = tab_button(icon, label);
+            button.set_widget_name(name);
             button.set_group(group.as_ref());
             if group.is_none() {
                 button.set_active(true);
@@ -56,11 +67,6 @@ impl Dash {
             group.get_or_insert(button.clone());
             tabs.append(&button);
         }
-        let walls = gtk::Button::new();
-        walls.add_css_class("dash-tab");
-        walls.set_child(Some(&tab_content("wallpaper", t("wallpapers"))));
-        walls.connect_clicked(move |_| wallpapers());
-        tabs.append(&walls);
 
         root.append(&tabs);
         root.append(&stack);
@@ -69,20 +75,71 @@ impl Dash {
             root,
             stack,
             lyrics,
+            walls,
+            tabs: tabs.clone(),
+            picker: RefCell::new(None),
+            release: Cell::new(None),
         });
         let weak = Rc::downgrade(&dash);
         dash.stack.connect_visible_child_name_notify(move |stack| {
             if let Some(d) = weak.upgrade() {
-                d.lyrics
-                    .set_active(stack.visible_child_name().as_deref() == Some("media"));
+                let name = stack.visible_child_name();
+                d.lyrics.set_active(name.as_deref() == Some("media"));
+                if name.as_deref() == Some("wallpapers") {
+                    d.wallpapers();
+                }
             }
         });
         dash
     }
 
-    pub fn set_open(&self, open: bool) {
+    pub fn set_open(self: &Rc<Self>, open: bool) {
         let on_media = self.stack.visible_child_name().as_deref() == Some("media");
         self.lyrics.set_active(open && on_media);
+        if let Some(id) = self.release.take() {
+            id.remove();
+        }
+        if open {
+            if self.stack.visible_child_name().as_deref() == Some("wallpapers") {
+                self.wallpapers();
+            }
+            return;
+        }
+        // The thumbnails go a while after the dash closes.
+        let weak = Rc::downgrade(self);
+        self.release.set(Some(glib::timeout_add_local_once(
+            std::time::Duration::from_secs(30),
+            move || {
+                let Some(dash) = weak.upgrade() else { return };
+                dash.release.set(None);
+                if dash.picker.borrow_mut().take().is_some() {
+                    crate::widgets::clear(&dash.walls);
+                    crate::memory::release_soon();
+                }
+            },
+        )));
+    }
+
+    /// Switches to one of the tabs by name.
+    pub fn select(&self, name: &str) {
+        let mut child = self.tabs.first_child();
+        while let Some(widget) = child {
+            if widget.widget_name() == name {
+                if let Some(button) = widget.downcast_ref::<gtk::ToggleButton>() {
+                    button.set_active(true);
+                }
+            }
+            child = widget.next_sibling();
+        }
+    }
+
+    fn wallpapers(&self) {
+        if self.picker.borrow().is_some() {
+            return;
+        }
+        let picker = Wallpapers::new();
+        self.walls.append(&picker.root);
+        *self.picker.borrow_mut() = Some(picker);
     }
 }
 

@@ -1,3 +1,5 @@
+//! Everything that opens on screen: one module per panel.
+
 pub mod audio;
 pub mod bluetooth;
 pub mod clipboard;
@@ -10,4 +12,5 @@ pub mod power;
 pub mod settings;
 pub mod toasts;
 pub mod tray;
+pub mod wallpapers;
 pub mod wifi;
