@@ -22,6 +22,8 @@ pub enum Place {
     BottomEdge,
     /// The middle of the screen, for the clipboard and power menus.
     Center,
+    /// Near the top, so the launcher grows downwards as results come in.
+    Top,
 }
 
 const GAP: i32 = 8;
@@ -72,6 +74,11 @@ impl Popup {
                 }
             }
             Place::Center => Origin::Bottom,
+            Place::Top => {
+                window.set_anchor(Edge::Top, true);
+                window.set_margin(Edge::Top, 160);
+                Origin::Bottom
+            }
             Place::BottomEdge => {
                 window.set_anchor(Edge::Bottom, true);
                 window.set_margin(Edge::Bottom, -6);
@@ -266,4 +273,29 @@ pub fn backdrop(app: &gtk::Application, on_click: impl Fn() + 'static) -> gtk::W
     click.connect_pressed(move |_, _, _, _| on_click());
     window.add_controller(click);
     window
+}
+
+/// Layer windows grow with their content but never shrink back on their own:
+/// asking for the smallest size lets them take the content's size again.
+pub fn fit(widget: &impl IsA<gtk::Widget>) {
+    if let Some(window) = widget.root().and_downcast::<gtk::Window>() {
+        window.set_default_size(1, 1);
+    }
+}
+
+/// Follows a stack's size on every frame while it changes page.
+pub fn follow(stack: &gtk::Stack) {
+    stack.connect_transition_running_notify(|stack| {
+        fit(stack);
+        if stack.is_transition_running() {
+            stack.add_tick_callback(|stack, _| {
+                fit(stack);
+                if stack.is_transition_running() {
+                    glib::ControlFlow::Continue
+                } else {
+                    glib::ControlFlow::Break
+                }
+            });
+        }
+    });
 }

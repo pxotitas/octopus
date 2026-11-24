@@ -31,9 +31,11 @@ impl TrayPanel {
 
         let stack = gtk::Stack::new();
         stack.set_transition_type(gtk::StackTransitionType::SlideLeftRight);
-        stack.set_transition_duration(220);
+        stack.set_transition_duration(200);
         stack.set_vhomogeneous(false);
+        stack.set_hhomogeneous(false);
         stack.set_interpolate_size(true);
+        crate::popup::follow(&stack);
 
         let items_page = gtk::Box::new(gtk::Orientation::Vertical, 10);
         items_page.append(&widgets::heading(t("bandeja"), None));
@@ -105,7 +107,12 @@ impl TrayPanel {
     /// Back to the icons whenever the panel opens.
     pub fn reset(&self) {
         self.trail.borrow_mut().clear();
+        self.stack
+            .set_transition_type(gtk::StackTransitionType::None);
         self.stack.set_visible_child_name("items");
+        self.stack
+            .set_transition_type(gtk::StackTransitionType::SlideLeftRight);
+        crate::popup::fit(&self.root);
     }
 
     fn button(self: &Rc<Self>, item: &Item) -> gtk::Button {
@@ -167,6 +174,7 @@ impl TrayPanel {
         }
         self.trail.borrow_mut().push((title, nodes));
         self.stack.set_visible_child_name("menu");
+        crate::popup::fit(&self.root);
     }
 
     fn back(self: &Rc<Self>) {
