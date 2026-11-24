@@ -139,7 +139,12 @@ impl LyricsView {
         for line in &lyrics.lines {
             let label = gtk::Label::new(Some(&line.text));
             label.add_css_class("lyric");
+            // Lines wrap to the width they are given and never ask for more,
+            // not even for one long word, so the line growing as it is sung
+            // never resizes the dash.
             label.set_wrap(true);
+            label.set_wrap_mode(gtk::pango::WrapMode::WordChar);
+            label.set_max_width_chars(1);
             label.set_xalign(0.0);
             self.column.append(&label);
         }

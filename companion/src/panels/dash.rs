@@ -252,6 +252,7 @@ fn media_tab(s: &Rc<Services>, lyrics: &Rc<LyricsView>) -> gtk::Box {
     let card = gtk::Box::new(gtk::Orientation::Vertical, 0);
     card.add_css_class("card");
     card.set_hexpand(true);
+    card.set_size_request(320, -1);
     card.append(&lyrics.root);
     root.append(&card);
     root
