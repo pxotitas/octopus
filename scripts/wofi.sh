@@ -15,5 +15,12 @@ export XDG_CONFIG_HOME="$home"
 if ! list=$(octopus wofi-list 2>/dev/null) || [ -z "$list" ]; then
   exec wofi --show drun --conf "$dir/config" --style "$dir/style.css"
 fi
-line=$(printf '%s\n' "$list" | sed '/^$/d' | wofi --dmenu --conf "$dir/config" --style "$dir/style.css") || exit 0
-[ -n "$line" ] && octopus wofi-launch "$line"
+selected=$(printf '%s\n' "$list" | sed '/^$/d' | wofi --dmenu --conf "$dir/config" --style "$dir/style.css") || exit 0
+[ -n "$selected" ] || exit 0
+
+# dmenu-print_line_num=true makes Wofi return the zero-based input line number.
+# Octopus expects that same zero-based index.
+case "$selected" in
+  ''|*[!0-9]*) exit 0 ;;
+esac
+octopus wofi-launch "$selected"

@@ -4,7 +4,7 @@
 spawn-at-startup "waybar"
 // gl: GTK's default Vulkan renderer runs through hasvk on Broadwell, which
 // is what made the panels stutter
-spawn-sh-at-startup "GSK_RENDERER=gl exec octopus"
+spawn-sh-at-startup "DISPLAY=:0 GSK_RENDERER=gl exec octopus"
 spawn-at-startup "wl-paste" "--type" "text" "--watch" "cliphist" "store"
 spawn-at-startup "wl-paste" "--type" "image" "--watch" "cliphist" "store"
 
