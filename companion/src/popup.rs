@@ -55,7 +55,8 @@ impl Popup {
         window.add_css_class("octopus-popup");
         window.init_layer_shell();
         window.set_namespace(Some(&format!("octopus-{name}")));
-        window.set_layer(Layer::Overlay);
+        // The top layer, like the bar: a fullscreen window covers it.
+        window.set_layer(Layer::Top);
         window.set_keyboard_mode(if interactive {
             KeyboardMode::Exclusive
         } else {

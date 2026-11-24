@@ -315,6 +315,9 @@ impl Shell {
         let opening = !popup.is_open();
         self.close_all();
         if opening {
+            // Same layer as the panels: whichever maps last is on top, so
+            // the backdrop goes first.
+            self.backdrop.set_visible(true);
             popup.show();
         }
         String::new()
