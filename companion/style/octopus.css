@@ -609,7 +609,9 @@ calendar > grid > label.today {
   font-size: 20px;
   font-weight: 600;
   color: @outline;
-  transition: color 260ms cubic-bezier(0.2, 0, 0, 1), font-size 260ms cubic-bezier(0.2, 0, 0, 1);
+  /* Only color eases: animating the size would lay every wrapped line out
+     again on each frame, which the dash cannot keep up with. */
+  transition: color 260ms cubic-bezier(0.2, 0, 0, 1);
 }
 
 .lyric.near {

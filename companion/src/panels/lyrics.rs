@@ -206,7 +206,7 @@ impl LyricsView {
             self.scroll.animate(
                 &self.scroller,
                 target,
-                520,
+                420,
                 anim::EMPHASIZED_DECELERATE,
                 move |v| a.set_value(v),
                 || {},
