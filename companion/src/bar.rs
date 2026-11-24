@@ -27,6 +27,45 @@ fn waybar_name(module: &str) -> Option<&'static str> {
     })
 }
 
+/// Radius of the flush bar's inward corners.
+const CONCAVE: u32 = 14;
+
+/// The flush bar: square against the screen's edge, with two inward corners
+/// where it meets the top and the bottom, so the rest of the screen reads as
+/// a rounded card. Drawn with gradients, since GTK 3 has no masks.
+fn flush_css(bar: &Bar) -> String {
+    let (w, r) = (bar.width, CONCAVE);
+    let fill = "@surface_container";
+    let (body, top, bottom, pad, top_at, bottom_at) = if bar.right() {
+        (
+            "right top",
+            "0% 100%",
+            "0% 0%",
+            "padding-left",
+            "0 0".to_owned(),
+            "0 100%".to_owned(),
+        )
+    } else {
+        (
+            "left top",
+            "100% 100%",
+            "100% 0%",
+            "padding-right",
+            format!("{w}px 0"),
+            format!("{w}px 100%"),
+        )
+    };
+    format!(
+        "window#waybar > box {{ border-radius: 0; {pad}: {r}px; background-color: transparent; \
+background-image: linear-gradient({fill}, {fill}), \
+radial-gradient(circle at {top}, transparent {inner}px, {fill} {r}px), \
+radial-gradient(circle at {bottom}, transparent {inner}px, {fill} {r}px); \
+background-size: {w}px 100%, {r}px {r}px, {r}px {r}px; \
+background-position: {body}, {top_at}, {bottom_at}; background-repeat: no-repeat; }}\n",
+        inner = r as f64 - 0.5,
+    )
+}
+
 /// The animated tray button, when install.sh could build it.
 fn arrow() -> Option<String> {
     let path = crate::exec::cache_dir().join("tray-arrow.so");
@@ -54,17 +93,23 @@ pub fn waybar_config(bar: &Bar) -> String {
     let mut config = Map::new();
     config.insert("layer".into(), json!("top"));
     config.insert("position".into(), json!(bar.position));
-    config.insert("width".into(), json!(bar.width));
-    config.insert("margin-top".into(), json!(8));
-    config.insert("margin-bottom".into(), json!(8));
-    config.insert(side_margin.into(), json!(8));
+    let flush = bar.style == "flush";
+    let (width, margin) = if flush {
+        (bar.width + CONCAVE, 0)
+    } else {
+        (bar.width, 8)
+    };
+    config.insert("width".into(), json!(width));
+    config.insert("margin-top".into(), json!(margin));
+    config.insert("margin-bottom".into(), json!(margin));
+    config.insert(side_margin.into(), json!(margin));
     config.insert("spacing".into(), json!(4));
     config.insert("reload_style_on_change".into(), json!(true));
     config.insert("modules-left".into(), Value::Array(names(&bar.top)));
     config.insert("modules-center".into(), Value::Array(names(&bar.center)));
     config.insert("modules-right".into(), Value::Array(names(&bar.bottom)));
 
-    let mut launcher = icon_module("\u{f303}", "", "octopus toggle launcher");
+    let mut launcher = icon_module("\u{f303}", "", "~/.config/octopus/scripts/wofi.sh");
     launcher["tooltip"] = json!(false);
     config.insert("custom/launcher".into(), launcher);
     config.insert(
@@ -199,7 +244,8 @@ pub fn layout_css(bar: &Bar) -> String {
 #workspaces button {{ margin: 3px {ws}px; }}\n\
 #clock {{ margin-left: {clock}px; margin-right: {clock}px; }}\n\
 #custom-battery {{ margin: 4px {bat}px 0; }}\n\
-#battery {{ margin-left: {pct}px; margin-right: {pct}px; }}\n",
+#battery {{ margin-left: {pct}px; margin-right: {pct}px; }}\n{flush}",
+        flush = if bar.style == "flush" { flush_css(bar) } else { String::new() },
         icon = (w - 16).max(0),
         ws = side(10),
         clock = side(32),
@@ -229,6 +275,15 @@ pub fn apply(bar: &Bar) {
 
 #[cfg(test)]
 mod tests {
+    #[test]
+    fn flush_css_mentions_both_corners() {
+        let mut bar = crate::config::Bar::default();
+        bar.style = "flush".into();
+        let css = super::layout_css(&bar);
+        println!("{css}");
+        assert!(css.contains("radial-gradient(circle at 100% 100%"));
+    }
+
     #[test]
     fn default_config_is_valid_json() {
         let bar = crate::config::Bar::default();
