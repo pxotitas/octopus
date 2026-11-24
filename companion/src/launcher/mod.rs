@@ -142,7 +142,7 @@ impl Launcher {
         entry.connect_changed(move |entry| {
             let Some(l) = weak.upgrade() else { return };
             let now = entry.text().chars().count();
-            if now > length.replace(now) {
+            if now != length.replace(now) {
                 l.badge.adapt(&[]);
             }
             l.query();

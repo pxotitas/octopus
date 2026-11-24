@@ -35,6 +35,7 @@ pub struct Popup {
     motion: Motion,
     tween: Rc<Tween>,
     open: Rc<Cell<bool>>,
+    sticky: Cell<bool>,
     leave: RefCell<Option<glib::SourceId>>,
     listeners: Listeners<bool>,
 }
@@ -95,6 +96,7 @@ impl Popup {
             motion,
             tween: Tween::new(0.0),
             open: Rc::new(Cell::new(false)),
+            sticky: Cell::new(false),
             leave: RefCell::new(None),
             listeners: RefCell::new(Vec::new()),
         });
@@ -134,7 +136,7 @@ impl Popup {
         let weak = Rc::downgrade(self);
         pointer.connect_leave(move |_| {
             let Some(popup) = weak.upgrade() else { return };
-            if !popup.is_open() || popup.typing() {
+            if !popup.is_open() || popup.sticky.get() || popup.typing() {
                 return;
             }
             let later = Rc::downgrade(&popup);
@@ -177,6 +179,16 @@ impl Popup {
             (false, Place::BarBottom) => Origin::LeftBottom,
             _ => Origin::Left,
         });
+    }
+
+    /// A sticky panel stays when the pointer leaves or clicks outside;
+    /// only its own keys (Enter, Escape) or a command close it.
+    pub fn set_sticky(&self, on: bool) {
+        self.sticky.set(on);
+    }
+
+    pub fn is_sticky(&self) -> bool {
+        self.sticky.get()
     }
 
     pub fn is_open(&self) -> bool {

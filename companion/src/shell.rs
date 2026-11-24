@@ -155,10 +155,9 @@ impl Shell {
                 },
                 |l| l.root.clone().upcast(),
             );
-            popups.insert(
-                "launcher",
-                Popup::new(app, "launcher", Place::Top, true, &launcher.holder),
-            );
+            let spotlight = Popup::new(app, "launcher", Place::Top, true, &launcher.holder);
+            spotlight.set_sticky(true);
+            popups.insert("launcher", spotlight);
             for popup in popups.values() {
                 popup.set_side(config.bar.right());
             }
@@ -172,7 +171,9 @@ impl Shell {
                 let weak = weak.clone();
                 move || {
                     if let Some(shell) = weak.upgrade() {
-                        shell.close_all();
+                        for popup in shell.popups.values().filter(|p| !p.is_sticky()) {
+                            popup.hide();
+                        }
                     }
                 }
             });
