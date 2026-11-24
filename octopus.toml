@@ -1,19 +1,25 @@
-# Octopus companion settings. Everything is optional; `octopus settings`
-# edits this file.
+# Octopus settings; `octopus settings` edits this file.
+
+language = "auto"
 
 [bar]
 position = "left"
-width = 52
-top = ["logo", "workspaces"]
+width = 40
+top = [
+    "logo",
+    "workspaces",
+]
 center = ["clock"]
-bottom = ["tray", "battery", "controls"]
+bottom = [
+    "tray",
+    "battery",
+    "controls",
+]
 
 [weather]
-# A city, postcode or airport code for wttr.in; empty locates by IP.
 place = ""
 
 [brightness]
-# brightnessctl device names; empty finds the backlight and *kbd_backlight.
 screen = ""
 keyboard = ""
 
