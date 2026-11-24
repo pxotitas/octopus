@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>octopus · a cozy m3 shell for niri</title>
+  <meta name="description" content="a cozy material 3 shell for niri: a vertical waybar and a rust + gtk4 companion.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+  <nav>
+    <span class="name">🐙 octopus</span>
+    <a href="https://github.com/pxotitas/octopus/tree/eng/docs">docs</a>
+    <a href="https://github.com/pxotitas/octopus">github</a>
+    <a href="pt/">português</a>
+  </nav>
+
+  <section class="hero">
+    <div>
+      <h1>octopus</h1>
+      <p>a cozy m3 shell for niri. a minimal vertical bar on waybar, and
+      everything bigger in a companion written in rust + gtk4.</p>
+      <div class="actions">
+        <a class="button filled" href="#install">install</a>
+        <a class="button tonal" href="https://github.com/pxotitas/octopus/tree/eng">read the docs</a>
+      </div>
+    </div>
+    <div class="shapes" title="press any key">
+      <div class="shape hours"><span>00</span></div>
+      <div class="shape minutes"><span>00</span></div>
+    </div>
+  </section>
+
+  <h2>what's inside</h2>
+  <p class="lead">opaque, tonal surfaces. colors from the wallpaper. light enough to idle around 45 mb.</p>
+  <div class="grid">
+    <div class="card"><h3>control center</h3><p>wi-fi, bluetooth, sound, brightness, media and notifications, in one place.</p></div>
+    <div class="card"><h3>dash</h3><p>clock, calendar, weather, the music with its lyrics, and a wallpaper picker.</p></div>
+    <div class="card"><h3>spotlight</h3><p>apps and their actions, a calculator, files behind <code>/</code>, power behind <code>&gt;</code>.</p></div>
+    <div class="card"><h3>lock screen</h3><p>m3 shapes that turn and change at every key, the lyric being sung, the weather.</p></div>
+    <div class="card"><h3>dock</h3><p>pinned and open apps, with magnification. fixed, autohide or smart.</p></div>
+    <div class="card"><h3>settings</h3><p>bar style and position, widgets, dock, language, light, dark or automatic.</p></div>
+  </div>
+
+  <h2 id="install">install</h2>
+  <p class="lead">the repo lives in <code>~/.config/octopus</code> itself.</p>
+<pre><code>git clone https://github.com/pxotitas/octopus ~/.config/octopus
+~/.config/octopus/install.sh</code></pre>
+  <p class="lead">then, at the end of <code>~/.config/niri/config.kdl</code>:</p>
+<pre><code>include "~/.config/octopus/niri.kdl"</code></pre>
+
+  <footer>
+    gpl-3.0-or-later · made by <a href="https://github.com/pxotitas">pxotitas</a>,
+    with parts from <a href="https://github.com/andreumassanet/impasto">impasto</a>
+    and <a href="https://github.com/pxdritz1/velatura">velatura</a>.
+  </footer>
+</main>
+<script src="shapes.js"></script>
+</body>
+</html>
