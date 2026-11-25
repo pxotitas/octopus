@@ -5,60 +5,130 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>octopus · um shell m3 cozy pro niri</title>
   <meta name="description" content="um shell material 3 cozy pro niri: uma waybar vertical e um companion em rust + gtk4.">
+  <meta name="theme-color" content="#fdfbef" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#14140c" media="(prefers-color-scheme: dark)">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="octopus">
+  <meta property="og:title" content="octopus · um shell m3 cozy pro niri">
+  <meta property="og:description" content="um shell material 3 cozy pro niri: uma waybar vertical e um companion em rust + gtk4.">
+  <meta property="og:url" content="https://pxotitas.github.io/octopus/pt/">
+  <meta property="og:image" content="https://pxotitas.github.io/octopus/assets/banner.png">
+  <meta property="og:image:width" content="1280">
+  <meta property="og:image:height" content="640">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+  <link rel="alternate" hreflang="en" href="https://pxotitas.github.io/octopus/">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../style.css">
 </head>
 <body>
-<main>
+<header class="top">
   <nav>
-    <span class="name">🐙 octopus</span>
-    <a href="https://github.com/pxotitas/octopus/tree/pt-br/docs">docs</a>
-    <a href="https://github.com/pxotitas/octopus">github</a>
-    <a href="../">english</a>
+    <a class="brand" href="../pt/">
+      <picture>
+        <source srcset="../assets/logo-dark.svg" media="(prefers-color-scheme: dark)">
+        <img src="../assets/logo.svg" alt="" width="36" height="36">
+      </picture>
+      <span>octopus</span>
+    </a>
+    <div class="links">
+      <a href="../pt/docs/">docs</a>
+      <a href="../pt/media/">mídia</a>
+      <a href="../pt/changelog/">changelog</a>
+      <a href="https://github.com/pxotitas/octopus">github</a>
+      <a class="switch" href="../" hreflang="en">english</a>
+    </div>
   </nav>
-
-  <section class="hero">
-    <div>
-      <h1>octopus</h1>
-      <p>um shell m3 cozy pro niri. uma barra vertical minimalista na waybar, e
-      tudo que é maior num companion em rust + gtk4.</p>
-      <div class="actions">
-        <a class="button filled" href="#install">instalar</a>
-        <a class="button tonal" href="https://github.com/pxotitas/octopus/tree/pt-br">ler as docs</a>
-      </div>
+</header>
+<main>
+<section class="hero">
+  <div>
+    <h1>octopus</h1>
+    <p>um shell m3 cozy pro niri. uma barra vertical minimalista na waybar,
+    e tudo que é maior num companion em rust + gtk4.</p>
+    <div class="actions">
+      <a class="button filled" href="#instalar">instalar</a>
+      <a class="button tonal" href="docs/">ler as docs</a>
+      <a class="button text" href="media/">ver em movimento</a>
     </div>
-    <div class="shapes" title="aperta qualquer tecla">
-      <div class="shape hours"><span>00</span></div>
-      <div class="shape minutes"><span>00</span></div>
-    </div>
-  </section>
-
-  <h2>o que tem dentro</h2>
-  <p class="lead">superfícies opacas e tonais. cores que saem do wallpaper. leve: uns 45 mb parado.</p>
-  <div class="grid">
-    <div class="card"><h3>central de controle</h3><p>wi-fi, bluetooth, som, brilho, mídia e notificações, num lugar só.</p></div>
-    <div class="card"><h3>dash</h3><p>relógio, calendário, clima, a música com a letra, e um seletor de wallpaper.</p></div>
-    <div class="card"><h3>spotlight</h3><p>apps e as ações deles, calculadora, arquivos no <code>/</code>, energia no <code>&gt;</code>.</p></div>
-    <div class="card"><h3>tela de bloqueio</h3><p>shapes m3 que giram e mudam a cada tecla, a letra que tá tocando, o clima.</p></div>
-    <div class="card"><h3>dock</h3><p>apps fixados e abertos, com magnificação. fixa, esconde sozinha ou inteligente.</p></div>
-    <div class="card"><h3>configurações</h3><p>estilo e posição da barra, widgets, dock, idioma, claro, escuro ou automático.</p></div>
   </div>
+  <div class="shapes" title="aperta qualquer tecla">
+    <div class="shape hours"><span>00</span></div>
+    <div class="shape minutes"><span>00</span></div>
+  </div>
+</section>
 
-  <h2 id="install">instalar</h2>
-  <p class="lead">o repo mora no próprio <code>~/.config/octopus</code>.</p>
+<figure class="stage">
+  <video src="../assets/clips/dash.mp4" poster="../assets/clips/dash.webp" autoplay muted loop playsinline></video>
+  <figcaption>o dash, com a música e a letra, linha por linha.</figcaption>
+</figure>
+
+<h2>o que tem dentro</h2>
+<p class="lead">superfícies opacas e tonais. cores do wallpaper. leve o bastante pra ficar em uns 45 mb parado.</p>
+<div class="features">
+  <a class="feature" href="media/#control-center">
+    <img src="../assets/features/control-center.webp" alt="" loading="lazy">
+    <h3>central de controle</h3>
+    <p>wi-fi, bluetooth, som, brilho, mídia e notificações, num lugar só.</p>
+  </a>
+  <a class="feature" href="media/#dash">
+    <img src="../assets/features/dash.webp" alt="" loading="lazy">
+    <h3>dash</h3>
+    <p>relógio, calendário, clima, a música com a letra, e um seletor de wallpaper.</p>
+  </a>
+  <a class="feature" href="media/#launchers">
+    <img src="../assets/features/spotlight.webp" alt="" loading="lazy">
+    <h3>spotlight</h3>
+    <p>apps e as ações deles, calculadora, arquivos com <code>/</code>, energia com <code>&gt;</code>.</p>
+  </a>
+  <a class="feature" href="media/#lock">
+    <img src="../assets/features/lock.webp" alt="" loading="lazy">
+    <h3>tela de bloqueio</h3>
+    <p>shapes m3 que giram e mudam a cada tecla, a letra sendo cantada, o clima.</p>
+  </a>
+  <a class="feature" href="media/#screenshots">
+    <img src="../assets/features/dock.webp" alt="" loading="lazy">
+    <h3>dock</h3>
+    <p>apps fixados e abertos, com magnificação. fixa, autohide ou inteligente.</p>
+  </a>
+  <a class="feature" href="media/#settings">
+    <img src="../assets/features/settings.webp" alt="" loading="lazy">
+    <h3>configurações</h3>
+    <p>estilo e posição da barra, widgets, dock, idioma, claro, escuro ou automático.</p>
+  </a>
+</div>
+
+<section class="split">
+  <div>
+    <h2>ele veste o seu wallpaper</h2>
+    <p class="lead">escolhe um wallpaper e o matugen repinta tudo: a barra, os
+    painéis, o rofi, o fuzzel e o resto do sistema. claro, escuro, ou o que a
+    imagem pedir.</p>
+    <a class="button tonal" href="docs/tema.html">como as cores funcionam</a>
+  </div>
+  <video src="../assets/clips/palette.mp4" poster="../assets/clips/palette.webp" autoplay muted loop playsinline></video>
+</section>
+
+<h2 id="instalar">instalar</h2>
+<p class="lead">no arch (ou o que tiver esses pacotes), o repo mora no próprio <code>~/.config/octopus</code>.</p>
 <pre><code>git clone https://github.com/pxotitas/octopus ~/.config/octopus
 ~/.config/octopus/install.sh</code></pre>
-  <p class="lead">depois, no fim do <code>~/.config/niri/config.kdl</code>:</p>
+<p class="lead">depois, no fim do <code>~/.config/niri/config.kdl</code>:</p>
 <pre><code>include "~/.config/octopus/niri.kdl"</code></pre>
+<details class="deps">
+  <summary>dependências</summary>
+  <p><code>pam waybar matugen matuwall awww cliphist wl-clipboard wtype playerctl cava brightnessctl networkmanager bluez-utils libpulse python unicode-emoji unicode-cldr fd gcc rofi gtk3 gtk4 gtk4-layer-shell ttf-material-symbols-variable rust</code></p>
+</details>
+<p class="lead next">depois: <a href="docs/atalhos.html">os atalhos</a> e <a href="docs/configuracao.html">o que dá pra mudar</a>.</p>
 
-  <footer>
-    gpl-3.0-or-later · feito por <a href="https://github.com/pxotitas">pxotitas</a>,
-    com partes do <a href="https://github.com/andreumassanet/impasto">impasto</a>
-    e do <a href="https://github.com/pxdritz1/velatura">velatura</a>.
-  </footer>
 </main>
-<script src="../shapes.js"></script>
+<footer>
+  <p>gpl-3.0-or-later · feito por <a href="https://github.com/pxotitas">pxotitas</a>, com partes do <a href="https://github.com/andreumassanet/impasto">impasto</a> e do <a href="https://github.com/pxdritz1/velatura">velatura</a>.</p>
+</footer>
+<script src="../shapes.js" defer></script>
+<script src="../motion.js" defer></script>
 </body>
 </html>

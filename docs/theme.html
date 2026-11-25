@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>theme · octopus</title>
+  <meta name="description" content="a cozy material 3 shell for niri: a vertical waybar and a rust + gtk4 companion.">
+  <meta name="theme-color" content="#fdfbef" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#14140c" media="(prefers-color-scheme: dark)">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="octopus">
+  <meta property="og:title" content="theme · octopus">
+  <meta property="og:description" content="a cozy material 3 shell for niri: a vertical waybar and a rust + gtk4 companion.">
+  <meta property="og:url" content="https://pxotitas.github.io/octopus/docs/theme.html">
+  <meta property="og:image" content="https://pxotitas.github.io/octopus/assets/banner.png">
+  <meta property="og:image:width" content="1280">
+  <meta property="og:image:height" content="640">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+  <link rel="alternate" hreflang="pt-BR" href="https://pxotitas.github.io/octopus/pt/docs/tema.html">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<header class="top">
+  <nav>
+    <a class="brand" href="../">
+      <picture>
+        <source srcset="../assets/logo-dark.svg" media="(prefers-color-scheme: dark)">
+        <img src="../assets/logo.svg" alt="" width="36" height="36">
+      </picture>
+      <span>octopus</span>
+    </a>
+    <div class="links">
+      <a href="../docs/" aria-current="page">docs</a>
+      <a href="../media/">media</a>
+      <a href="../changelog/">changelog</a>
+      <a href="https://github.com/pxotitas/octopus">github</a>
+      <a class="switch" href="../pt/docs/tema.html" hreflang="pt-BR">português</a>
+    </div>
+  </nav>
+</header>
+<main>
+<div class="docs">
+  <aside class="docs-nav">
+    <ul><li><a href="./">overview</a></li><li><a href="structure.html">structure</a></li><li><a href="shortcuts.html">shortcuts and commands</a></li><li><a href="configuration.html">configuration</a></li><li><a href="theme.html" aria-current="page">theme</a></li><li><a href="troubleshooting.html">when something breaks</a></li></ul>
+  </aside>
+  <article class="doc">
+    <h1>theme</h1>
+    <ol><li>matuwall (or the dash's wallpapers tab) sets the image with <code>awww</code>.</li><li>then it runs <code>octopus-theme &lt;image&gt;</code> (= <code>scripts/theme.sh</code>).</li><li><code>theme.sh</code> reads the mode from <code>~/.local/state/octopus/mode</code> (<code>light</code>, <code>dark</code> or <code>auto</code>; on auto it asks <code>octopus luma</code>).</li><li>matugen makes the colors with <code>matugen/config.toml</code>: companion, waybar, fuzzel, rofi and matuwall.</li><li>then it runs your <code>~/.config/matugen/config.toml</code>, for the rest of the system.</li></ol>
+<p>the companion and waybar notice the new <code>colors.css</code> and reload on their own.</p>
+<p>to switch the mode: the theme tile in the control center, or settings → appearance.</p>
+    <p class="edit"><a href="https://github.com/pxotitas/octopus/blob/eng/docs/theme.md">edit this page on github</a></p>
+  </article>
+</div>
+</main>
+<footer>
+  <p>gpl-3.0-or-later · made by <a href="https://github.com/pxotitas">pxotitas</a>, with parts from <a href="https://github.com/andreumassanet/impasto">impasto</a> and <a href="https://github.com/pxdritz1/velatura">velatura</a>.</p>
+</footer>
+</body>
+</html>

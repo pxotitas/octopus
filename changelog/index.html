@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>changelog · octopus</title>
+  <meta name="description" content="a cozy material 3 shell for niri: a vertical waybar and a rust + gtk4 companion.">
+  <meta name="theme-color" content="#fdfbef" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#14140c" media="(prefers-color-scheme: dark)">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="octopus">
+  <meta property="og:title" content="changelog · octopus">
+  <meta property="og:description" content="a cozy material 3 shell for niri: a vertical waybar and a rust + gtk4 companion.">
+  <meta property="og:url" content="https://pxotitas.github.io/octopus/changelog/">
+  <meta property="og:image" content="https://pxotitas.github.io/octopus/assets/banner.png">
+  <meta property="og:image:width" content="1280">
+  <meta property="og:image:height" content="640">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+  <link rel="alternate" hreflang="pt-BR" href="https://pxotitas.github.io/octopus/pt/changelog/">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<header class="top">
+  <nav>
+    <a class="brand" href="../">
+      <picture>
+        <source srcset="../assets/logo-dark.svg" media="(prefers-color-scheme: dark)">
+        <img src="../assets/logo.svg" alt="" width="36" height="36">
+      </picture>
+      <span>octopus</span>
+    </a>
+    <div class="links">
+      <a href="../docs/">docs</a>
+      <a href="../media/">media</a>
+      <a href="../changelog/" aria-current="page">changelog</a>
+      <a href="https://github.com/pxotitas/octopus">github</a>
+      <a class="switch" href="../pt/changelog/" hreflang="pt-BR">português</a>
+    </div>
+  </nav>
+</header>
+<main>
+<section class="page-head"><h1>changelog</h1><p class="lead">everything that changed in the shell, newest first, straight from the commits on <code>main</code>.</p></section>
+<div class="changelog">
+<section class="day"><h2 id="2026-11-24"><time datetime="2026-11-24">november 24, 2026</time></h2><ul>
+<li><span class="kind k-docs">docs</span><span class="scope">readme</span><span class="text">rewrite it in english only, with the logo and links to the site</span><a class="sha" href="https://github.com/pxotitas/octopus/commit/108b31d">108b31d</a></li>
+<li><span class="kind k-docs">docs</span><span class="scope">readme</span><span class="text">add the showcase and lowercase the badges</span><a class="sha" href="https://github.com/pxotitas/octopus/commit/f91dc64">f91dc64</a></li>
+<li><span class="kind k-feat">new</span><span class="scope">launcher</span><span class="text">swap wofi for rofi, keeping the same look</span><a class="sha" href="https://github.com/pxotitas/octopus/commit/365752a">365752a</a></li>
+<li><span class="kind k-fix">fix</span><span class="scope">panels</span><span class="text">keep long notifications and song titles from widening the control center and dash</span><a class="sha" href="https://github.com/pxotitas/octopus/commit/75d259a">75d259a</a></li>
+<li><span class="kind k-fix">fix</span><span class="scope">lyrics</span><span class="text">light lines a beat early, read the position on time, and add a timing offset</span><a class="sha" href="https://github.com/pxotitas/octopus/commit/4a506c3">4a506c3</a></li>
+<li><span class="kind k-feat">new</span><span class="scope">dash</span><span class="text">let the sung lyric rise into place</span><a class="sha" href="https://github.com/pxotitas/octopus/commit/f677aae">f677aae</a></li>
+<li><span class="kind k-perf">faster</span><span class="scope">dash</span><span class="text">ease only the lyric colors so line changes stay smooth</span><a class="sha" href="https://github.com/pxotitas/octopus/commit/e0f962c">e0f962c</a></li>
+<li><span class="kind k-fix">fix</span><span class="scope">dash</span><span class="text">keep the lyrics from resizing the dash as lines are sung</span><a class="sha" href="https://github.com/pxotitas/octopus/commit/9e454cf">9e454cf</a></li>
+<li><span class="kind k-revert">revert</span><span class="scope">lyrics</span><span class="text">follow the lyrics by line again, keeping the brighter line</span><a class="sha" href="https://github.com/pxotitas/octopus/commit/fbdc8bd">fbdc8bd</a></li>
+<li><span class="kind k-feat">new</span><span class="scope">lyrics</span><span class="text">light lyrics word by word and give the sung line more color</span><a class="sha" href="https://github.com/pxotitas/octopus/commit/6f81a86">6f81a86</a></li>
+<li><span class="kind k-fix">fix</span><span class="scope">lock</span><span class="text">lay the player out like Velatura, between a smaller clock and the account</span><a class="sha" href="https://github.com/pxotitas/octopus/commit/38259d5">38259d5</a></li>
+<li><span class="kind k-fix">fix</span><span class="scope">dock</span><span class="text">open apps on a plain left click</span><a class="sha" href="https://github.com/pxotitas/octopus/commit/a56debb">a56debb</a></li>
+<li><span class="kind k-fix">fix</span><span class="scope">bar</span><span class="text">center the arch logo in the column again</span><a class="sha" href="https://github.com/pxotitas/octopus/commit/61b8f2b">61b8f2b</a></li>
+<li><span class="kind k-style">style</span><span class="scope">bar</span><span class="text">double the arch logo</span><a class="sha" href="https://github.com/pxotitas/octopus/commit/e119695">e119695</a></li>
+<li><span class="kind k-fix">fix</span><span class="scope">lock,media</span><span class="text">hold the lock cover to a small shape and tuck the visualizer in a corner</span><a class="sha" href="https://github.com/pxotitas/octopus/commit/b4c7dd8">b4c7dd8</a></li>
+<li><span class="kind k-fix">fix</span><span class="scope">popup</span><span class="text">stay under fullscreen windows like the bar</span><a class="sha" href="https://github.com/pxotitas/octopus/commit/d2843e1">d2843e1</a></li>
+<li><span class="kind k-fix">fix</span><span class="scope">bar</span><span class="text">let the tray button outlive its widgets and stay loaded</span><a class="sha" href="https://github.com/pxotitas/octopus/commit/a1d2306">a1d2306</a></li>
+<li><span class="kind k-feat">new</span><span class="scope">wofi</span><span class="text">rank apps by use, shared with the spotlight</span><a class="sha" href="https://github.com/pxotitas/octopus/commit/d3fe7be">d3fe7be</a></li>
+<li><span class="kind k-fix">fix</span><span class="scope">dock</span><span class="text">give swelling icons room and drop the button frames</span><a class="sha" href="https://github.com/pxotitas/octopus/commit/b5a48f1">b5a48f1</a></li>
+<li><span class="kind k-fix">fix</span><span class="scope">bar</span><span class="text">keep the tray button alive past waybar reloads</span><a class="sha" href="https://github.com/pxotitas/octopus/commit/0a0538e">0a0538e</a></li>
+<li><span class="kind k-docs">docs</span><span class="text">point main&#x27;s readme to the language branches</span><a class="sha" href="https://github.com/pxotitas/octopus/commit/0ec5fb3">0ec5fb3</a></li>
+<li><span class="kind k-feat">new</span><span class="scope">dock</span><span class="text">add icon size and Velatura&#x27;s magnification</span><a class="sha" href="https://github.com/pxotitas/octopus/commit/000bd2b">000bd2b</a></li>
+<li><span class="kind k-chore">chore</span><span class="text">license under GPL-3.0-or-later and credit impasto and velatura</span><a class="sha" href="https://github.com/pxotitas/octopus/commit/3fac8dd">3fac8dd</a></li>
+</ul></section>
+<section class="day"><h2 id="2026-11-23"><time datetime="2026-11-23">november 23, 2026</time></h2><ul>
+<li><span class="kind k-fix">fix</span><span class="scope">wofi</span><span class="text">restore app launching from custom launcher</span><a class="sha" href="https://github.com/pxotitas/octopus/commit/0d9a4aa">0d9a4aa</a></li>
+<li><span class="kind k-other">other</span><span class="text">revise README.md for language and content updates</span><a class="sha" href="https://github.com/pxotitas/octopus/commit/b748246">b748246</a></li>
+<li><span class="kind k-other">other</span><span class="text">rewrite README in natural English and add GitHub badges</span><a class="sha" href="https://github.com/pxotitas/octopus/commit/c5f75d2">c5f75d2</a></li>
+<li><span class="kind k-chore">chore</span><span class="text">keep the current settings and the bar they generate</span><a class="sha" href="https://github.com/pxotitas/octopus/commit/415c230">415c230</a></li>
+<li><span class="kind k-fix">fix</span><span class="scope">wofi</span><span class="text">run apart from the user gtk.css so its style applies</span><a class="sha" href="https://github.com/pxotitas/octopus/commit/7456223">7456223</a></li>
+<li><span class="kind k-fix">fix</span><span class="scope">wofi</span><span class="text">clear the theme&#x27;s list background and color every part</span><a class="sha" href="https://github.com/pxotitas/octopus/commit/514a105">514a105</a></li>
+<li><span class="kind k-fix">fix</span><span class="scope">bar</span><span class="text">grow the focused workspace smoothly instead of bouncing</span><a class="sha" href="https://github.com/pxotitas/octopus/commit/9f36951">9f36951</a></li>
+<li><span class="kind k-fix">fix</span><span class="scope">launcher</span><span class="text">stay open until Enter or Escape and adapt on every edit</span><a class="sha" href="https://github.com/pxotitas/octopus/commit/05026b0">05026b0</a></li>
+<li><span class="kind k-docs">docs</span><span class="text">add a short guide to the dotfiles and module notes</span><a class="sha" href="https://github.com/pxotitas/octopus/commit/21c3b75">21c3b75</a></li>
+<li><span class="kind k-feat">new</span><span class="scope">settings</span><span class="text">redo the window as M3 pages with a navigation rail</span><a class="sha" href="https://github.com/pxotitas/octopus/commit/8f257bc">8f257bc</a></li>
+<li><span class="kind k-feat">new</span><span class="scope">dash</span><span class="text">pick wallpapers from a tab of its own</span><a class="sha" href="https://github.com/pxotitas/octopus/commit/92e55c1">92e55c1</a></li>
+<li><span class="kind k-feat">new</span><span class="scope">dock</span><span class="text">port Velatura&#x27;s dock with fixed, autohide and smart modes</span><a class="sha" href="https://github.com/pxotitas/octopus/commit/ff797f2">ff797f2</a></li>
+<li><span class="kind k-feat">new</span><span class="scope">launcher</span><span class="text">open wofi in the shell&#x27;s colors on Mod+D and the logo</span><a class="sha" href="https://github.com/pxotitas/octopus/commit/dab0bb8">dab0bb8</a></li>
+<li><span class="kind k-feat">new</span><span class="scope">bar</span><span class="text">add a flush style with concave corners and snappier workspaces</span><a class="sha" href="https://github.com/pxotitas/octopus/commit/a9003ec">a9003ec</a></li>
+<li><span class="kind k-feat">new</span><span class="scope">shape</span><span class="text">add more M3 shapes and an adapt step for the turning wheel</span><a class="sha" href="https://github.com/pxotitas/octopus/commit/3bda630">3bda630</a></li>
+<li><span class="kind k-fix">fix</span><span class="scope">popup</span><span class="text">fit panels to their natural size and fade centered ones in place</span><a class="sha" href="https://github.com/pxotitas/octopus/commit/a3058b1">a3058b1</a></li>
+<li><span class="kind k-perf">faster</span><span class="scope">companion</span><span class="text">build occasional panels on demand and restart on language change</span><a class="sha" href="https://github.com/pxotitas/octopus/commit/87d1b44">87d1b44</a></li>
+<li><span class="kind k-feat">new</span><span class="scope">launcher</span><span class="text">add a spotlight with apps, actions, math, files and power</span><a class="sha" href="https://github.com/pxotitas/octopus/commit/853056e">853056e</a></li>
+<li><span class="kind k-feat">new</span><span class="scope">bar</span><span class="text">animate the tray button as a Waybar CFFI module</span><a class="sha" href="https://github.com/pxotitas/octopus/commit/e57577f">e57577f</a></li>
+<li><span class="kind k-fix">fix</span><span class="scope">tray</span><span class="text">shrink back after a menu and follow page changes snappily</span><a class="sha" href="https://github.com/pxotitas/octopus/commit/733629e">733629e</a></li>
+<li><span class="kind k-fix">fix</span><span class="scope">lock</span><span class="text">show the check in progress neutrally, not in the error color</span><a class="sha" href="https://github.com/pxotitas/octopus/commit/3ae6f24">3ae6f24</a></li>
+<li><span class="kind k-feat">new</span><span class="scope">lock</span><span class="text">bring back the own lock with turning M3 shapes, weather and session buttons</span><a class="sha" href="https://github.com/pxotitas/octopus/commit/0873bae">0873bae</a></li>
+<li><span class="kind k-feat">new</span><span class="scope">lock</span><span class="text">lock with hyprlock in an M3 layout fed by the companion</span><a class="sha" href="https://github.com/pxotitas/octopus/commit/27cd529">27cd529</a></li>
+<li><span class="kind k-fix">fix</span><span class="scope">bar</span><span class="text">give the battery group its own name so its margins apply once</span><a class="sha" href="https://github.com/pxotitas/octopus/commit/c9f3e70">c9f3e70</a></li>
+<li><span class="kind k-fix">fix</span><span class="scope">bar</span><span class="text">regenerate the Waybar config on start and on reload</span><a class="sha" href="https://github.com/pxotitas/octopus/commit/932b352">932b352</a></li>
+<li><span class="kind k-refactor">refactor</span><span class="text">live in ~/.config/octopus instead of a projects folder</span><a class="sha" href="https://github.com/pxotitas/octopus/commit/23179af">23179af</a></li>
+<li><span class="kind k-feat">new</span><span class="scope">bar</span><span class="text">show the battery percentage under the pill</span><a class="sha" href="https://github.com/pxotitas/octopus/commit/b26eb0b">b26eb0b</a></li>
+<li><span class="kind k-feat">new</span><span class="scope">i18n</span><span class="text">add English, picked in settings or from LANG</span><a class="sha" href="https://github.com/pxotitas/octopus/commit/da33eab">da33eab</a></li>
+<li><span class="kind k-perf">faster</span><span class="scope">companion</span><span class="text">tune glibc and free panel contents on close</span><a class="sha" href="https://github.com/pxotitas/octopus/commit/b8afadd">b8afadd</a></li>
+<li><span class="kind k-feat">new</span><span class="scope">tray</span><span class="text">show app names and an arrow that turns when open</span><a class="sha" href="https://github.com/pxotitas/octopus/commit/9a57b61">9a57b61</a></li>
+<li><span class="kind k-feat">new</span><span class="scope">theme</span><span class="text">add an automatic mode that follows the wallpaper</span><a class="sha" href="https://github.com/pxotitas/octopus/commit/e50f847">e50f847</a></li>
+<li><span class="kind k-feat">new</span><span class="scope">emoji</span><span class="text">replace the fuzzel picker with an emoji panel</span><a class="sha" href="https://github.com/pxotitas/octopus/commit/699ee8c">699ee8c</a></li>
+<li><span class="kind k-fix">fix</span><span class="scope">lock</span><span class="text">take typed input again and unlock without a borrow panic</span><a class="sha" href="https://github.com/pxotitas/octopus/commit/121ad48">121ad48</a></li>
+<li><span class="kind k-perf">faster</span><span class="scope">companion</span><span class="text">render with GL and animate panels by translation</span><a class="sha" href="https://github.com/pxotitas/octopus/commit/db1ef23">db1ef23</a></li>
+<li><span class="kind k-fix">fix</span><span class="scope">lock</span><span class="text">keep every typed character and follow Velatura&#x27;s layout</span><a class="sha" href="https://github.com/pxotitas/octopus/commit/3feff94">3feff94</a></li>
+<li><span class="kind k-feat">new</span><span class="scope">theme</span><span class="text">switch between light and dark from the control center</span><a class="sha" href="https://github.com/pxotitas/octopus/commit/2f64726">2f64726</a></li>
+<li><span class="kind k-feat">new</span><span class="scope">settings</span><span class="text">add a settings window that generates the bar</span><a class="sha" href="https://github.com/pxotitas/octopus/commit/59d36b7">59d36b7</a></li>
+<li><span class="kind k-feat">new</span><span class="scope">companion</span><span class="text">move the clipboard and power menus into the shell</span><a class="sha" href="https://github.com/pxotitas/octopus/commit/2e4c92c">2e4c92c</a></li>
+<li><span class="kind k-feat">new</span><span class="scope">tray</span><span class="text">host the tray and draw its menus in the shell</span><a class="sha" href="https://github.com/pxotitas/octopus/commit/31dfafe">31dfafe</a></li>
+<li><span class="kind k-fix">fix</span><span class="scope">config</span><span class="text">keep the clipboard on cancel and list copied images</span><a class="sha" href="https://github.com/pxotitas/octopus/commit/5b9a43a">5b9a43a</a></li>
+<li><span class="kind k-fix">fix</span><span class="scope">waybar</span><span class="text">slim the bar and center its modules</span><a class="sha" href="https://github.com/pxotitas/octopus/commit/4b70b05">4b70b05</a></li>
+<li><span class="kind k-feat">new</span><span class="scope">lock</span><span class="text">add a session lock with blurred wallpaper and lyrics</span><a class="sha" href="https://github.com/pxotitas/octopus/commit/c07a7a1">c07a7a1</a></li>
+<li><span class="kind k-feat">new</span><span class="scope">companion</span><span class="text">add M3 shapes, wave timelines and frame-clock motion</span><a class="sha" href="https://github.com/pxotitas/octopus/commit/c66d7d4">c66d7d4</a></li>
+<li><span class="kind k-docs">docs</span><span class="text">rewrite the README and add the installer</span><a class="sha" href="https://github.com/pxotitas/octopus/commit/a957fbf">a957fbf</a></li>
+<li><span class="kind k-feat">new</span><span class="scope">config</span><span class="text">add fuzzel menus, matugen templates and niri include</span><a class="sha" href="https://github.com/pxotitas/octopus/commit/b1c0d97">b1c0d97</a></li>
+<li><span class="kind k-feat">new</span><span class="scope">waybar</span><span class="text">rebuild the bar as a minimal vertical column</span><a class="sha" href="https://github.com/pxotitas/octopus/commit/6869d46">6869d46</a></li>
+<li><span class="kind k-feat">new</span><span class="scope">companion</span><span class="text">add the Rust + GTK4 companion daemon</span><a class="sha" href="https://github.com/pxotitas/octopus/commit/878b269">878b269</a></li>
+<li><span class="kind k-chore">chore</span><span class="text">remove the previous Octopus setup</span><a class="sha" href="https://github.com/pxotitas/octopus/commit/e9d9a5d">e9d9a5d</a></li>
+</ul></section>
+<section class="day"><h2 id="2026-11-19"><time datetime="2026-11-19">november 19, 2026</time></h2><ul>
+<li><span class="kind k-fix">fix</span><span class="text">round Waybar surface and audio icon</span><a class="sha" href="https://github.com/pxotitas/octopus/commit/1c2fe75">1c2fe75</a></li>
+<li><span class="kind k-docs">docs</span><span class="text">document Octopus dependencies</span><a class="sha" href="https://github.com/pxotitas/octopus/commit/1b9ccc0">1b9ccc0</a></li>
+<li><span class="kind k-feat">new</span><span class="text">build Octopus Waybar configuration</span><a class="sha" href="https://github.com/pxotitas/octopus/commit/6749593">6749593</a></li>
+<li><span class="kind k-docs">docs</span><span class="text">set weather location to Campo Grande</span><a class="sha" href="https://github.com/pxotitas/octopus/commit/d87dc05">d87dc05</a></li>
+<li><span class="kind k-docs">docs</span><span class="text">prefer native Waybar status modules</span><a class="sha" href="https://github.com/pxotitas/octopus/commit/6d341de">6d341de</a></li>
+<li><span class="kind k-docs">docs</span><span class="text">record Waybar and Ewwii package review</span><a class="sha" href="https://github.com/pxotitas/octopus/commit/ecbe173">ecbe173</a></li>
+<li><span class="kind k-docs">docs</span><span class="text">use native Waybar MPRIS module</span><a class="sha" href="https://github.com/pxotitas/octopus/commit/df9a6ce">df9a6ce</a></li>
+<li><span class="kind k-docs">docs</span><span class="text">simplify Ewwii shared window approach</span><a class="sha" href="https://github.com/pxotitas/octopus/commit/e2aa4c4">e2aa4c4</a></li>
+<li><span class="kind k-docs">docs</span><span class="text">prefer native Waybar Niri modules</span><a class="sha" href="https://github.com/pxotitas/octopus/commit/4e6a01d">4e6a01d</a></li>
+<li><span class="kind k-docs">docs</span><span class="text">mark workspace behaviour decision complete</span><a class="sha" href="https://github.com/pxotitas/octopus/commit/d55be77">d55be77</a></li>
+<li><span class="kind k-docs">docs</span><span class="text">clarify workspace display behaviour</span><a class="sha" href="https://github.com/pxotitas/octopus/commit/3d1c98c">3d1c98c</a></li>
+<li><span class="kind k-docs">docs</span><span class="text">record upstream research and architecture constraints</span><a class="sha" href="https://github.com/pxotitas/octopus/commit/2c99053">2c99053</a></li>
+<li><span class="kind k-docs">docs</span><span class="text">establish Octopus design and Waybar specification</span><a class="sha" href="https://github.com/pxotitas/octopus/commit/d664375">d664375</a></li>
+</ul></section>
+</div>
+</main>
+<footer>
+  <p>gpl-3.0-or-later · made by <a href="https://github.com/pxotitas">pxotitas</a>, with parts from <a href="https://github.com/andreumassanet/impasto">impasto</a> and <a href="https://github.com/pxdritz1/velatura">velatura</a>.</p>
+</footer>
+</body>
+</html>

@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>media · octopus</title>
+  <meta name="description" content="a cozy material 3 shell for niri: a vertical waybar and a rust + gtk4 companion.">
+  <meta name="theme-color" content="#fdfbef" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#14140c" media="(prefers-color-scheme: dark)">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="octopus">
+  <meta property="og:title" content="media · octopus">
+  <meta property="og:description" content="a cozy material 3 shell for niri: a vertical waybar and a rust + gtk4 companion.">
+  <meta property="og:url" content="https://pxotitas.github.io/octopus/media/">
+  <meta property="og:image" content="https://pxotitas.github.io/octopus/assets/banner.png">
+  <meta property="og:image:width" content="1280">
+  <meta property="og:image:height" content="640">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+  <link rel="alternate" hreflang="pt-BR" href="https://pxotitas.github.io/octopus/pt/media/">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<header class="top">
+  <nav>
+    <a class="brand" href="../">
+      <picture>
+        <source srcset="../assets/logo-dark.svg" media="(prefers-color-scheme: dark)">
+        <img src="../assets/logo.svg" alt="" width="36" height="36">
+      </picture>
+      <span>octopus</span>
+    </a>
+    <div class="links">
+      <a href="../docs/">docs</a>
+      <a href="../media/" aria-current="page">media</a>
+      <a href="../changelog/">changelog</a>
+      <a href="https://github.com/pxotitas/octopus">github</a>
+      <a class="switch" href="../pt/media/" hreflang="pt-BR">português</a>
+    </div>
+  </nav>
+</header>
+<main>
+<section class="page-head">
+  <h1>media</h1>
+  <p class="lead">octopus in motion and standing still. the screenshots are in english.</p>
+</section>
+
+<h2 id="video">the whole tour</h2>
+<p class="lead">a minute and a half, with sound.</p>
+<video class="tour" src="../assets/video/showcase.mp4" poster="../assets/video/showcase.webp" controls preload="metadata" playsinline></video>
+
+<h2 id="clips">clips</h2>
+<p class="lead">the same tour, a piece at a time. they play as you scroll.</p>
+<div class="clips">
+  <figure class="clip" id="dash">
+    <video src="../assets/clips/dash.mp4" poster="../assets/clips/dash.webp" muted loop playsinline preload="none"></video>
+    <figcaption><strong>dash</strong> overview, music and the synced lyrics</figcaption>
+  </figure>
+  <figure class="clip" id="weather">
+    <video src="../assets/clips/weather.mp4" poster="../assets/clips/weather.webp" muted loop playsinline preload="none"></video>
+    <figcaption><strong>weather and wallpapers</strong> the forecast, then the wallpaper picker</figcaption>
+  </figure>
+  <figure class="clip" id="control-center">
+    <video src="../assets/clips/control-center.mp4" poster="../assets/clips/control-center.webp" muted loop playsinline preload="none"></video>
+    <figcaption><strong>control center</strong> quick toggles, sliders and the player</figcaption>
+  </figure>
+  <figure class="clip" id="lock">
+    <video src="../assets/clips/lock.mp4" poster="../assets/clips/lock.webp" muted loop playsinline preload="none"></video>
+    <figcaption><strong>lock screen</strong> shapes that change at every key</figcaption>
+  </figure>
+  <figure class="clip" id="launchers">
+    <video src="../assets/clips/launchers.mp4" poster="../assets/clips/launchers.webp" muted loop playsinline preload="none"></video>
+    <figcaption><strong>launchers</strong> rofi and the spotlight</figcaption>
+  </figure>
+  <figure class="clip" id="emoji">
+    <video src="../assets/clips/emoji.mp4" poster="../assets/clips/emoji.webp" muted loop playsinline preload="none"></video>
+    <figcaption><strong>emoji</strong> the picker, with search</figcaption>
+  </figure>
+  <figure class="clip" id="settings">
+    <video src="../assets/clips/settings.mp4" poster="../assets/clips/settings.webp" muted loop playsinline preload="none"></video>
+    <figcaption><strong>settings</strong> colors, language, bar, widgets and dock</figcaption>
+  </figure>
+  <figure class="clip" id="calculator">
+    <video src="../assets/clips/calculator.mp4" poster="../assets/clips/calculator.webp" muted loop playsinline preload="none"></video>
+    <figcaption><strong>spotlight math</strong> a sum typed after <code>=</code></figcaption>
+  </figure>
+  <figure class="clip" id="palette">
+    <video src="../assets/clips/palette.mp4" poster="../assets/clips/palette.webp" muted loop playsinline preload="none"></video>
+    <figcaption><strong>palette from the wallpaper</strong> a new wallpaper repaints the shell</figcaption>
+  </figure>
+</div>
+
+<h2 id="screenshots">screenshots</h2>
+<p class="lead">click one to see it full size.</p>
+<div class="shots">
+  <button class="shot" type="button" data-full="../assets/screenshots/desktop.webp" data-label="the bar and the dock">
+    <img src="../assets/screenshots/thumbs/desktop.webp" alt="the bar and the dock" loading="lazy">
+    <span>the bar and the dock</span>
+  </button>
+  <button class="shot" type="button" data-full="../assets/screenshots/control-center.webp" data-label="control center">
+    <img src="../assets/screenshots/thumbs/control-center.webp" alt="control center" loading="lazy">
+    <span>control center</span>
+  </button>
+  <button class="shot" type="button" data-full="../assets/screenshots/dash.webp" data-label="dash">
+    <img src="../assets/screenshots/thumbs/dash.webp" alt="dash" loading="lazy">
+    <span>dash</span>
+  </button>
+  <button class="shot" type="button" data-full="../assets/screenshots/wallpapers.webp" data-label="wallpaper picker">
+    <img src="../assets/screenshots/thumbs/wallpapers.webp" alt="wallpaper picker" loading="lazy">
+    <span>wallpaper picker</span>
+  </button>
+  <button class="shot" type="button" data-full="../assets/screenshots/launcher.webp" data-label="spotlight">
+    <img src="../assets/screenshots/thumbs/launcher.webp" alt="spotlight" loading="lazy">
+    <span>spotlight</span>
+  </button>
+  <button class="shot" type="button" data-full="../assets/screenshots/rofi.webp" data-label="rofi">
+    <img src="../assets/screenshots/thumbs/rofi.webp" alt="rofi" loading="lazy">
+    <span>rofi</span>
+  </button>
+  <button class="shot" type="button" data-full="../assets/screenshots/wifi.webp" data-label="wi-fi">
+    <img src="../assets/screenshots/thumbs/wifi.webp" alt="wi-fi" loading="lazy">
+    <span>wi-fi</span>
+  </button>
+  <button class="shot" type="button" data-full="../assets/screenshots/bluetooth.webp" data-label="bluetooth">
+    <img src="../assets/screenshots/thumbs/bluetooth.webp" alt="bluetooth" loading="lazy">
+    <span>bluetooth</span>
+  </button>
+  <button class="shot" type="button" data-full="../assets/screenshots/audio.webp" data-label="sound">
+    <img src="../assets/screenshots/thumbs/audio.webp" alt="sound" loading="lazy">
+    <span>sound</span>
+  </button>
+  <button class="shot" type="button" data-full="../assets/screenshots/tray.webp" data-label="tray">
+    <img src="../assets/screenshots/thumbs/tray.webp" alt="tray" loading="lazy">
+    <span>tray</span>
+  </button>
+  <button class="shot" type="button" data-full="../assets/screenshots/power.webp" data-label="power">
+    <img src="../assets/screenshots/thumbs/power.webp" alt="power" loading="lazy">
+    <span>power</span>
+  </button>
+  <button class="shot" type="button" data-full="../assets/screenshots/clipboard.webp" data-label="clipboard">
+    <img src="../assets/screenshots/thumbs/clipboard.webp" alt="clipboard" loading="lazy">
+    <span>clipboard</span>
+  </button>
+  <button class="shot" type="button" data-full="../assets/screenshots/emoji.webp" data-label="emoji">
+    <img src="../assets/screenshots/thumbs/emoji.webp" alt="emoji" loading="lazy">
+    <span>emoji</span>
+  </button>
+  <button class="shot" type="button" data-full="../assets/screenshots/notification.webp" data-label="a notification">
+    <img src="../assets/screenshots/thumbs/notification.webp" alt="a notification" loading="lazy">
+    <span>a notification</span>
+  </button>
+  <button class="shot" type="button" data-full="../assets/screenshots/osd.webp" data-label="volume osd">
+    <img src="../assets/screenshots/thumbs/osd.webp" alt="volume osd" loading="lazy">
+    <span>volume osd</span>
+  </button>
+  <button class="shot" type="button" data-full="../assets/screenshots/settings.webp" data-label="settings">
+    <img src="../assets/screenshots/thumbs/settings.webp" alt="settings" loading="lazy">
+    <span>settings</span>
+  </button>
+</div>
+
+<h2 id="brand">logo and banner</h2>
+<p class="lead">for posts, videos or a link to the project.</p>
+<div class="brand-assets">
+  <figure>
+    <div class="logo-pair">
+      <img src="../assets/logo.svg" alt="" width="120" height="120">
+      <img src="../assets/logo-dark.svg" alt="" width="120" height="120">
+    </div>
+    <figcaption>logo · <a href="../assets/logo.svg" download>svg</a> · <a href="../assets/logo-dark.svg" download>svg (dark)</a></figcaption>
+  </figure>
+  <figure>
+    <img src="../assets/banner.png" alt="" loading="lazy">
+    <figcaption>banner · <a href="../assets/banner.png" download>png, 1280×640</a></figcaption>
+  </figure>
+</div>
+
+<dialog class="viewer">
+  <form method="dialog"><button class="close" aria-label="close"><svg viewBox="0 0 24 24" width="24" height="24"><path d="M6.4 19 5 17.6 10.6 12 5 6.4 6.4 5 12 10.6 17.6 5 19 6.4 13.4 12 19 17.6 17.6 19 12 13.4Z"/></svg></button></form>
+  <img alt="">
+  <p></p>
+</dialog>
+</main>
+<footer>
+  <p>gpl-3.0-or-later · made by <a href="https://github.com/pxotitas">pxotitas</a>, with parts from <a href="https://github.com/andreumassanet/impasto">impasto</a> and <a href="https://github.com/pxdritz1/velatura">velatura</a>.</p>
+</footer>
+<script src="../media.js" defer></script>
+</body>
+</html>

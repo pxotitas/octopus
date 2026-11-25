@@ -1,0 +1,79 @@
+<section class="hero">
+  <div>
+    <h1>octopus</h1>
+    <p>a cozy m3 shell for niri. a minimal vertical bar on waybar, and
+    everything bigger in a companion written in rust + gtk4.</p>
+    <div class="actions">
+      <a class="button filled" href="#install">install</a>
+      <a class="button tonal" href="docs/">read the docs</a>
+      <a class="button text" href="media/">see it move</a>
+    </div>
+  </div>
+  <div class="shapes" title="press any key">
+    <div class="shape hours"><span>00</span></div>
+    <div class="shape minutes"><span>00</span></div>
+  </div>
+</section>
+
+<figure class="stage">
+  <video src="{{rel}}assets/clips/dash.mp4" poster="{{rel}}assets/clips/dash.webp" autoplay muted loop playsinline></video>
+  <figcaption>the dash, with the music and its lyrics, line by line.</figcaption>
+</figure>
+
+<h2>what's inside</h2>
+<p class="lead">opaque, tonal surfaces. colors from the wallpaper. light enough to idle around 45 mb.</p>
+<div class="features">
+  <a class="feature" href="media/#control-center">
+    <img src="{{rel}}assets/features/control-center.webp" alt="" loading="lazy">
+    <h3>control center</h3>
+    <p>wi-fi, bluetooth, sound, brightness, media and notifications, in one place.</p>
+  </a>
+  <a class="feature" href="media/#dash">
+    <img src="{{rel}}assets/features/dash.webp" alt="" loading="lazy">
+    <h3>dash</h3>
+    <p>clock, calendar, weather, the music with its lyrics, and a wallpaper picker.</p>
+  </a>
+  <a class="feature" href="media/#launchers">
+    <img src="{{rel}}assets/features/spotlight.webp" alt="" loading="lazy">
+    <h3>spotlight</h3>
+    <p>apps and their actions, a calculator, files behind <code>/</code>, power behind <code>&gt;</code>.</p>
+  </a>
+  <a class="feature" href="media/#lock">
+    <img src="{{rel}}assets/features/lock.webp" alt="" loading="lazy">
+    <h3>lock screen</h3>
+    <p>m3 shapes that turn and change at every key, the lyric being sung, the weather.</p>
+  </a>
+  <a class="feature" href="media/#screenshots">
+    <img src="{{rel}}assets/features/dock.webp" alt="" loading="lazy">
+    <h3>dock</h3>
+    <p>pinned and open apps, with magnification. fixed, autohide or smart.</p>
+  </a>
+  <a class="feature" href="media/#settings">
+    <img src="{{rel}}assets/features/settings.webp" alt="" loading="lazy">
+    <h3>settings</h3>
+    <p>bar style and position, widgets, dock, language, light, dark or automatic.</p>
+  </a>
+</div>
+
+<section class="split">
+  <div>
+    <h2>it wears your wallpaper</h2>
+    <p class="lead">pick a wallpaper and matugen repaints everything: the bar,
+    the panels, rofi, fuzzel and the rest of your system. light, dark, or
+    whatever the picture asks for.</p>
+    <a class="button tonal" href="docs/theme.html">how the colors work</a>
+  </div>
+  <video src="{{rel}}assets/clips/palette.mp4" poster="{{rel}}assets/clips/palette.webp" autoplay muted loop playsinline></video>
+</section>
+
+<h2 id="install">install</h2>
+<p class="lead">on arch (or anything with these packages), the repo lives in <code>~/.config/octopus</code> itself.</p>
+<pre><code>git clone https://github.com/pxotitas/octopus ~/.config/octopus
+~/.config/octopus/install.sh</code></pre>
+<p class="lead">then, at the end of <code>~/.config/niri/config.kdl</code>:</p>
+<pre><code>include "~/.config/octopus/niri.kdl"</code></pre>
+<details class="deps">
+  <summary>dependencies</summary>
+  <p><code>pam waybar matugen matuwall awww cliphist wl-clipboard wtype playerctl cava brightnessctl networkmanager bluez-utils libpulse python unicode-emoji unicode-cldr fd gcc rofi gtk3 gtk4 gtk4-layer-shell ttf-material-symbols-variable rust</code></p>
+</details>
+<p class="lead next">next: <a href="docs/shortcuts.html">the shortcuts</a> and <a href="docs/configuration.html">what you can change</a>.</p>

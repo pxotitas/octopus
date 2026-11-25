@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>atalhos e comandos · octopus</title>
+  <meta name="description" content="um shell material 3 cozy pro niri: uma waybar vertical e um companion em rust + gtk4.">
+  <meta name="theme-color" content="#fdfbef" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#14140c" media="(prefers-color-scheme: dark)">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="octopus">
+  <meta property="og:title" content="atalhos e comandos · octopus">
+  <meta property="og:description" content="um shell material 3 cozy pro niri: uma waybar vertical e um companion em rust + gtk4.">
+  <meta property="og:url" content="https://pxotitas.github.io/octopus/pt/docs/atalhos.html">
+  <meta property="og:image" content="https://pxotitas.github.io/octopus/assets/banner.png">
+  <meta property="og:image:width" content="1280">
+  <meta property="og:image:height" content="640">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="../../assets/logo.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png">
+  <link rel="alternate" hreflang="en" href="https://pxotitas.github.io/octopus/docs/shortcuts.html">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+<header class="top">
+  <nav>
+    <a class="brand" href="../../pt/">
+      <picture>
+        <source srcset="../../assets/logo-dark.svg" media="(prefers-color-scheme: dark)">
+        <img src="../../assets/logo.svg" alt="" width="36" height="36">
+      </picture>
+      <span>octopus</span>
+    </a>
+    <div class="links">
+      <a href="../../pt/docs/" aria-current="page">docs</a>
+      <a href="../../pt/media/">mídia</a>
+      <a href="../../pt/changelog/">changelog</a>
+      <a href="https://github.com/pxotitas/octopus">github</a>
+      <a class="switch" href="../../docs/shortcuts.html" hreflang="en">english</a>
+    </div>
+  </nav>
+</header>
+<main>
+<div class="docs">
+  <aside class="docs-nav">
+    <ul><li><a href="./">visão geral</a></li><li><a href="estrutura.html">estrutura</a></li><li><a href="atalhos.html" aria-current="page">atalhos e comandos</a><ul class="toc"><li><a href="#niri-niri-kdl">niri (niri.kdl)</a></li><li><a href="#spotlight">spotlight</a></li><li><a href="#comandos">comandos</a></li></ul></li><li><a href="configuracao.html">configuração</a></li><li><a href="tema.html">tema</a></li><li><a href="problemas.html">quando algo quebra</a></li></ul>
+  </aside>
+  <article class="doc">
+    <h1>atalhos e comandos</h1>
+    <h2 id="niri-niri-kdl">niri (<code>niri.kdl</code>)</h2>
+<div class="table"><table><thead><tr><th>atalho</th><th>faz</th></tr></thead><tbody><tr><td>Mod+Space, XF86LaunchB</td><td>spotlight</td></tr><tr><td>Mod+D</td><td>rofi (apps)</td></tr><tr><td>Mod+Shift+D</td><td>fuzzel (vem do teu config.kdl, não do octopus)</td></tr><tr><td>Mod+C</td><td>central de controle</td></tr><tr><td>Mod+A</td><td>dash</td></tr><tr><td>Mod+Shift+V</td><td>clipboard</td></tr><tr><td>Mod+Period</td><td>emoji</td></tr><tr><td>Mod+Shift+E</td><td>energia</td></tr><tr><td>Mod+Comma</td><td>configurações</td></tr><tr><td>Mod+L</td><td>bloquear</td></tr><tr><td>Mod+Shift+W</td><td>matuwall</td></tr></tbody></table></div>
+<h2 id="spotlight">spotlight</h2>
+<ul><li>digitar: apps e as ações deles (ex. "nova janela privativa")</li><li>uma conta (<code>2*(3+4)</code>, <code>sqrt 16</code>, <code>1,5 x 2</code>): calculadora, enter copia</li><li><code>/nome</code>: arquivos na pasta pessoal (usa o <code>fd</code>)</li><li><code>&gt;</code>: bloquear, suspender, sair, reiniciar, desligar</li></ul>
+<h2 id="comandos">comandos</h2>
+<pre><code>octopus                    o daemon (o niri inicia sozinho)
+octopus toggle &lt;painel&gt;    control-center, dash, wifi, bluetooth, audio,
+                           tray, clipboard, emoji, power, launcher
+octopus open wallpapers    dash na aba de wallpapers
+octopus settings           janela de configurações
+octopus lock               bloquear
+octopus close              fecha qualquer painel
+octopus reload             regera o config da Waybar
+octopus restart            reinicia o daemon (o idioma e a dock precisam)
+octopus luma &lt;imagem&gt;      diz se a imagem é dark ou light</code></pre>
+    <p class="edit"><a href="https://github.com/pxotitas/octopus/blob/pt-br/docs/atalhos.md">editar essa página no github</a></p>
+  </article>
+</div>
+</main>
+<footer>
+  <p>gpl-3.0-or-later · feito por <a href="https://github.com/pxotitas">pxotitas</a>, com partes do <a href="https://github.com/andreumassanet/impasto">impasto</a> e do <a href="https://github.com/pxdritz1/velatura">velatura</a>.</p>
+</footer>
+</body>
+</html>

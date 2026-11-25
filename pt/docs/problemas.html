@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>quando algo quebra · octopus</title>
+  <meta name="description" content="um shell material 3 cozy pro niri: uma waybar vertical e um companion em rust + gtk4.">
+  <meta name="theme-color" content="#fdfbef" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#14140c" media="(prefers-color-scheme: dark)">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="octopus">
+  <meta property="og:title" content="quando algo quebra · octopus">
+  <meta property="og:description" content="um shell material 3 cozy pro niri: uma waybar vertical e um companion em rust + gtk4.">
+  <meta property="og:url" content="https://pxotitas.github.io/octopus/pt/docs/problemas.html">
+  <meta property="og:image" content="https://pxotitas.github.io/octopus/assets/banner.png">
+  <meta property="og:image:width" content="1280">
+  <meta property="og:image:height" content="640">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="../../assets/logo.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png">
+  <link rel="alternate" hreflang="en" href="https://pxotitas.github.io/octopus/docs/troubleshooting.html">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+<header class="top">
+  <nav>
+    <a class="brand" href="../../pt/">
+      <picture>
+        <source srcset="../../assets/logo-dark.svg" media="(prefers-color-scheme: dark)">
+        <img src="../../assets/logo.svg" alt="" width="36" height="36">
+      </picture>
+      <span>octopus</span>
+    </a>
+    <div class="links">
+      <a href="../../pt/docs/" aria-current="page">docs</a>
+      <a href="../../pt/media/">mídia</a>
+      <a href="../../pt/changelog/">changelog</a>
+      <a href="https://github.com/pxotitas/octopus">github</a>
+      <a class="switch" href="../../docs/troubleshooting.html" hreflang="en">english</a>
+    </div>
+  </nav>
+</header>
+<main>
+<div class="docs">
+  <aside class="docs-nav">
+    <ul><li><a href="./">visão geral</a></li><li><a href="estrutura.html">estrutura</a></li><li><a href="atalhos.html">atalhos e comandos</a></li><li><a href="configuracao.html">configuração</a></li><li><a href="tema.html">tema</a></li><li><a href="problemas.html" aria-current="page">quando algo quebra</a></li></ul>
+  </aside>
+  <article class="doc">
+    <h1>quando algo quebra</h1>
+    <p><strong>painéis não abrem / <code>octopus: … is the daemon running?</code></strong><br>o daemon caiu. rodar <code>GSK_RENDERER=gl octopus &amp;</code> num terminal mostra o erro.</p>
+<p><strong>a barra sumiu ou ficou estranha</strong><br><code>octopus reload</code> regera o config. se a waybar morreu: <code>waybar &amp;</code>.<br>erros de css aparecem rodando <code>waybar</code> num terminal.</p>
+<p><strong>a setinha da bandeja não aparece</strong><br>falta o <code>~/.cache/octopus/tray-arrow.so</code>. rodar o <code>install.sh</code> de novo<br>(precisa de <code>gcc</code> e <code>gtk3</code>). sem ele a barra usa o botão de texto.</p>
+<p><strong>tela travada no bloqueio</strong><br>Ctrl+Alt+F2, entrar, e <code>pkill -x octopus</code>. o niri continua bloqueado até<br>um bloqueio novo destravar: <code>niri msg action spawn -- octopus</code> e depois<br><code>octopus lock</code> de novo, ou sair da sessão.</p>
+<p><strong>cores não mudam</strong><br>ver se o matuwall tem <code>on_apply = [&quot;octopus-theme {path}&quot;]</code> e se<br><code>~/.local/bin/octopus-theme</code> existe.</p>
+<p><strong>recompilar</strong></p>
+<pre><code>cd ~/.config/octopus &amp;&amp; ./install.sh
+octopus restart</code></pre>
+<p><strong>memória</strong><br><code>grep RssAnon /proc/$(pgrep -x octopus)/status</code> mostra o que é do daemon<br>(sem as bibliotecas compartilhadas). fica em torno de 45 mb parado.</p>
+    <p class="edit"><a href="https://github.com/pxotitas/octopus/blob/pt-br/docs/problemas.md">editar essa página no github</a></p>
+  </article>
+</div>
+</main>
+<footer>
+  <p>gpl-3.0-or-later · feito por <a href="https://github.com/pxotitas">pxotitas</a>, com partes do <a href="https://github.com/andreumassanet/impasto">impasto</a> e do <a href="https://github.com/pxdritz1/velatura">velatura</a>.</p>
+</footer>
+</body>
+</html>

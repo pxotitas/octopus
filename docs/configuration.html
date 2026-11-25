@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>configuration · octopus</title>
+  <meta name="description" content="a cozy material 3 shell for niri: a vertical waybar and a rust + gtk4 companion.">
+  <meta name="theme-color" content="#fdfbef" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#14140c" media="(prefers-color-scheme: dark)">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="octopus">
+  <meta property="og:title" content="configuration · octopus">
+  <meta property="og:description" content="a cozy material 3 shell for niri: a vertical waybar and a rust + gtk4 companion.">
+  <meta property="og:url" content="https://pxotitas.github.io/octopus/docs/configuration.html">
+  <meta property="og:image" content="https://pxotitas.github.io/octopus/assets/banner.png">
+  <meta property="og:image:width" content="1280">
+  <meta property="og:image:height" content="640">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+  <link rel="alternate" hreflang="pt-BR" href="https://pxotitas.github.io/octopus/pt/docs/configuracao.html">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<header class="top">
+  <nav>
+    <a class="brand" href="../">
+      <picture>
+        <source srcset="../assets/logo-dark.svg" media="(prefers-color-scheme: dark)">
+        <img src="../assets/logo.svg" alt="" width="36" height="36">
+      </picture>
+      <span>octopus</span>
+    </a>
+    <div class="links">
+      <a href="../docs/" aria-current="page">docs</a>
+      <a href="../media/">media</a>
+      <a href="../changelog/">changelog</a>
+      <a href="https://github.com/pxotitas/octopus">github</a>
+      <a class="switch" href="../pt/docs/configuracao.html" hreflang="pt-BR">português</a>
+    </div>
+  </nav>
+</header>
+<main>
+<div class="docs">
+  <aside class="docs-nav">
+    <ul><li><a href="./">overview</a></li><li><a href="structure.html">structure</a></li><li><a href="shortcuts.html">shortcuts and commands</a></li><li><a href="configuration.html" aria-current="page">configuration</a><ul class="toc"><li><a href="#when-it-applies">when it applies</a></li><li><a href="#your-own-css">your own css</a></li><li><a href="#dock">dock</a></li></ul></li><li><a href="theme.html">theme</a></li><li><a href="troubleshooting.html">when something breaks</a></li></ul>
+  </aside>
+  <article class="doc">
+    <h1>configuration</h1>
+    <p>almost everything can be changed from the window (Mod+Comma). it writes to <code>~/.config/octopus/octopus.toml</code>, which you can also edit by hand.</p>
+<pre><code class="language-toml">language = &quot;auto&quot;          # auto follows LANG; &quot;pt&quot; or &quot;en&quot;
+
+[bar]
+position = &quot;left&quot;          # or &quot;right&quot;
+width = 40
+style = &quot;floating&quot;         # or &quot;flush&quot;: against the edge, concave corners
+top = [&quot;logo&quot;, &quot;workspaces&quot;]
+center = [&quot;clock&quot;]
+bottom = [&quot;tray&quot;, &quot;battery&quot;, &quot;controls&quot;]
+
+[dock]
+enabled = false
+mode = &quot;smart&quot;             # &quot;fixed&quot;, &quot;autohide&quot; or &quot;smart&quot;
+pinned = [&quot;firefox.desktop&quot;]  # right-click an icon to pin it
+size = 44                  # icon size, in pixels
+magnify = true             # icons swell under the pointer
+
+[weather]
+place = &quot;&quot;                 # empty uses your ip
+
+[notifications]
+timeout_ms = 5000
+max_popups = 3
+
+[media]
+lyrics = true</code></pre>
+<h2 id="when-it-applies">when it applies</h2>
+<ul><li><strong>bar</strong>: right away (waybar reloads on its own)</li><li><strong>language and dock</strong>: octopus restarts on its own when you apply</li><li><strong>weather, notifications, lyrics</strong>: after <code>octopus restart</code></li></ul>
+<h2 id="your-own-css">your own css</h2>
+<p>a <code>~/.config/octopus/style.css</code> goes on top of the built-in css and reloads on its own. good for tweaks without recompiling.</p>
+<h2 id="dock">dock</h2>
+<ul><li><strong>fixed</strong>: keeps its own space, windows don't go under it</li><li><strong>autohide</strong>: goes away and comes back when the pointer touches the bottom edge</li><li><strong>smart</strong>: only steps aside when a window on the workspace sits under it</li></ul>
+<p>click: opens, focuses or cycles through the app's windows. middle: new window. right: a menu with the windows, pin and close.</p>
+    <p class="edit"><a href="https://github.com/pxotitas/octopus/blob/eng/docs/configuration.md">edit this page on github</a></p>
+  </article>
+</div>
+</main>
+<footer>
+  <p>gpl-3.0-or-later · made by <a href="https://github.com/pxotitas">pxotitas</a>, with parts from <a href="https://github.com/andreumassanet/impasto">impasto</a> and <a href="https://github.com/pxdritz1/velatura">velatura</a>.</p>
+</footer>
+</body>
+</html>

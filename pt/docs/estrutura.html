@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>estrutura · octopus</title>
+  <meta name="description" content="um shell material 3 cozy pro niri: uma waybar vertical e um companion em rust + gtk4.">
+  <meta name="theme-color" content="#fdfbef" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#14140c" media="(prefers-color-scheme: dark)">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="octopus">
+  <meta property="og:title" content="estrutura · octopus">
+  <meta property="og:description" content="um shell material 3 cozy pro niri: uma waybar vertical e um companion em rust + gtk4.">
+  <meta property="og:url" content="https://pxotitas.github.io/octopus/pt/docs/estrutura.html">
+  <meta property="og:image" content="https://pxotitas.github.io/octopus/assets/banner.png">
+  <meta property="og:image:width" content="1280">
+  <meta property="og:image:height" content="640">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="../../assets/logo.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png">
+  <link rel="alternate" hreflang="en" href="https://pxotitas.github.io/octopus/docs/structure.html">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+<header class="top">
+  <nav>
+    <a class="brand" href="../../pt/">
+      <picture>
+        <source srcset="../../assets/logo-dark.svg" media="(prefers-color-scheme: dark)">
+        <img src="../../assets/logo.svg" alt="" width="36" height="36">
+      </picture>
+      <span>octopus</span>
+    </a>
+    <div class="links">
+      <a href="../../pt/docs/" aria-current="page">docs</a>
+      <a href="../../pt/media/">mídia</a>
+      <a href="../../pt/changelog/">changelog</a>
+      <a href="https://github.com/pxotitas/octopus">github</a>
+      <a class="switch" href="../../docs/structure.html" hreflang="en">english</a>
+    </div>
+  </nav>
+</header>
+<main>
+<div class="docs">
+  <aside class="docs-nav">
+    <ul><li><a href="./">visão geral</a></li><li><a href="estrutura.html" aria-current="page">estrutura</a><ul class="toc"><li><a href="#fora-do-repo">fora do repo</a></li></ul></li><li><a href="atalhos.html">atalhos e comandos</a></li><li><a href="configuracao.html">configuração</a></li><li><a href="tema.html">tema</a></li><li><a href="problemas.html">quando algo quebra</a></li></ul>
+  </aside>
+  <article class="doc">
+    <h1>estrutura</h1>
+    <p>o repo <strong>é</strong> o <code>~/.config/octopus</code>. nada fica em <code>~/Projects</code>.</p>
+<p>as docs (isto aqui) moram na branch <code>pt-br</code> (e em inglês na <code>eng</code>); a <code>main</code> tem só o shell.</p>
+<pre><code>~/.config/octopus/
+├── companion/        o daemon em Rust + GTK4 (binário `octopus`)
+│   ├── src/
+│   │   ├── main.rs       entrada: daemon, cliente do socket, `luma`
+│   │   ├── shell.rs      junta tudo: cria os painéis e responde aos comandos
+│   │   ├── popup.rs      janelas de layer que abrem e fecham animadas
+│   │   ├── lazy.rs       painéis montados só ao abrir e soltos depois
+│   │   ├── bar.rs        gera o config da Waybar a partir do octopus.toml
+│   │   ├── i18n.rs       português → inglês
+│   │   ├── panels/       um arquivo por painel (control center, dash, menus…)
+│   │   ├── launcher/     o spotlight (apps, calculadora, arquivos)
+│   │   ├── dock/         a dock (opcional), com a magnificação em shelf.rs
+│   │   ├── lock/         a tela de bloqueio (PAM próprio)
+│   │   ├── services/     o sistema por trás (áudio, rede, mídia, niri…)
+│   │   └── widgets/      peças reaproveitadas (shapes, animação, sliders…)
+│   └── style/octopus.css o CSS embutido no binário
+├── waybar/           style.css, tray-arrow.c (o botão da bandeja animado)
+├── scripts/          tema, bateria, clima, letras, emoji, rofi, matuwall
+├── matugen/          templates de cor (companion, waybar, fuzzel, rofi, matuwall)
+├── rofi/config.rasi  o rofi do Mod+D (o theme.rasi é gerado)
+├── niri.kdl          autostart e atalhos, incluído no config do niri
+├── octopus.toml      as configurações (a janela de configurações escreve aqui)
+├── LICENSE           gpl-3.0
+└── NOTICE.md         o que veio do impasto e do velatura</code></pre>
+<h2 id="fora-do-repo">fora do repo</h2>
+<div class="table"><table><thead><tr><th>caminho</th><th>o quê</th></tr></thead><tbody><tr><td><code>~/.local/bin/octopus</code></td><td>o binário instalado</td></tr><tr><td><code>~/.local/bin/octopus-theme</code></td><td>link pro <code>scripts/theme.sh</code> (o matuwall chama)</td></tr><tr><td><code>~/.config/waybar</code></td><td>link pra <code>~/.config/octopus/waybar</code></td></tr><tr><td><code>~/.cache/octopus/target</code></td><td>build do rust</td></tr><tr><td><code>~/.cache/octopus/tray-arrow.so</code></td><td>o módulo da bandeja compilado</td></tr><tr><td><code>~/.cache/octopus/</code></td><td>miniaturas de wallpaper, capas, emojis</td></tr><tr><td><code>~/.local/state/octopus/</code></td><td>modo de cor, apps mais abertos, letras em cache</td></tr></tbody></table></div>
+<p>arquivos gerados (não editar, estão no <code>.gitignore</code>): <code>colors.css</code>, <code>waybar/colors.css</code>, <code>waybar/layout.css</code>, <code>rofi/theme.rasi</code>.</p>
+    <p class="edit"><a href="https://github.com/pxotitas/octopus/blob/pt-br/docs/estrutura.md">editar essa página no github</a></p>
+  </article>
+</div>
+</main>
+<footer>
+  <p>gpl-3.0-or-later · feito por <a href="https://github.com/pxotitas">pxotitas</a>, com partes do <a href="https://github.com/andreumassanet/impasto">impasto</a> e do <a href="https://github.com/pxdritz1/velatura">velatura</a>.</p>
+</footer>
+</body>
+</html>
