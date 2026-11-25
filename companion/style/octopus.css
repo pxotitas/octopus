@@ -2,8 +2,10 @@
 
 window.octopus-popup,
 window.octopus-backdrop,
+window.octopus-desktop,
 window.octopus-popup > decoration,
-window.octopus-backdrop > decoration {
+window.octopus-backdrop > decoration,
+window.octopus-desktop > decoration {
   background: none;
   background-color: transparent;
   box-shadow: none;
@@ -515,36 +517,7 @@ passwordentry {
 /* dash */
 
 .dash {
-  min-width: 820px;
-}
-
-.dash-tabs {
-  margin-bottom: 2px;
-}
-
-.dash-tab {
-  border-radius: 18px;
-  padding: 8px;
-}
-
-.dash-tab:checked {
-  background: @secondary_container;
-}
-
-.dash-tab:checked label {
-  color: @on_secondary_container;
-}
-
-.dash-tab:checked .dash-tab-icon {
-  font-variation-settings: "FILL" 1, "wght" 400, "opsz" 24;
-}
-
-.dash-tab label {
-  font-size: 12px;
-}
-
-.dash-tab label.dash-tab-icon {
-  font-size: 22px;
+  min-width: 900px;
 }
 
 .dash-clock {
@@ -635,20 +608,6 @@ calendar > grid > label.today {
 .plain .lyric {
   font-size: 15px;
   color: @on_surface_variant;
-}
-
-.weather-hero {
-  padding: 22px;
-}
-
-.hero-icon {
-  font-size: 72px;
-  color: @primary;
-}
-
-.hero-temp {
-  font-size: 52px;
-  font-weight: 700;
 }
 
 .hour {
@@ -1504,4 +1463,448 @@ gridview.wallpaper-grid > child:selected {
 .dock-capsule.magnify .dock-item:active {
   transform: none;
   background: none;
+}
+
+/* dash: the navigation rail */
+
+.dash-rail {
+  padding: 4px 0;
+}
+
+button.rail-item {
+  background: none;
+  padding: 4px 2px;
+  border-radius: 16px;
+}
+
+button.rail-item:hover {
+  background: none;
+}
+
+.rail-indicator {
+  min-width: 56px;
+  min-height: 32px;
+  border-radius: 16px;
+  transition: background 220ms cubic-bezier(0.2, 0, 0, 1);
+}
+
+button.rail-item:hover .rail-indicator {
+  background: mix(@surface_container, @on_surface, 0.08);
+}
+
+button.rail-item:checked .rail-indicator {
+  background: @secondary_container;
+}
+
+button.rail-item:checked .rail-indicator label {
+  color: @on_secondary_container;
+  font-variation-settings: "FILL" 1, "wght" 500, "opsz" 24;
+}
+
+.rail-indicator label {
+  font-size: 22px;
+  color: @on_surface_variant;
+}
+
+.rail-label {
+  font-size: 12px;
+  color: @on_surface_variant;
+}
+
+button.rail-item:checked .rail-label {
+  color: @on_surface;
+  font-weight: 600;
+}
+
+/* dash: the analog clock and the small weather */
+
+.dash-analog-card {
+  background: @tertiary_container;
+  padding: 10px 14px;
+}
+
+clock.dash-analog {
+  color: @on_tertiary_container;
+}
+
+.card.activatable:hover {
+  background: mix(@surface_container_high, @on_surface, 0.05);
+}
+
+shape.mini-badge {
+  color: @primary_container;
+}
+
+shape.mini-badge label {
+  color: @on_primary_container;
+  font-size: 28px;
+}
+
+.mini-temp {
+  font-size: 32px;
+  font-weight: 700;
+}
+
+.mini-range {
+  font-weight: 600;
+  color: @on_surface_variant;
+}
+
+.mini-pill {
+  background: @surface_container_highest;
+  border-radius: 999px;
+  padding: 5px 8px;
+}
+
+.mini-pill .icon {
+  font-size: 16px;
+  color: @primary;
+}
+
+.mini-pill label {
+  font-size: 12px;
+}
+
+.mini-hour {
+  background: @surface_container_highest;
+  border-radius: 14px;
+  padding: 6px 2px;
+}
+
+.mini-hour .icon {
+  font-size: 18px;
+}
+
+/* weather tab */
+
+.weather-query {
+  background: @surface_container_highest;
+  border-radius: 999px;
+  padding: 2px 6px 2px 14px;
+}
+
+.weather-query .prompt {
+  color: @primary;
+  font-size: 22px;
+}
+
+.weather-query entry {
+  background: none;
+  border: none;
+  box-shadow: none;
+  outline: none;
+  min-height: 40px;
+  font-size: 14px;
+}
+
+.chips button.chip {
+  border: 1px solid @outline_variant;
+  border-radius: 8px;
+  padding: 5px 12px;
+  font-size: 12px;
+}
+
+.chips button.chip:hover {
+  background: @secondary_container;
+  border-color: @secondary_container;
+}
+
+.chips button.chip label {
+  font-size: 12px;
+}
+
+.weather-status {
+  color: @error;
+  padding: 0 6px;
+}
+
+shapebox.weather-hero {
+  color: @primary_container;
+}
+
+shapebox.weather-hero label,
+shapebox.weather-hero .icon {
+  color: @on_primary_container;
+}
+
+shape.hero-badge {
+  color: @primary;
+}
+
+shape.hero-badge label {
+  color: @on_primary;
+  font-size: 54px;
+}
+
+.hero-temp {
+  font-size: 56px;
+  font-weight: 700;
+}
+
+.hero-desc {
+  font-size: 16px;
+  font-weight: 500;
+}
+
+shape.metric.tone-a {
+  color: @primary_container;
+}
+
+shape.metric.tone-a label {
+  color: @on_primary_container;
+}
+
+shape.metric.tone-b {
+  color: @secondary_container;
+}
+
+shape.metric.tone-b label {
+  color: @on_secondary_container;
+}
+
+shape.metric.tone-c {
+  color: @tertiary_container;
+}
+
+shape.metric.tone-c label {
+  color: @on_tertiary_container;
+}
+
+shape.metric .icon {
+  font-size: 18px;
+}
+
+.metric-value {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.metric-caption {
+  font-size: 10px;
+}
+
+shapebox.sky-card {
+  color: @secondary_container;
+}
+
+shapebox.sky-card label {
+  color: @on_secondary_container;
+}
+
+sky.sun-arc {
+  color: @primary;
+}
+
+sky.moon {
+  color: @on_secondary_container;
+}
+
+.moon-name {
+  font-weight: 600;
+}
+
+shapebox.weather-section {
+  color: @surface_container_high;
+}
+
+.hour.now {
+  background: @primary_container;
+}
+
+.hour.now label {
+  color: @on_primary_container;
+}
+
+.hours {
+  min-height: 112px;
+}
+
+button.day-row {
+  border-radius: 14px;
+  padding: 6px 10px;
+}
+
+button.day-row:hover {
+  background: @surface_container_highest;
+}
+
+button.day-row.today {
+  background: @secondary_container;
+}
+
+button.day-row.past {
+  opacity: 0.6;
+}
+
+.day-name {
+  font-weight: 500;
+}
+
+.day-high {
+  font-weight: 700;
+}
+
+sky.range {
+  color: @primary;
+}
+
+button.shape-button {
+  background: none;
+  padding: 0;
+  transition: transform 260ms cubic-bezier(0.34, 1.5, 0.64, 1);
+}
+
+button.shape-button:hover {
+  background: none;
+  transform: scale(1.05);
+}
+
+.week-day {
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.week-icon {
+  font-size: 28px;
+}
+
+.week-temp {
+  font-weight: 600;
+}
+
+shapebox.day-hero {
+  color: @tertiary_container;
+}
+
+shapebox.day-hero label,
+shapebox.day-hero .icon {
+  color: @on_tertiary_container;
+}
+
+.weather-title .title {
+  font-size: 26px;
+  font-weight: 700;
+}
+
+.insight {
+  background: @surface_container_high;
+  border-radius: 20px;
+  padding: 12px 14px;
+}
+
+.insight .icon {
+  color: @primary;
+}
+
+.insight-day {
+  font-weight: 700;
+  font-size: 15px;
+}
+
+/* shapes in lists and pills */
+
+shape.row-badge {
+  color: @surface_container_highest;
+}
+
+shape.row-badge label {
+  font-size: 18px;
+  color: @on_surface_variant;
+}
+
+shape.row-badge.on {
+  color: @primary;
+}
+
+shape.row-badge.on label {
+  color: @on_primary;
+}
+
+shape.osd-badge {
+  color: @primary_container;
+}
+
+shape.osd-badge label {
+  color: @on_primary_container;
+}
+
+/* desktop widgets */
+
+.desktop-widget {
+  background: @surface_container;
+  border-radius: 32px;
+  padding: 18px;
+}
+
+shape.desktop-badge {
+  color: @primary_container;
+}
+
+shape.desktop-badge label {
+  color: @on_primary_container;
+}
+
+.desktop-weather-icon {
+  font-size: 40px;
+}
+
+.desktop-temp {
+  font-size: 44px;
+  font-weight: 700;
+}
+
+.desktop-desc {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.desktop-range {
+  font-size: 15px;
+  font-weight: 600;
+  margin-top: 6px;
+}
+
+shape.desktop-day-shape {
+  color: @secondary_container;
+}
+
+shape.desktop-day-shape label {
+  color: @on_secondary_container;
+}
+
+.desktop-day {
+  font-weight: 700;
+  font-size: 12px;
+}
+
+shape.desktop-github-badge {
+  color: @tertiary_container;
+}
+
+shape.desktop-github-badge label {
+  color: @on_tertiary_container;
+}
+
+.desktop-title {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+button.commit-row {
+  border-radius: 16px;
+  padding: 8px 12px;
+  background: @surface_container_high;
+}
+
+button.commit-row:hover {
+  background: @surface_container_highest;
+}
+
+.commit-meta {
+  font-size: 11px;
+  color: @on_surface_variant;
+}
+
+.commit-message {
+  font-weight: 500;
 }

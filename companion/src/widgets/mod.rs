@@ -1,10 +1,12 @@
 pub mod anim;
 pub mod art;
 pub mod cava;
+pub mod clock;
 pub mod media;
 pub mod motion;
 pub mod notification;
 pub mod shape;
+pub mod shapebox;
 pub mod slider;
 pub mod tile;
 pub mod wave;

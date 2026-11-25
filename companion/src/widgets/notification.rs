@@ -142,6 +142,11 @@ fn avatar(n: &Notification) -> gtk::Widget {
 
 /// Every notification, newest first, rebuilt when the list changes.
 pub fn list(service: &Rc<Notifications>) -> gtk::Stack {
+    list_sized(service, 340)
+}
+
+/// `list`, scrolling past `max_height`.
+pub fn list_sized(service: &Rc<Notifications>, max_height: i32) -> gtk::Stack {
     let stack = gtk::Stack::new();
     stack.set_transition_type(gtk::StackTransitionType::Crossfade);
     stack.set_vexpand(true);
@@ -164,7 +169,7 @@ pub fn list(service: &Rc<Notifications>) -> gtk::Stack {
     let scroller = gtk::ScrolledWindow::builder()
         .hscrollbar_policy(gtk::PolicyType::Never)
         .propagate_natural_height(true)
-        .max_content_height(340)
+        .max_content_height(max_height)
         .child(&column)
         .vexpand(true)
         .build();
