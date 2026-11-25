@@ -12,38 +12,51 @@ CLIPS = [
     ("palette", {"en": ("palette from the wallpaper", "a new wallpaper repaints the shell"), "pt": ("paleta do wallpaper", "um wallpaper novo repinta o shell")}),
 ]
 
-SHOTS = [
-    ("desktop", {"en": "the bar and the dock", "pt": "a barra e a dock"}),
-    ("control-center", {"en": "control center", "pt": "central de controle"}),
-    ("dash", {"en": "dash", "pt": "dash"}),
-    ("wallpapers", {"en": "wallpaper picker", "pt": "seletor de wallpaper"}),
-    ("launcher", {"en": "spotlight", "pt": "spotlight"}),
-    ("rofi", {"en": "rofi", "pt": "rofi"}),
-    ("wifi", {"en": "wi-fi", "pt": "wi-fi"}),
-    ("bluetooth", {"en": "bluetooth", "pt": "bluetooth"}),
-    ("audio", {"en": "sound", "pt": "som"}),
-    ("tray", {"en": "tray", "pt": "bandeja"}),
-    ("power", {"en": "power", "pt": "energia"}),
-    ("clipboard", {"en": "clipboard", "pt": "clipboard"}),
-    ("emoji", {"en": "emoji", "pt": "emoji"}),
-    ("notification", {"en": "a notification", "pt": "uma notificação"}),
-    ("osd", {"en": "volume osd", "pt": "osd de volume"}),
-    ("settings", {"en": "settings", "pt": "configurações"}),
+GROUPS = [
+    ("shots-shell", "cookie9", {"en": "the shell", "pt": "o shell"}, [
+        ("desktop", {"en": "the bar and the desktop widgets", "pt": "a barra e os widgets de desktop"}),
+        ("dash", {"en": "dash", "pt": "dash"}),
+        ("control-center", {"en": "control center", "pt": "central de controle"}),
+        ("notification", {"en": "a notification", "pt": "uma notificação"}),
+        ("osd", {"en": "volume osd", "pt": "osd de volume"}),
+        ("wallpapers", {"en": "wallpaper picker", "pt": "seletor de wallpaper"}),
+    ]),
+    ("shots-weather", "sunny", {"en": "the weather", "pt": "o clima"}, [
+        ("weather", {"en": "right now", "pt": "agora"}),
+        ("weather-tomorrow", {"en": "> tomorrow", "pt": "> amanhã"}),
+        ("weather-yesterday", {"en": "> yesterday", "pt": "> ontem"}),
+        ("weather-week", {"en": "> week", "pt": "> semana"}),
+        ("weather-weekend", {"en": "> weekend", "pt": "> fim de semana"}),
+    ]),
+    ("shots-menus", "clover4", {"en": "menus", "pt": "menus"}, [
+        ("wifi", {"en": "wi-fi", "pt": "wi-fi"}),
+        ("bluetooth", {"en": "bluetooth", "pt": "bluetooth"}),
+        ("audio", {"en": "sound", "pt": "som"}),
+        ("tray", {"en": "tray", "pt": "bandeja"}),
+        ("power", {"en": "power", "pt": "energia"}),
+    ]),
+    ("shots-launchers", "softburst", {"en": "launchers and tools", "pt": "launchers e ferramentas"}, [
+        ("launcher", {"en": "spotlight", "pt": "spotlight"}),
+        ("rofi", {"en": "rofi", "pt": "rofi"}),
+        ("clipboard", {"en": "clipboard", "pt": "clipboard"}),
+        ("emoji", {"en": "emoji", "pt": "emoji"}),
+        ("settings", {"en": "settings", "pt": "configurações"}),
+    ]),
 ]
 
 TEXT = {
     "en": {
-        "title": "media", "lead": "octopus in motion and standing still. the screenshots are in english.",
-        "video": "the whole tour", "video_lead": "a minute and a half, with sound.",
-        "clips": "clips", "clips_lead": "the same tour, a piece at a time. they play as you scroll; click one to see it bigger.",
+        "title": "media", "lead": "octopus standing still and in motion. the screenshots are in english.",
+        "video": "the whole tour", "video_lead": "a minute and a half, with sound, recorded before the navigation rail and the new weather tab.",
+        "clips": "clips", "clips_lead": "the same tour, a piece at a time. they play as you scroll; click one to see it bigger. recorded before the navigation rail and the new weather tab.",
         "shots": "screenshots", "shots_lead": "click one to see it full size.",
         "brand": "logo and banner", "brand_lead": "for posts, videos or a link to the project.",
         "download": "download", "close": "close",
     },
     "pt": {
-        "title": "mídia", "lead": "o octopus em movimento e parado. as screenshots estão em inglês.",
-        "video": "o tour inteiro", "video_lead": "um minuto e meio, com som.",
-        "clips": "clipes", "clips_lead": "o mesmo tour, um pedaço por vez. eles tocam conforme você rola; clica num pra ver maior.",
+        "title": "mídia", "lead": "o octopus parado e em movimento. as screenshots estão em inglês.",
+        "video": "o tour inteiro", "video_lead": "um minuto e meio, com som, gravado antes do rail de navegação e da aba de clima nova.",
+        "clips": "clipes", "clips_lead": "o mesmo tour, um pedaço por vez. eles tocam conforme você rola; clica num pra ver maior. gravados antes do rail de navegação e da aba de clima nova.",
         "shots": "screenshots", "shots_lead": "clica numa pra ver em tamanho real.",
         "brand": "logo e banner", "brand_lead": "pra posts, vídeos ou um link pro projeto.",
         "download": "baixar", "close": "fechar",
@@ -63,13 +76,22 @@ def render(lang, rel):
   </figure>"""
         for name, text in CLIPS
     )
-    shots = "\n".join(
-        f"""  <button class="shot" type="button" data-full="{a}/screenshots/{name}.webp" data-label="{label[lang]}">
+    groups = []
+    for anchor, shape, heading, shots in GROUPS:
+        buttons = "\n".join(
+            f"""  <button class="shot" type="button" data-full="{a}/screenshots/{name}.webp" data-label="{label[lang]}">
     <img src="{a}/screenshots/thumbs/{name}.webp" alt="{label[lang]}" loading="lazy">
     <span>{label[lang]}</span>
   </button>"""
-        for name, label in SHOTS
-    )
+            for name, label in shots
+        )
+        groups.append(
+            f"""<h3 class="group" id="{anchor}"><span class="shape-badge small tone-b" data-shape="{shape}"></span>{heading[lang]}</h3>
+<div class="shots">
+{buttons}
+</div>"""
+        )
+    shots = "\n".join(groups)
     return f"""<section class="page-head">
   <h1>{t["title"]}</h1>
   <p class="lead">{t["lead"]}</p>
@@ -87,9 +109,7 @@ def render(lang, rel):
 
 <h2 id="screenshots">{t["shots"]}</h2>
 <p class="lead">{t["shots_lead"]}</p>
-<div class="shots">
 {shots}
-</div>
 
 <h2 id="brand">{t["brand"]}</h2>
 <p class="lead">{t["brand_lead"]}</p>

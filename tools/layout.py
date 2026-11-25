@@ -60,7 +60,7 @@ def page(lang, path, title, body, other, section=None, scripts=(), base=None):
         impasto='<a href="https://github.com/andreumassanet/impasto">impasto</a>',
         velatura='<a href="https://github.com/pxdritz1/velatura">velatura</a>',
     )
-    tags = "".join(f'\n<script src="{rel}{versioned(s)}" defer></script>' for s in scripts)
+    tags = "".join(f'\n<script src="{rel}{versioned(s)}" defer></script>' for s in (*scripts, "m3.js"))
 
     return f"""<!DOCTYPE html>
 <html lang="{t['html']}">
@@ -85,7 +85,7 @@ def page(lang, path, title, body, other, section=None, scripts=(), base=None):
   <link rel="alternate" hreflang="{'pt-BR' if lang == 'en' else 'en'}" href="{SITE}{other.removesuffix('index.html')}">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,400..600,0..1,0&display=block" rel="stylesheet">
   <link rel="stylesheet" href="{rel}{versioned('style.css')}">
 </head>
 <body>

@@ -21,8 +21,8 @@
   <link rel="alternate" hreflang="pt-BR" href="https://pxotitas.github.io/octopus/pt/">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=1f1fbd75">
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,400..600,0..1,0&display=block" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=2c4128f4">
 </head>
 <body>
 <header class="top">
@@ -50,9 +50,15 @@
     <p>a cozy m3 shell for niri. a minimal vertical bar on waybar, and
     everything bigger in a companion written in rust + gtk4.</p>
     <div class="actions">
-      <a class="button filled" href="#install">install</a>
-      <a class="button tonal" href="docs/">read the docs</a>
+      <a class="button filled" href="#install"><span class="symbol">download</span>install</a>
+      <a class="button tonal" href="docs/"><span class="symbol">menu_book</span>read the docs</a>
       <a class="button text" href="media/">see it move</a>
+    </div>
+    <div class="tags">
+      <span class="chip"><span class="symbol">memory</span>rust + gtk4</span>
+      <span class="chip"><span class="symbol">view_sidebar</span>waybar</span>
+      <span class="chip"><span class="symbol">palette</span>matugen</span>
+      <span class="chip"><span class="symbol">grid_view</span>niri</span>
     </div>
   </div>
   <div class="shapes" title="press any key">
@@ -62,47 +68,79 @@
 </section>
 
 <figure class="stage">
-  <video src="assets/clips/hq/dash.mp4" poster="assets/clips/hq/dash.webp" autoplay muted loop playsinline></video>
-  <figcaption>the dash, with the music and its lyrics, line by line.</figcaption>
+  <img src="assets/screenshots/dash.webp" alt="the dash: a navigation rail, the clock, an analog clock on a cookie, the calendar, the notifications and the weather" width="1440" height="900">
+  <figcaption>the dash: a navigation rail, an analog clock on a cookie, the notifications and the weather side by side.</figcaption>
 </figure>
 
+<section class="ask">
+  <div class="ask-text">
+    <span class="shape-badge big tone-c" data-shape="sunny" data-hover="burst"><span class="symbol">partly_cloudy_day</span></span>
+    <h2>ask the weather</h2>
+    <p class="lead">the weather tab takes questions after a <code>&gt;</code>: tomorrow,
+    yesterday, next thursday, last friday, <code>+3</code>, <code>11/28</code>, the week or the
+    weekend. a week back and two ahead, from open-meteo. try it:</p>
+    <label class="field">
+      <span class="symbol">chevron_right</span>
+      <input type="text" placeholder="tomorrow, yesterday, week…" aria-label="ask the weather">
+    </label>
+    <div class="chips">
+      <button class="chip" type="button" data-ask="now">now</button>
+      <button class="chip" type="button" data-ask="tomorrow">tomorrow</button>
+      <button class="chip" type="button" data-ask="yesterday">yesterday</button>
+      <button class="chip" type="button" data-ask="weekend">weekend</button>
+      <button class="chip" type="button" data-ask="week">week</button>
+    </div>
+  </div>
+  <figure class="ask-shot">
+    <img src="assets/screenshots/weather.webp" data-base="assets/screenshots/" alt="the weather tab" width="1440" height="900">
+    <figcaption data-now="now">&gt; now</figcaption>
+  </figure>
+</section>
+
 <h2>what's inside</h2>
-<p class="lead">opaque, tonal surfaces. colors from the wallpaper. light enough to idle around 45 mb.</p>
+<p class="lead">opaque, tonal surfaces in m3 shapes. colors from the wallpaper. light enough to idle around 45 mb.</p>
 <div class="features">
-  <a class="feature" href="media/#control-center">
+  <a class="feature" href="media/#shots-shell">
+    <img src="assets/features/dash.webp" alt="" loading="lazy">
+    <span class="shape-badge tone-a" data-shape="cookie9" data-hover="flower"><span class="symbol">dashboard</span></span>
+    <h3>dash</h3>
+    <p>a navigation rail, an analog clock, the calendar, the music with its lyrics, the notifications, the weather and a wallpaper picker.</p>
+  </a>
+  <a class="feature" href="media/#shots-weather">
+    <img src="assets/features/weather.webp" alt="" loading="lazy">
+    <span class="shape-badge tone-c" data-shape="sunny" data-hover="verysunny"><span class="symbol">partly_cloudy_day</span></span>
+    <h3>weather</h3>
+    <p>metrics in m3 shapes, the sun's arc and the moon, hour by hour, and any day from a week back to two ahead.</p>
+  </a>
+  <a class="feature" href="media/#shots-shell">
+    <img src="assets/features/desktop.webp" alt="" loading="lazy">
+    <span class="shape-badge tone-b" data-shape="puffy" data-hover="softburst"><span class="symbol">widgets</span></span>
+    <h3>desktop widgets</h3>
+    <p>under the windows: the weather in a big cookie, and your latest commits on github.</p>
+  </a>
+  <a class="feature" href="media/#shots-shell">
     <img src="assets/features/control-center.webp" alt="" loading="lazy">
+    <span class="shape-badge tone-a" data-shape="clover4" data-hover="clover8"><span class="symbol">tune</span></span>
     <h3>control center</h3>
     <p>wi-fi, bluetooth, sound, brightness, media and notifications, in one place.</p>
   </a>
-  <a class="feature" href="media/#dash">
-    <img src="assets/features/dash.webp" alt="" loading="lazy">
-    <h3>dash</h3>
-    <p>clock, calendar, weather, the music with its lyrics, and a wallpaper picker.</p>
-  </a>
-  <a class="feature" href="media/#launchers">
+  <a class="feature" href="media/#shots-launchers">
     <img src="assets/features/spotlight.webp" alt="" loading="lazy">
+    <span class="shape-badge tone-b" data-shape="cookie6" data-hover="burst"><span class="symbol">search</span></span>
     <h3>spotlight</h3>
     <p>apps and their actions, a calculator, files behind <code>/</code>, power behind <code>&gt;</code>.</p>
   </a>
   <a class="feature" href="media/#lock">
     <img src="assets/features/lock.webp" alt="" loading="lazy">
+    <span class="shape-badge tone-c" data-shape="cookie12" data-hover="pentagon"><span class="symbol">lock</span></span>
     <h3>lock screen</h3>
     <p>m3 shapes that turn and change at every key, the lyric being sung, the weather.</p>
-  </a>
-  <a class="feature" href="media/#screenshots">
-    <img src="assets/features/dock.webp" alt="" loading="lazy">
-    <h3>dock</h3>
-    <p>pinned and open apps, with magnification. fixed, autohide or smart.</p>
-  </a>
-  <a class="feature" href="media/#settings">
-    <img src="assets/features/settings.webp" alt="" loading="lazy">
-    <h3>settings</h3>
-    <p>bar style and position, widgets, dock, language, light, dark or automatic.</p>
   </a>
 </div>
 
 <section class="split">
   <div>
+    <span class="shape-badge big tone-a" data-shape="flower" data-hover="cookie9"><span class="symbol">palette</span></span>
     <h2>it wears your wallpaper</h2>
     <p class="lead">pick a wallpaper and matugen repaints everything: the bar,
     the panels, rofi, fuzzel and the rest of your system. light, dark, or
@@ -130,5 +168,7 @@
 </footer>
 <script src="shapes.js?v=1024970f" defer></script>
 <script src="motion.js?v=af87fff4" defer></script>
+<script src="weather-demo.js?v=52a4f1d6" defer></script>
+<script src="m3.js?v=92a4685c" defer></script>
 </body>
 </html>

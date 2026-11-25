@@ -21,8 +21,8 @@
   <link rel="alternate" hreflang="en" href="https://pxotitas.github.io/octopus/media/">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../../style.css?v=1f1fbd75">
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,400..600,0..1,0&display=block" rel="stylesheet">
+  <link rel="stylesheet" href="../../style.css?v=2c4128f4">
 </head>
 <body>
 <header class="top">
@@ -46,15 +46,15 @@
 <main>
 <section class="page-head">
   <h1>mídia</h1>
-  <p class="lead">o octopus em movimento e parado. as screenshots estão em inglês.</p>
+  <p class="lead">o octopus parado e em movimento. as screenshots estão em inglês.</p>
 </section>
 
 <h2 id="video">o tour inteiro</h2>
-<p class="lead">um minuto e meio, com som.</p>
+<p class="lead">um minuto e meio, com som, gravado antes do rail de navegação e da aba de clima nova.</p>
 <video class="tour" src="../../assets/video/showcase.mp4" poster="../../assets/video/showcase.webp" controls preload="metadata" playsinline></video>
 
 <h2 id="clips">clipes</h2>
-<p class="lead">o mesmo tour, um pedaço por vez. eles tocam conforme você rola; clica num pra ver maior.</p>
+<p class="lead">o mesmo tour, um pedaço por vez. eles tocam conforme você rola; clica num pra ver maior. gravados antes do rail de navegação e da aba de clima nova.</p>
 <div class="clips">
   <figure class="clip" id="dash">
     <button type="button" data-video="../../assets/clips/hq/dash.mp4" data-label="dash">
@@ -114,31 +114,58 @@
 
 <h2 id="screenshots">screenshots</h2>
 <p class="lead">clica numa pra ver em tamanho real.</p>
+<h3 class="group" id="shots-shell"><span class="shape-badge small tone-b" data-shape="cookie9"></span>o shell</h3>
 <div class="shots">
-  <button class="shot" type="button" data-full="../../assets/screenshots/desktop.webp" data-label="a barra e a dock">
-    <img src="../../assets/screenshots/thumbs/desktop.webp" alt="a barra e a dock" loading="lazy">
-    <span>a barra e a dock</span>
-  </button>
-  <button class="shot" type="button" data-full="../../assets/screenshots/control-center.webp" data-label="central de controle">
-    <img src="../../assets/screenshots/thumbs/control-center.webp" alt="central de controle" loading="lazy">
-    <span>central de controle</span>
+  <button class="shot" type="button" data-full="../../assets/screenshots/desktop.webp" data-label="a barra e os widgets de desktop">
+    <img src="../../assets/screenshots/thumbs/desktop.webp" alt="a barra e os widgets de desktop" loading="lazy">
+    <span>a barra e os widgets de desktop</span>
   </button>
   <button class="shot" type="button" data-full="../../assets/screenshots/dash.webp" data-label="dash">
     <img src="../../assets/screenshots/thumbs/dash.webp" alt="dash" loading="lazy">
     <span>dash</span>
   </button>
+  <button class="shot" type="button" data-full="../../assets/screenshots/control-center.webp" data-label="central de controle">
+    <img src="../../assets/screenshots/thumbs/control-center.webp" alt="central de controle" loading="lazy">
+    <span>central de controle</span>
+  </button>
+  <button class="shot" type="button" data-full="../../assets/screenshots/notification.webp" data-label="uma notificação">
+    <img src="../../assets/screenshots/thumbs/notification.webp" alt="uma notificação" loading="lazy">
+    <span>uma notificação</span>
+  </button>
+  <button class="shot" type="button" data-full="../../assets/screenshots/osd.webp" data-label="osd de volume">
+    <img src="../../assets/screenshots/thumbs/osd.webp" alt="osd de volume" loading="lazy">
+    <span>osd de volume</span>
+  </button>
   <button class="shot" type="button" data-full="../../assets/screenshots/wallpapers.webp" data-label="seletor de wallpaper">
     <img src="../../assets/screenshots/thumbs/wallpapers.webp" alt="seletor de wallpaper" loading="lazy">
     <span>seletor de wallpaper</span>
   </button>
-  <button class="shot" type="button" data-full="../../assets/screenshots/launcher.webp" data-label="spotlight">
-    <img src="../../assets/screenshots/thumbs/launcher.webp" alt="spotlight" loading="lazy">
-    <span>spotlight</span>
+</div>
+<h3 class="group" id="shots-weather"><span class="shape-badge small tone-b" data-shape="sunny"></span>o clima</h3>
+<div class="shots">
+  <button class="shot" type="button" data-full="../../assets/screenshots/weather.webp" data-label="agora">
+    <img src="../../assets/screenshots/thumbs/weather.webp" alt="agora" loading="lazy">
+    <span>agora</span>
   </button>
-  <button class="shot" type="button" data-full="../../assets/screenshots/rofi.webp" data-label="rofi">
-    <img src="../../assets/screenshots/thumbs/rofi.webp" alt="rofi" loading="lazy">
-    <span>rofi</span>
+  <button class="shot" type="button" data-full="../../assets/screenshots/weather-tomorrow.webp" data-label="> amanhã">
+    <img src="../../assets/screenshots/thumbs/weather-tomorrow.webp" alt="> amanhã" loading="lazy">
+    <span>> amanhã</span>
   </button>
+  <button class="shot" type="button" data-full="../../assets/screenshots/weather-yesterday.webp" data-label="> ontem">
+    <img src="../../assets/screenshots/thumbs/weather-yesterday.webp" alt="> ontem" loading="lazy">
+    <span>> ontem</span>
+  </button>
+  <button class="shot" type="button" data-full="../../assets/screenshots/weather-week.webp" data-label="> semana">
+    <img src="../../assets/screenshots/thumbs/weather-week.webp" alt="> semana" loading="lazy">
+    <span>> semana</span>
+  </button>
+  <button class="shot" type="button" data-full="../../assets/screenshots/weather-weekend.webp" data-label="> fim de semana">
+    <img src="../../assets/screenshots/thumbs/weather-weekend.webp" alt="> fim de semana" loading="lazy">
+    <span>> fim de semana</span>
+  </button>
+</div>
+<h3 class="group" id="shots-menus"><span class="shape-badge small tone-b" data-shape="clover4"></span>menus</h3>
+<div class="shots">
   <button class="shot" type="button" data-full="../../assets/screenshots/wifi.webp" data-label="wi-fi">
     <img src="../../assets/screenshots/thumbs/wifi.webp" alt="wi-fi" loading="lazy">
     <span>wi-fi</span>
@@ -159,6 +186,17 @@
     <img src="../../assets/screenshots/thumbs/power.webp" alt="energia" loading="lazy">
     <span>energia</span>
   </button>
+</div>
+<h3 class="group" id="shots-launchers"><span class="shape-badge small tone-b" data-shape="softburst"></span>launchers e ferramentas</h3>
+<div class="shots">
+  <button class="shot" type="button" data-full="../../assets/screenshots/launcher.webp" data-label="spotlight">
+    <img src="../../assets/screenshots/thumbs/launcher.webp" alt="spotlight" loading="lazy">
+    <span>spotlight</span>
+  </button>
+  <button class="shot" type="button" data-full="../../assets/screenshots/rofi.webp" data-label="rofi">
+    <img src="../../assets/screenshots/thumbs/rofi.webp" alt="rofi" loading="lazy">
+    <span>rofi</span>
+  </button>
   <button class="shot" type="button" data-full="../../assets/screenshots/clipboard.webp" data-label="clipboard">
     <img src="../../assets/screenshots/thumbs/clipboard.webp" alt="clipboard" loading="lazy">
     <span>clipboard</span>
@@ -166,14 +204,6 @@
   <button class="shot" type="button" data-full="../../assets/screenshots/emoji.webp" data-label="emoji">
     <img src="../../assets/screenshots/thumbs/emoji.webp" alt="emoji" loading="lazy">
     <span>emoji</span>
-  </button>
-  <button class="shot" type="button" data-full="../../assets/screenshots/notification.webp" data-label="uma notificação">
-    <img src="../../assets/screenshots/thumbs/notification.webp" alt="uma notificação" loading="lazy">
-    <span>uma notificação</span>
-  </button>
-  <button class="shot" type="button" data-full="../../assets/screenshots/osd.webp" data-label="osd de volume">
-    <img src="../../assets/screenshots/thumbs/osd.webp" alt="osd de volume" loading="lazy">
-    <span>osd de volume</span>
   </button>
   <button class="shot" type="button" data-full="../../assets/screenshots/settings.webp" data-label="configurações">
     <img src="../../assets/screenshots/thumbs/settings.webp" alt="configurações" loading="lazy">
@@ -208,5 +238,6 @@
   <p>gpl-3.0-or-later · feito por <a href="https://github.com/pxotitas">pxotitas</a>, com partes do <a href="https://github.com/andreumassanet/impasto">impasto</a> e do <a href="https://github.com/pxdritz1/velatura">velatura</a>.</p>
 </footer>
 <script src="../../media.js?v=9b639122" defer></script>
+<script src="../../m3.js?v=92a4685c" defer></script>
 </body>
 </html>

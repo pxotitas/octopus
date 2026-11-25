@@ -102,7 +102,7 @@ def main():
         twin_root = LANGS[other(lang)]["root"]
 
         path = f"{root}index.html"
-        write(path, page(lang, path, "", fragment(lang, "home", path), f"{twin_root}index.html", scripts=("shapes.js", "motion.js")))
+        write(path, page(lang, path, "", fragment(lang, "home", path), f"{twin_root}index.html", scripts=("shapes.js", "motion.js", "weather-demo.js")))
 
         path = f"{root}media/index.html"
         title = LANGS[lang]["nav"]["media"]
