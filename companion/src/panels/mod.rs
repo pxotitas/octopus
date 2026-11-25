@@ -14,3 +14,4 @@ pub mod toasts;
 pub mod tray;
 pub mod wallpapers;
 pub mod wifi;
+pub mod weather;
