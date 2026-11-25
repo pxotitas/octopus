@@ -110,10 +110,10 @@ the full video, with sound, is on the [site](https://pxotitas.github.io/octopus/
 all of them are in [`screenshots/`](screenshots). click a group to open it.
 
 <details>
-<summary><b>desktop</b>: the bar, the dock, notifications and the osd</summary>
+<summary><b>desktop</b>: the bar, the desktop widgets, notifications and the osd</summary>
 <br>
 
-the vertical bar on the left and the dock at the bottom.
+the vertical bar on the left, and the desktop widgets on the right: the weather and the latest commits.
 
 <img src="screenshots/desktop.webp" alt="desktop with the bar and the dock" width="100%">
 
@@ -136,16 +136,40 @@ the osd, for volume and brightness.
 </details>
 
 <details>
-<summary><b>dash</b>: clock, calendar, weather, player and wallpapers</summary>
+<summary><b>dash</b>: rail, clocks, calendar, player, notifications, weather and wallpapers</summary>
 <br>
 
-the overview, opened from the clock on the bar.
+the overview, opened from the clock on the bar: a navigation rail, an analog clock on a cookie, and the notifications over a small weather card.
 
 <img src="screenshots/dash.webp" alt="dash overview" width="100%">
 
 the wallpapers tab; picking one also makes the palette.
 
 <img src="screenshots/wallpapers.webp" alt="wallpaper picker in the dash" width="100%">
+
+</details>
+
+<details>
+<summary><b>weather</b>: m3 shapes, and questions after a <code>&gt;</code></summary>
+<br>
+
+right now: metrics in m3 shapes, the sun's arc and the moon, the next 24 hours and the days.
+
+<img src="screenshots/weather.webp" alt="the weather tab" width="100%">
+
+<code>&gt; tomorrow</code>: one day, and how it compares to today.
+
+<img src="screenshots/weather-tomorrow.webp" alt="tomorrow's weather" width="100%">
+
+<code>&gt; yesterday</code>: a week back is there too.
+
+<img src="screenshots/weather-yesterday.webp" alt="yesterday's weather" width="100%">
+
+<code>&gt; week</code> and <code>&gt; weekend</code>: days in shapes, with the warmest, the coolest and the rainiest.
+
+<img src="screenshots/weather-week.webp" alt="the week's weather" width="100%">
+
+<img src="screenshots/weather-weekend.webp" alt="the weekend's weather" width="100%">
 
 </details>
 
