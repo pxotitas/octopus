@@ -22,7 +22,13 @@ size = 44                  # tamanho dos ícones, em pixels
 magnify = true             # os ícones crescem embaixo do ponteiro
 
 [weather]
-place = ""                 # vazio usa o ip
+place = ""                 # uma cidade, ou "lat,lon"; vazio usa o ip
+
+[desktop]
+enabled = true             # widgets embaixo das janelas
+widgets = ["weather", "github"]
+position = "top-right"     # ou top-left, bottom-right, bottom-left
+github = ""                # um usuário do github, pro widget de commits
 
 [notifications]
 timeout_ms = 5000
@@ -51,3 +57,12 @@ recarrega sozinho. bom pra ajustes sem recompilar.
 
 clique: abre, foca ou alterna entre as janelas do app. meio: janela nova.
 direito: menu com as janelas, fixar e fechar.
+
+## widgets de desktop
+
+uma camada embaixo das janelas, então eles aparecem onde nenhuma janela cobre:
+
+- **weather**: o clima agora num cookie grande, e os próximos quatro dias. um clique abre a aba de clima.
+- **github**: os últimos commits de `github`, pela busca pública de commits do github (sem token). um clique abre o commit.
+
+mudar o `[desktop]` nas configurações reinicia o octopus sozinho.

@@ -23,6 +23,19 @@
 - `/nome`: arquivos na pasta pessoal (usa o `fd`)
 - `>`: bloquear, suspender, sair, reiniciar, desligar
 
+## clima
+
+a linha no topo da aba de clima (depois da setinha) aceita perguntas, em
+português ou inglês:
+
+- `amanhã`, `ontem`, `hoje`, `agora`, `depois de amanhã`, `anteontem`
+- um dia da semana: `quinta`, `próxima quinta`, `sexta passada`
+- dias a partir de hoje: `+3`, `-2`, `em 4 dias`, `3 dias atrás`
+- uma data: `28/11`, `2026-12-01`, `30 de novembro`
+- `semana`, `próxima semana`, `semana passada`, `fim de semana`
+
+vai de uma semana atrás até duas pra frente. esc volta pro agora.
+
 ## comandos
 
 ```
@@ -30,6 +43,7 @@ octopus                    o daemon (o niri inicia sozinho)
 octopus toggle <painel>    control-center, dash, wifi, bluetooth, audio,
                            tray, clipboard, emoji, power, launcher
 octopus open wallpapers    dash na aba de wallpapers
+octopus open weather [p]   a aba de clima, perguntando p (amanhã, semana…)
 octopus settings           janela de configurações
 octopus lock               bloquear
 octopus close              fecha qualquer painel
