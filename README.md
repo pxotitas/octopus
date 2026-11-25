@@ -110,10 +110,10 @@ o vídeo inteiro, com som, tá no [site](https://pxotitas.github.io/octopus/pt/m
 estão todas em [`screenshots/`](screenshots). clica num grupo pra abrir.
 
 <details>
-<summary><b>desktop</b>: a barra, a dock, notificações e o osd</summary>
+<summary><b>desktop</b>: a barra, os widgets de desktop, notificações e o osd</summary>
 <br>
 
-a barra vertical na esquerda e a dock embaixo.
+a barra vertical na esquerda, e os widgets de desktop na direita: o clima e os últimos commits.
 
 <img src="screenshots/desktop.webp" alt="desktop com a barra e a dock" width="100%">
 
@@ -136,16 +136,40 @@ o osd, pra volume e brilho.
 </details>
 
 <details>
-<summary><b>dash</b>: relógio, calendário, clima, player e wallpapers</summary>
+<summary><b>dash</b>: rail, relógios, calendário, player, notificações, clima e wallpapers</summary>
 <br>
 
-a visão geral, que abre pelo relógio da barra.
+a visão geral, que abre pelo relógio da barra: rail de navegação, um relógio analógico num cookie, e as notificações em cima de um card de clima pequeno.
 
 <img src="screenshots/dash.webp" alt="visão geral do dash" width="100%">
 
 a aba de wallpapers; escolher um também gera a paleta.
 
 <img src="screenshots/wallpapers.webp" alt="seletor de wallpaper no dash" width="100%">
+
+</details>
+
+<details>
+<summary><b>clima</b>: shapes m3, e perguntas depois de um <code>&gt;</code></summary>
+<br>
+
+agora: métricas em shapes m3, o arco do sol e a lua, as próximas 24 horas e os dias.
+
+<img src="screenshots/weather.webp" alt="a aba de clima" width="100%">
+
+<code>&gt; amanhã</code>: um dia, e como ele fica comparado com hoje.
+
+<img src="screenshots/weather-tomorrow.webp" alt="o clima de amanhã" width="100%">
+
+<code>&gt; ontem</code>: tem uma semana pra trás também.
+
+<img src="screenshots/weather-yesterday.webp" alt="o clima de ontem" width="100%">
+
+<code>&gt; semana</code> e <code>&gt; fim de semana</code>: os dias em shapes, com o mais quente, o mais fresco e o mais chuvoso.
+
+<img src="screenshots/weather-week.webp" alt="o clima da semana" width="100%">
+
+<img src="screenshots/weather-weekend.webp" alt="o clima do fim de semana" width="100%">
 
 </details>
 
