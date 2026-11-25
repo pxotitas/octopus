@@ -5,7 +5,7 @@
 3. `theme.sh` reads the mode from `~/.local/state/octopus/mode`
    (`light`, `dark` or `auto`; on auto it asks `octopus luma`).
 4. matugen makes the colors with `matugen/config.toml`:
-   companion, waybar, fuzzel, wofi and matuwall.
+   companion, waybar, fuzzel, rofi and matuwall.
 5. then it runs your `~/.config/matugen/config.toml`, for the rest of the system.
 
 the companion and waybar notice the new `colors.css` and reload on their own.

@@ -5,7 +5,7 @@
 | shortcut | does |
 |---|---|
 | Mod+Space, XF86LaunchB | spotlight |
-| Mod+D | wofi (apps) |
+| Mod+D | rofi (apps) |
 | Mod+Shift+D | fuzzel (comes from your config.kdl, not from octopus) |
 | Mod+C | control center |
 | Mod+A | dash |

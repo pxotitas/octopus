@@ -23,9 +23,9 @@ the docs (this) live on the `eng` branch (and in portuguese on `pt-br`);
 │   │   └── widgets/      reused pieces (shapes, animation, sliders…)
 │   └── style/octopus.css the css built into the binary
 ├── waybar/           style.css, tray-arrow.c (the animated tray button)
-├── scripts/          theme, battery, weather, lyrics, emoji, wofi, matuwall
-├── matugen/          color templates (companion, waybar, fuzzel, wofi, matuwall)
-├── wofi/config       the wofi on Mod+D (its style.css is generated)
+├── scripts/          theme, battery, weather, lyrics, emoji, rofi, matuwall
+├── matugen/          color templates (companion, waybar, fuzzel, rofi, matuwall)
+├── rofi/config.rasi  the rofi on Mod+D (its theme.rasi is generated)
 ├── niri.kdl          autostart and shortcuts, included from niri's config
 ├── octopus.toml      the settings (the settings window writes here)
 ├── LICENSE           gpl-3.0
@@ -45,4 +45,4 @@ the docs (this) live on the `eng` branch (and in portuguese on `pt-br`);
 | `~/.local/state/octopus/` | color mode, most-opened apps, cached lyrics |
 
 generated files (don't edit, they're in `.gitignore`): `colors.css`,
-`waybar/colors.css`, `waybar/layout.css`, `wofi/style.css`.
+`waybar/colors.css`, `waybar/layout.css`, `rofi/theme.rasi`.
