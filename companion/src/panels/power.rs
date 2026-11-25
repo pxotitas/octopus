@@ -23,23 +23,25 @@ pub fn build(run: Rc<dyn Fn(&str)>) -> gtk::Box {
 
     let armed: Rc<RefCell<Option<(gtk::Button, glib::SourceId)>>> = Rc::default();
     let actions = [
-        ("lock", "lock", t("bloquear"), Kind::Cookie9, false),
-        ("suspend", "bedtime", t("suspender"), Kind::Clover4, false),
-        ("logout", "logout", t("sair"), Kind::Cookie6, true),
-        ("reboot", "restart_alt", t("reiniciar"), Kind::Sunny, true),
+        ("lock", "lock", t("bloquear"), Kind::Cookie9, Kind::Flower, false),
+        ("suspend", "bedtime", t("suspender"), Kind::Clover4, Kind::Puffy, false),
+        ("logout", "logout", t("sair"), Kind::Cookie6, Kind::SoftBurst, true),
+        ("reboot", "restart_alt", t("reiniciar"), Kind::Sunny, Kind::Clover8, true),
         (
             "poweroff",
             "power_settings_new",
             t("desligar"),
-            Kind::Cookie9,
+            Kind::Cookie12,
+            Kind::Burst,
             true,
         ),
     ];
-    for (action, glyph, label, kind, confirm) in actions {
+    for (action, glyph, label, kind, hover, confirm) in actions {
         let button = gtk::Button::new();
         button.add_css_class("power-action");
         let content = gtk::Box::new(gtk::Orientation::Vertical, 8);
         let shape = Shape::new(kind, 64, true, Some(&icons::icon(glyph)));
+        shape.morph_on_hover(&button, hover);
         content.append(&shape);
         let name = gtk::Label::new(Some(label));
         content.append(&name);

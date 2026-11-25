@@ -12,6 +12,7 @@ use crate::popup::{Place, Popup};
 pub struct Osd {
     popup: Rc<Popup>,
     icon: gtk::Label,
+    badge: crate::widgets::shape::Shape,
     level: gtk::DrawingArea,
     fraction: Rc<std::cell::Cell<f64>>,
     value: gtk::Label,
@@ -65,13 +66,21 @@ impl Osd {
         }
         let value = gtk::Label::new(None);
         value.add_css_class("percent");
-        root.append(&icon);
+        let badge = crate::widgets::shape::Shape::new(
+            crate::widgets::shape::Kind::Cookie9,
+            40,
+            true,
+            Some(&icon),
+        );
+        badge.add_css_class("osd-badge");
+        root.append(&badge);
         root.append(&level);
         root.append(&value);
         let popup = Popup::new(app, "osd", Place::BottomEdge, false, &root);
         Rc::new(Self {
             popup,
             icon,
+            badge,
             level,
             fraction,
             value,
@@ -80,6 +89,9 @@ impl Osd {
     }
 
     pub fn show(self: &Rc<Self>, icon: &str, percent: u32) {
+        if self.icon.label() != icon || !self.popup.is_open() {
+            self.badge.adapt(&[]);
+        }
         self.icon.set_label(icon);
         self.fraction.set(percent.min(100) as f64 / 100.0);
         self.level.queue_draw();

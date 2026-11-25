@@ -6,7 +6,6 @@ use std::rc::Rc;
 use gtk::pango;
 use gtk::prelude::*;
 
-use crate::icons;
 use crate::services::bluetooth::{Bluetooth, Device};
 use crate::widgets;
 
@@ -98,11 +97,10 @@ fn row(device: &Device, busy: bool, bt: &Rc<Bluetooth>) -> gtk::Button {
         button.add_css_class("active");
     }
     let content = gtk::Box::new(gtk::Orientation::Horizontal, 12);
-    content.append(&icons::icon(if device.connected {
-        "bluetooth_connected"
-    } else {
-        "bluetooth"
-    }));
+    content.append(&crate::widgets::shape::badge(
+        if device.connected { "bluetooth_connected" } else { "bluetooth" },
+        device.connected,
+    ));
     let text = gtk::Box::new(gtk::Orientation::Vertical, 0);
     text.set_hexpand(true);
     let name = gtk::Label::new(Some(&device.name));

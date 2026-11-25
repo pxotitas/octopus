@@ -142,7 +142,7 @@ fn row(
         button.add_css_class("active");
     }
     let content = gtk::Box::new(gtk::Orientation::Horizontal, 12);
-    content.append(&icons::icon(icons::wifi(network.signal)));
+    content.append(&crate::widgets::shape::badge(icons::wifi(network.signal), network.active));
 
     let text = gtk::Box::new(gtk::Orientation::Vertical, 0);
     text.set_hexpand(true);

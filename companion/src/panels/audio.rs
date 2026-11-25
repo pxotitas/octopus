@@ -81,11 +81,10 @@ fn row(device: &Device, selected: bool, kind: Kind, audio: &Rc<Audio>) -> gtk::B
         button.add_css_class("active");
     }
     let content = gtk::Box::new(gtk::Orientation::Horizontal, 12);
-    content.append(&icons::icon(if selected {
-        "radio_button_checked"
-    } else {
-        "radio_button_unchecked"
-    }));
+    content.append(&crate::widgets::shape::badge(
+        if matches!(kind, Kind::Sink) { "speaker" } else { "mic" },
+        selected,
+    ));
     let name = gtk::Label::new(Some(&device.description));
     name.set_xalign(0.0);
     name.set_hexpand(true);
