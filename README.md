@@ -1,9 +1,9 @@
 # octopus
 
-[![GitHub repo](https://img.shields.io/badge/GitHub-pxotitas%2Foctopus-blue?logo=github)](https://github.com/pxotitas/octopus)
-[![License](https://img.shields.io/github/license/pxotitas/octopus)](https://github.com/pxotitas/octopus/blob/main/LICENSE)
-[![Rust](https://img.shields.io/badge/Made%20with-Rust-orange?logo=rust)](https://github.com/pxotitas/octopus)
-[![GitHub stars](https://img.shields.io/github/stars/pxotitas/octopus?style=social)](https://github.com/pxotitas/octopus/stargazers)
+[![github repo](https://img.shields.io/badge/github-pxotitas%2Foctopus-blue?logo=github)](https://github.com/pxotitas/octopus)
+[![license](https://img.shields.io/badge/license-gpl--3.0--or--later-blue)](https://github.com/pxotitas/octopus/blob/main/LICENSE)
+[![rust](https://img.shields.io/badge/made%20with-rust-orange?logo=rust)](https://github.com/pxotitas/octopus)
+[![github stars](https://img.shields.io/github/stars/pxotitas/octopus?label=stars&logo=github&color=yellow&style=flat)](https://github.com/pxotitas/octopus/stargazers)
 
 a cozy m3 shell for niri. / um shell m3 cozy pro niri.
 
@@ -12,6 +12,14 @@ the niri config. the docs live in branches of their own.
 
 essa branch é o shell em si: o companion, os scripts, a waybar e o config do
 niri. as docs moram em branches próprias.
+
+<a href="https://github.com/pxotitas/octopus/blob/eng/screenshots/showcase.mp4">
+  <img src="https://raw.githubusercontent.com/pxotitas/octopus/eng/screenshots/showcase.webp" alt="octopus on niri / octopus no niri" width="100%">
+</a>
+
+<sub>click to watch / clica pra ver. more screenshots in / mais screenshots na
+[`eng`](https://github.com/pxotitas/octopus/tree/eng#screenshots) and / e
+[`pt-br`](https://github.com/pxotitas/octopus/tree/pt-br#screenshots).</sub>
 
 | branch | what / o quê |
 |---|---|
@@ -36,4 +44,4 @@ include "~/.config/octopus/niri.kdl"
 ## license / licença
 
 gpl-3.0-or-later. some parts come from [impasto](https://github.com/andreumassanet/impasto)
-and [velatura](https://github.com/pxdritz1/velatura); see [`NOTICE.md`](NOTICE.md).
+and [velatura](https://github.com/pxdritz1/velatura); see [`notice.md`](NOTICE.md).
