@@ -15,6 +15,7 @@ pub struct Config {
     pub notifications: Notifications,
     pub media: Media,
     pub dock: Dock,
+    pub desktop: Desktop,
 }
 
 impl Default for Config {
@@ -27,6 +28,7 @@ impl Default for Config {
             notifications: Notifications::default(),
             media: Media::default(),
             dock: Dock::default(),
+            desktop: Desktop::default(),
         }
     }
 }
@@ -81,6 +83,30 @@ impl Default for Dock {
             pinned: Vec::new(),
             size: 44,
             magnify: true,
+        }
+    }
+}
+
+/// Widgets on the desktop, under the windows.
+#[derive(Debug, Clone, Deserialize, Serialize, PartialEq)]
+#[serde(default)]
+pub struct Desktop {
+    pub enabled: bool,
+    /// In order, top to bottom: "weather", "github".
+    pub widgets: Vec<String>,
+    /// "top-right", "top-left", "bottom-right" or "bottom-left".
+    pub position: String,
+    /// The github user whose commits to show; empty hides that widget.
+    pub github: String,
+}
+
+impl Default for Desktop {
+    fn default() -> Self {
+        Self {
+            enabled: true,
+            widgets: vec!["weather".into(), "github".into()],
+            position: "top-right".into(),
+            github: String::new(),
         }
     }
 }

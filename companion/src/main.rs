@@ -1,5 +1,6 @@
 mod bar;
 mod config;
+mod desktop;
 mod dock;
 mod exec;
 mod i18n;

@@ -29,6 +29,7 @@ pub struct Shell {
     lock: Rc<crate::lock::Lock>,
     _toasts: Rc<Toasts>,
     _dock: Option<Rc<crate::dock::Dock>>,
+    _desktop: Option<Rc<crate::desktop::Desktop>>,
     dash: Rc<Dash>,
 }
 
@@ -282,6 +283,8 @@ impl Shell {
                 )
             });
 
+            let desktop = crate::desktop::Desktop::new(app, &services, &config);
+
             Shell {
                 app: app.clone(),
                 config: shared.clone(),
@@ -293,6 +296,7 @@ impl Shell {
                 lock,
                 _toasts: toasts,
                 _dock: dock,
+                _desktop: desktop,
                 dash: dash.clone(),
             }
         })
@@ -354,6 +358,13 @@ impl Shell {
                     };
                     serde_json::json!({"text": glyph, "tooltip": crate::i18n::tf("{} na bandeja", count)}).to_string()
                 }
+            }
+            ["open", "weather", rest @ ..] => {
+                self.dash.ask_weather(&rest.join(" "));
+                if !self.popups.get("dash").is_some_and(|p| p.is_open()) {
+                    self.toggle("dash");
+                }
+                String::new()
             }
             ["open", "wallpapers"] => {
                 self.dash.select("wallpapers");
@@ -469,15 +480,16 @@ impl Shell {
                     if let Err(err) = config::save(&next) {
                         eprintln!("octopus: cannot save settings: {err}");
                     }
-                    let (old_language, old_dock) = {
+                    let (old_language, old_dock, old_desktop) = {
                         let current = current.borrow();
-                        (current.language.clone(), current.dock.clone())
+                        (current.language.clone(), current.dock.clone(), current.desktop.clone())
                     };
                     if next.language != old_language
                         || next.dock.enabled != old_dock.enabled
                         || next.dock.mode != old_dock.mode
                         || next.dock.size != old_dock.size
                         || next.dock.magnify != old_dock.magnify
+                        || next.desktop != old_desktop
                     {
                         crate::restart(&app);
                         return;
