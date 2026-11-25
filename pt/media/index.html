@@ -22,7 +22,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../../style.css?v=0d9aaed6">
+  <link rel="stylesheet" href="../../style.css?v=1f1fbd75">
 </head>
 <body>
 <header class="top">
@@ -54,42 +54,60 @@
 <video class="tour" src="../../assets/video/showcase.mp4" poster="../../assets/video/showcase.webp" controls preload="metadata" playsinline></video>
 
 <h2 id="clips">clipes</h2>
-<p class="lead">o mesmo tour, um pedaço por vez. eles tocam conforme você rola.</p>
+<p class="lead">o mesmo tour, um pedaço por vez. eles tocam conforme você rola; clica num pra ver maior.</p>
 <div class="clips">
   <figure class="clip" id="dash">
-    <video src="../../assets/clips/dash.mp4" poster="../../assets/clips/dash.webp" muted loop playsinline preload="none"></video>
+    <button type="button" data-video="../../assets/clips/hq/dash.mp4" data-label="dash">
+      <video src="../../assets/clips/dash.mp4" poster="../../assets/clips/dash.webp" muted loop playsinline preload="none"></video>
+    </button>
     <figcaption><strong>dash</strong> visão geral, música e a letra sincronizada</figcaption>
   </figure>
   <figure class="clip" id="weather">
-    <video src="../../assets/clips/weather.mp4" poster="../../assets/clips/weather.webp" muted loop playsinline preload="none"></video>
+    <button type="button" data-video="../../assets/clips/hq/weather.mp4" data-label="clima e wallpapers">
+      <video src="../../assets/clips/weather.mp4" poster="../../assets/clips/weather.webp" muted loop playsinline preload="none"></video>
+    </button>
     <figcaption><strong>clima e wallpapers</strong> a previsão, depois o seletor de wallpaper</figcaption>
   </figure>
   <figure class="clip" id="control-center">
-    <video src="../../assets/clips/control-center.mp4" poster="../../assets/clips/control-center.webp" muted loop playsinline preload="none"></video>
+    <button type="button" data-video="../../assets/clips/hq/control-center.mp4" data-label="central de controle">
+      <video src="../../assets/clips/control-center.mp4" poster="../../assets/clips/control-center.webp" muted loop playsinline preload="none"></video>
+    </button>
     <figcaption><strong>central de controle</strong> atalhos, sliders e o player</figcaption>
   </figure>
   <figure class="clip" id="lock">
-    <video src="../../assets/clips/lock.mp4" poster="../../assets/clips/lock.webp" muted loop playsinline preload="none"></video>
+    <button type="button" data-video="../../assets/clips/hq/lock.mp4" data-label="tela de bloqueio">
+      <video src="../../assets/clips/lock.mp4" poster="../../assets/clips/lock.webp" muted loop playsinline preload="none"></video>
+    </button>
     <figcaption><strong>tela de bloqueio</strong> shapes que mudam a cada tecla</figcaption>
   </figure>
   <figure class="clip" id="launchers">
-    <video src="../../assets/clips/launchers.mp4" poster="../../assets/clips/launchers.webp" muted loop playsinline preload="none"></video>
+    <button type="button" data-video="../../assets/clips/hq/launchers.mp4" data-label="launchers">
+      <video src="../../assets/clips/launchers.mp4" poster="../../assets/clips/launchers.webp" muted loop playsinline preload="none"></video>
+    </button>
     <figcaption><strong>launchers</strong> o rofi e o spotlight</figcaption>
   </figure>
   <figure class="clip" id="emoji">
-    <video src="../../assets/clips/emoji.mp4" poster="../../assets/clips/emoji.webp" muted loop playsinline preload="none"></video>
+    <button type="button" data-video="../../assets/clips/hq/emoji.mp4" data-label="emoji">
+      <video src="../../assets/clips/emoji.mp4" poster="../../assets/clips/emoji.webp" muted loop playsinline preload="none"></video>
+    </button>
     <figcaption><strong>emoji</strong> o seletor, com busca</figcaption>
   </figure>
   <figure class="clip" id="settings">
-    <video src="../../assets/clips/settings.mp4" poster="../../assets/clips/settings.webp" muted loop playsinline preload="none"></video>
+    <button type="button" data-video="../../assets/clips/hq/settings.mp4" data-label="configurações">
+      <video src="../../assets/clips/settings.mp4" poster="../../assets/clips/settings.webp" muted loop playsinline preload="none"></video>
+    </button>
     <figcaption><strong>configurações</strong> cores, idioma, barra, widgets e dock</figcaption>
   </figure>
   <figure class="clip" id="calculator">
-    <video src="../../assets/clips/calculator.mp4" poster="../../assets/clips/calculator.webp" muted loop playsinline preload="none"></video>
+    <button type="button" data-video="../../assets/clips/hq/calculator.mp4" data-label="conta no spotlight">
+      <video src="../../assets/clips/calculator.mp4" poster="../../assets/clips/calculator.webp" muted loop playsinline preload="none"></video>
+    </button>
     <figcaption><strong>conta no spotlight</strong> uma soma depois do <code>=</code></figcaption>
   </figure>
   <figure class="clip" id="palette">
-    <video src="../../assets/clips/palette.mp4" poster="../../assets/clips/palette.webp" muted loop playsinline preload="none"></video>
+    <button type="button" data-video="../../assets/clips/hq/palette.mp4" data-label="paleta do wallpaper">
+      <video src="../../assets/clips/palette.mp4" poster="../../assets/clips/palette.webp" muted loop playsinline preload="none"></video>
+    </button>
     <figcaption><strong>paleta do wallpaper</strong> um wallpaper novo repinta o shell</figcaption>
   </figure>
 </div>
@@ -182,12 +200,13 @@
 <dialog class="viewer">
   <form method="dialog"><button class="close" aria-label="fechar"><svg viewBox="0 0 24 24" width="24" height="24"><path d="M6.4 19 5 17.6 10.6 12 5 6.4 6.4 5 12 10.6 17.6 5 19 6.4 13.4 12 19 17.6 17.6 19 12 13.4Z"/></svg></button></form>
   <img alt="">
+  <video muted loop playsinline controls></video>
   <p></p>
 </dialog>
 </main>
 <footer>
   <p>gpl-3.0-or-later · feito por <a href="https://github.com/pxotitas">pxotitas</a>, com partes do <a href="https://github.com/andreumassanet/impasto">impasto</a> e do <a href="https://github.com/pxdritz1/velatura">velatura</a>.</p>
 </footer>
-<script src="../../media.js?v=7fb29eb1" defer></script>
+<script src="../../media.js?v=9b639122" defer></script>
 </body>
 </html>

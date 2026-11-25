@@ -386,6 +386,19 @@ td { color: var(--on-variant); }
 }
 
 .clip { margin: 0; }
+
+.clip button {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  border-radius: 16px;
+  cursor: zoom-in;
+  transition: transform 220ms var(--ease);
+}
+
+.clip button:hover { transform: scale(1.015); }
 .clip video { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; border-radius: 16px; background: var(--surface-high); }
 .clip figcaption { padding: 10px 4px 0; color: var(--on-variant); font-size: 14px; }
 .clip strong { color: var(--on-surface); font-weight: 500; margin-right: 4px; }
@@ -430,7 +443,8 @@ td { color: var(--on-variant); }
 
 .viewer[open] { animation: rise 280ms var(--ease); }
 .viewer::backdrop { background: rgba(0, 0, 0, 0.55); }
-.viewer img { border-radius: 16px; max-height: 80vh; margin: 0 auto; }
+.viewer img, .viewer video { border-radius: 16px; max-height: 80vh; margin: 0 auto; }
+.viewer [hidden] { display: none; }
 .viewer p { margin: 12px 4px 0; color: var(--on-variant); font-size: 14px; }
 .viewer form { position: absolute; top: 24px; right: 24px; }
 

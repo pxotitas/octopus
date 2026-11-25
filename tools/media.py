@@ -35,7 +35,7 @@ TEXT = {
     "en": {
         "title": "media", "lead": "octopus in motion and standing still. the screenshots are in english.",
         "video": "the whole tour", "video_lead": "a minute and a half, with sound.",
-        "clips": "clips", "clips_lead": "the same tour, a piece at a time. they play as you scroll.",
+        "clips": "clips", "clips_lead": "the same tour, a piece at a time. they play as you scroll; click one to see it bigger.",
         "shots": "screenshots", "shots_lead": "click one to see it full size.",
         "brand": "logo and banner", "brand_lead": "for posts, videos or a link to the project.",
         "download": "download", "close": "close",
@@ -43,7 +43,7 @@ TEXT = {
     "pt": {
         "title": "mídia", "lead": "o octopus em movimento e parado. as screenshots estão em inglês.",
         "video": "o tour inteiro", "video_lead": "um minuto e meio, com som.",
-        "clips": "clipes", "clips_lead": "o mesmo tour, um pedaço por vez. eles tocam conforme você rola.",
+        "clips": "clipes", "clips_lead": "o mesmo tour, um pedaço por vez. eles tocam conforme você rola; clica num pra ver maior.",
         "shots": "screenshots", "shots_lead": "clica numa pra ver em tamanho real.",
         "brand": "logo e banner", "brand_lead": "pra posts, vídeos ou um link pro projeto.",
         "download": "baixar", "close": "fechar",
@@ -56,7 +56,9 @@ def render(lang, rel):
     a = f"{rel}assets"
     clips = "\n".join(
         f"""  <figure class="clip" id="{name}">
-    <video src="{a}/clips/{name}.mp4" poster="{a}/clips/{name}.webp" muted loop playsinline preload="none"></video>
+    <button type="button" data-video="{a}/clips/hq/{name}.mp4" data-label="{text[lang][0]}">
+      <video src="{a}/clips/{name}.mp4" poster="{a}/clips/{name}.webp" muted loop playsinline preload="none"></video>
+    </button>
     <figcaption><strong>{text[lang][0]}</strong> {text[lang][1]}</figcaption>
   </figure>"""
         for name, text in CLIPS
@@ -108,5 +110,6 @@ def render(lang, rel):
 <dialog class="viewer">
   <form method="dialog"><button class="close" aria-label="{t["close"]}"><svg viewBox="0 0 24 24" width="24" height="24"><path d="M6.4 19 5 17.6 10.6 12 5 6.4 6.4 5 12 10.6 17.6 5 19 6.4 13.4 12 19 17.6 17.6 19 12 13.4Z"/></svg></button></form>
   <img alt="">
+  <video muted loop playsinline controls></video>
   <p></p>
 </dialog>"""
