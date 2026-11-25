@@ -22,7 +22,13 @@ size = 44                  # icon size, in pixels
 magnify = true             # icons swell under the pointer
 
 [weather]
-place = ""                 # empty uses your ip
+place = ""                 # a city, or "lat,lon"; empty uses your ip
+
+[desktop]
+enabled = true             # widgets under the windows
+widgets = ["weather", "github"]
+position = "top-right"     # or top-left, bottom-right, bottom-left
+github = ""                # a github user, for the commits widget
 
 [notifications]
 timeout_ms = 5000
@@ -51,3 +57,12 @@ on its own. good for tweaks without recompiling.
 
 click: opens, focuses or cycles through the app's windows. middle: new
 window. right: a menu with the windows, pin and close.
+
+## desktop widgets
+
+a layer under the windows, so they show wherever no window covers them:
+
+- **weather**: now in a big cookie, and the next four days. a click opens the weather tab.
+- **github**: the latest commits of `github`, from github's public commit search (no token). a click opens the commit.
+
+changing `[desktop]` in the settings restarts octopus on its own.
