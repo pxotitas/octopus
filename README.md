@@ -1,9 +1,22 @@
-# octopus
+<p align="center">
+  <img src="assets/logo.svg" width="128" alt="octopus logo">
+</p>
 
-[![github repo](https://img.shields.io/badge/github-pxotitas%2Foctopus-blue?logo=github)](https://github.com/pxotitas/octopus)
-[![license](https://img.shields.io/badge/license-gpl--3.0--or--later-blue)](https://github.com/pxotitas/octopus/blob/main/LICENSE)
-[![rust](https://img.shields.io/badge/made%20with-rust-orange?logo=rust)](https://github.com/pxotitas/octopus)
-[![github stars](https://img.shields.io/github/stars/pxotitas/octopus?label=stars&logo=github&color=yellow&style=flat)](https://github.com/pxotitas/octopus/stargazers)
+<h1 align="center">octopus</h1>
+
+<p align="center">
+  <a href="https://pxotitas.github.io/octopus/">site</a> ·
+  <a href="https://pxotitas.github.io/octopus/docs/">docs</a> ·
+  <a href="https://pxotitas.github.io/octopus/media/">screenshots and videos</a> ·
+  <a href="https://pxotitas.github.io/octopus/changelog/">changelog</a>
+</p>
+
+<p align="center">
+  <a href="https://github.com/pxotitas/octopus"><img src="https://img.shields.io/badge/github-pxotitas%2Foctopus-blue?logo=github" alt="github repo"></a>
+  <a href="https://github.com/pxotitas/octopus/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-gpl--3.0--or--later-blue" alt="license"></a>
+  <a href="https://github.com/pxotitas/octopus"><img src="https://img.shields.io/badge/made%20with-rust-orange?logo=rust" alt="rust"></a>
+  <a href="https://github.com/pxotitas/octopus/stargazers"><img src="https://img.shields.io/github/stars/pxotitas/octopus?label=stars&logo=github&color=yellow&style=flat" alt="github stars"></a>
+</p>
 
 a cozy m3 shell for niri: a minimal vertical bar on waybar, with everything
 bigger (control center, dash, menus, notifications) in a companion written
@@ -18,12 +31,79 @@ english. the colors come from the wallpaper through matugen.
 
 ## showcase
 
-<a href="screenshots/showcase.mp4">
-  <img src="screenshots/showcase.webp" alt="octopus on niri, with the dash open" width="100%">
-</a>
+the full video, with sound, is on the [site](https://pxotitas.github.io/octopus/media/). here it's cut into short clips; click one to open it.
 
-<sub>click to watch the video: the dash, lyrics, weather, wallpapers, control
-center, lock screen, spotlight, emoji and settings.</sub>
+<details>
+<summary><b>dash</b>: overview, music and the synced lyrics</summary>
+<br>
+
+<img src="screenshots/clips/dash.webp" alt="dash" width="100%">
+
+</details>
+
+<details>
+<summary><b>weather and wallpapers</b>: the forecast, then the wallpaper picker</summary>
+<br>
+
+<img src="screenshots/clips/weather.webp" alt="weather and wallpapers" width="100%">
+
+</details>
+
+<details>
+<summary><b>control center</b>: quick toggles, sliders and the player</summary>
+<br>
+
+<img src="screenshots/clips/control-center.webp" alt="control center" width="100%">
+
+</details>
+
+<details>
+<summary><b>lock screen</b>: shapes that change at every key, with the lyric being sung</summary>
+<br>
+
+<img src="screenshots/clips/lock.webp" alt="lock screen" width="100%">
+
+</details>
+
+<details>
+<summary><b>launchers</b>: rofi and the spotlight</summary>
+<br>
+
+<img src="screenshots/clips/launchers.webp" alt="launchers" width="100%">
+
+</details>
+
+<details>
+<summary><b>emoji</b>: the picker, with search</summary>
+<br>
+
+<img src="screenshots/clips/emoji.webp" alt="emoji" width="100%">
+
+</details>
+
+<details>
+<summary><b>settings</b>: colors, language, bar, widgets and dock</summary>
+<br>
+
+<img src="screenshots/clips/settings.webp" alt="settings" width="100%">
+
+</details>
+
+<details>
+<summary><b>spotlight math</b>: typing a sum with <code>=</code></summary>
+<br>
+
+<img src="screenshots/clips/calculator.webp" alt="spotlight math" width="100%">
+
+</details>
+
+<details>
+<summary><b>palette from the wallpaper</b>: a new wallpaper repaints the whole shell</summary>
+<br>
+
+<img src="screenshots/clips/palette.webp" alt="palette from the wallpaper" width="100%">
+
+</details>
 
 ## screenshots
 
