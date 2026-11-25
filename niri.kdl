@@ -9,7 +9,7 @@ spawn-at-startup "wl-paste" "--type" "text" "--watch" "cliphist" "store"
 spawn-at-startup "wl-paste" "--type" "image" "--watch" "cliphist" "store"
 
 binds {
-    Mod+D hotkey-overlay-title="apps (wofi)" { spawn-sh "~/.config/octopus/scripts/wofi.sh"; }
+    Mod+D hotkey-overlay-title="apps (rofi)" { spawn-sh "~/.config/octopus/scripts/rofi.sh"; }
     Mod+Space hotkey-overlay-title="spotlight" { spawn "octopus" "toggle" "launcher"; }
     XF86LaunchB hotkey-overlay-title="spotlight" { spawn "octopus" "toggle" "launcher"; }
     Mod+Shift+V hotkey-overlay-title="clipboard" { spawn "octopus" "toggle" "clipboard"; }

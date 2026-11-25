@@ -1,4 +1,4 @@
-//! The list wofi shows on Mod+D: the spotlight's apps, ranked by how often
+//! The list rofi shows on Mod+D: the spotlight's apps, ranked by how often
 //! they are opened from either, so both learn from each other.
 
 use gtk::gio;
@@ -6,7 +6,7 @@ use gtk::prelude::*;
 
 use super::apps::Apps;
 
-/// One line per app for `wofi --dmenu`: `img:<icon file>:text:<name>`.
+/// One line per app for `rofi -dmenu`: `<name>\0icon\x1f<icon file>`.
 pub fn list() -> String {
     let apps = Apps::load();
     let theme = gtk::gdk::Display::default().map(|d| gtk::IconTheme::for_display(&d));
@@ -22,7 +22,7 @@ pub fn list() -> String {
         if icon.is_empty() {
             out.push_str(&format!("{name}\n"));
         } else {
-            out.push_str(&format!("img:{icon}:text:{name}\n"));
+            out.push_str(&format!("{name}\0icon\x1f{icon}\n"));
         }
     }
     out

@@ -426,10 +426,10 @@ impl Shell {
                 self.services.notifications.dnd.set(on);
                 if on { "on" } else { "off" }.to_owned()
             }
-            ["wofi-list"] => crate::launcher::wofi::list(),
-            ["wofi-launch", line] => {
+            ["rofi-list"] => crate::launcher::rofi::list(),
+            ["rofi-launch", line] => {
                 if let Ok(line) = line.parse() {
-                    crate::launcher::wofi::launch(line);
+                    crate::launcher::rofi::launch(line);
                 }
                 String::new()
             }

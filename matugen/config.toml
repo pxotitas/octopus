@@ -23,6 +23,6 @@ output_path = "~/.config/fuzzel/fuzzel.ini"
 input_path = "templates/matuwall.toml"
 output_path = "~/.config/matuwall/config.toml"
 
-[templates.wofi]
-input_path = "templates/wofi.css"
-output_path = "~/.config/octopus/wofi/style.css"
+[templates.rofi]
+input_path = "templates/rofi.rasi"
+output_path = "~/.config/octopus/rofi/theme.rasi"

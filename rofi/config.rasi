@@ -1,0 +1,11 @@
+configuration {
+  show-icons: true;
+  drun-display-format: "{name}";
+  terminal: "foot";
+  hover-select: true;
+  me-select-entry: "";
+  me-accept-entry: "MousePrimary";
+}
+
+@theme "/dev/null"
+@import "theme.rasi"

@@ -44,7 +44,7 @@
     "format": "",
     "icon-size": 0,
     "icon-spacing": 0,
-    "on-click": "~/.config/octopus/scripts/wofi.sh",
+    "on-click": "~/.config/octopus/scripts/rofi.sh",
     "tooltip": false,
     "tooltip-format": ""
   },

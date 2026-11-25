@@ -1,7 +1,7 @@
 mod apps;
 mod calc;
 mod files;
-pub mod wofi;
+pub mod rofi;
 
 use std::cell::{Cell, RefCell};
 use std::f64::consts::TAU;

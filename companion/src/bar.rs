@@ -109,7 +109,7 @@ pub fn waybar_config(bar: &Bar) -> String {
     config.insert("modules-center".into(), Value::Array(names(&bar.center)));
     config.insert("modules-right".into(), Value::Array(names(&bar.bottom)));
 
-    let mut launcher = icon_module("\u{f303}", "", "~/.config/octopus/scripts/wofi.sh");
+    let mut launcher = icon_module("\u{f303}", "", "~/.config/octopus/scripts/rofi.sh");
     launcher["tooltip"] = json!(false);
     config.insert("custom/launcher".into(), launcher);
     config.insert(
