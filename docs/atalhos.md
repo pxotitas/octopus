@@ -5,7 +5,7 @@
 | atalho | faz |
 |---|---|
 | Mod+Space, XF86LaunchB | spotlight |
-| Mod+D | wofi (apps) |
+| Mod+D | rofi (apps) |
 | Mod+Shift+D | fuzzel (vem do teu config.kdl, não do octopus) |
 | Mod+C | central de controle |
 | Mod+A | dash |
