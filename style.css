@@ -98,6 +98,7 @@ code { font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 0.9em;
   font-size: 19px;
 }
 
+.brand picture { display: flex; }
 .brand img { transition: transform 560ms var(--spring); }
 .brand:hover img { transform: rotate(22.5deg); }
 
@@ -189,7 +190,7 @@ h2 { font-size: 28px; font-weight: 600; margin: 64px 0 8px; letter-spacing: -0.3
 .shape.minutes svg { fill: var(--tertiary-container); }
 .shape.minutes span { color: var(--on-tertiary-container); }
 
-.stage { margin: 16px 0 0; }
+.stage { max-width: 860px; margin: 24px auto 0; }
 
 .stage video, .split video, .tour {
   width: 100%;
@@ -197,6 +198,8 @@ h2 { font-size: 28px; font-weight: 600; margin: 64px 0 8px; letter-spacing: -0.3
   background: var(--surface-high);
   box-shadow: 0 24px 60px -28px rgba(var(--shadow), 0.45);
 }
+
+.tour { max-width: 760px; margin: 0 auto; }
 
 .stage figcaption { color: var(--on-variant); font-size: 14px; text-align: center; margin-top: 12px; }
 
@@ -378,12 +381,12 @@ td { color: var(--on-variant); }
 
 .clips {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 14px;
 }
 
 .clip { margin: 0; }
-.clip video { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; border-radius: 20px; background: var(--surface-high); }
+.clip video { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; border-radius: 16px; background: var(--surface-high); }
 .clip figcaption { padding: 10px 4px 0; color: var(--on-variant); font-size: 14px; }
 .clip strong { color: var(--on-surface); font-weight: 500; margin-right: 4px; }
 

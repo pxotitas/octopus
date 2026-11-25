@@ -1,5 +1,10 @@
 """The shell every page shares: head, navbar and footer, in both languages."""
 
+import hashlib
+import pathlib
+
+ROOT = pathlib.Path(__file__).resolve().parent.parent
+
 SITE = "https://pxotitas.github.io/octopus/"
 REPO = "https://github.com/pxotitas/octopus"
 
@@ -27,6 +32,12 @@ LANGS = {
 SECTIONS = {"docs": "docs/", "media": "media/", "changelog": "changelog/"}
 
 
+def versioned(name):
+    """A content hash in the url, so browsers drop a cached file as soon as it changes."""
+    digest = hashlib.sha1((ROOT / name).read_bytes()).hexdigest()[:8]
+    return f"{name}?v={digest}"
+
+
 def page(lang, path, title, body, other, section=None, scripts=(), base=None):
     """path: where the page is written, from the site root (e.g. "pt/docs/tema.html").
     other: the same page in the other language, from the site root.
@@ -49,7 +60,7 @@ def page(lang, path, title, body, other, section=None, scripts=(), base=None):
         impasto='<a href="https://github.com/andreumassanet/impasto">impasto</a>',
         velatura='<a href="https://github.com/pxdritz1/velatura">velatura</a>',
     )
-    tags = "".join(f'\n<script src="{rel}{s}" defer></script>' for s in scripts)
+    tags = "".join(f'\n<script src="{rel}{versioned(s)}" defer></script>' for s in scripts)
 
     return f"""<!DOCTYPE html>
 <html lang="{t['html']}">
@@ -75,7 +86,7 @@ def page(lang, path, title, body, other, section=None, scripts=(), base=None):
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="{rel}style.css">
+  <link rel="stylesheet" href="{rel}{versioned('style.css')}">
 </head>
 <body>
 <header class="top">
