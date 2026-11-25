@@ -23,12 +23,44 @@ pub enum Kind {
     Cookie12,
     Pentagon,
     Sunny,
+    VerySunny,
+    Flower,
+    Puffy,
+    Burst,
+    SoftBurst,
     /// A rounded square, for pictures that should read as pictures.
     Rounded,
 }
 
+/// How each lobe of the polar wave is drawn.
+#[derive(Clone, Copy, PartialEq)]
+enum Profile {
+    /// Smooth bumps and dips: cookies and clovers.
+    Wave,
+    /// Round bumps meeting in sharp dips: puffy and flower.
+    Puff,
+    /// Sharp tips and sharp dips: burst and sunny.
+    Spike,
+    /// Halfway between a wave and a spike.
+    Soft,
+}
+
+impl Profile {
+    /// The lobe at angle `x`, from -1 (dip) to 1 (tip).
+    fn at(self, x: f64) -> f64 {
+        let wave = x.cos();
+        let spike = 1.0 - 2.0 * wave.clamp(-1.0, 1.0).acos() / std::f64::consts::PI;
+        match self {
+            Profile::Wave => wave,
+            Profile::Puff => 2.0 * (x / 2.0).cos().abs() - 1.0,
+            Profile::Spike => spike,
+            Profile::Soft => (wave + spike) / 2.0,
+        }
+    }
+}
+
 /// The shapes that read as shapes (the circle is the morph's midpoint).
-pub const VARIETY: [Kind; 9] = [
+pub const VARIETY: [Kind; 14] = [
     Kind::Clover4,
     Kind::Clover8,
     Kind::Cookie4,
@@ -38,6 +70,11 @@ pub const VARIETY: [Kind; 9] = [
     Kind::Cookie12,
     Kind::Pentagon,
     Kind::Sunny,
+    Kind::VerySunny,
+    Kind::Flower,
+    Kind::Puffy,
+    Kind::Burst,
+    Kind::SoftBurst,
 ];
 
 /// A random shape other than `not`.
@@ -50,19 +87,24 @@ pub fn random_kind(not: &[Kind]) -> Kind {
 }
 
 impl Kind {
-    fn params(self) -> (f64, f64) {
+    fn params(self) -> (f64, f64, Profile) {
+        use Profile::*;
         match self {
-            Kind::Circle => (0.0, 0.0),
-            Kind::Clover4 => (4.0, 0.16),
-            Kind::Clover8 => (8.0, 0.11),
-            Kind::Cookie4 => (4.0, 0.07),
-            Kind::Cookie6 => (6.0, 0.085),
-            Kind::Cookie7 => (7.0, 0.07),
-            Kind::Cookie9 => (9.0, 0.055),
-            Kind::Cookie12 => (12.0, 0.035),
-            Kind::Pentagon => (5.0, 0.09),
-            Kind::Sunny => (8.0, 0.04),
-            Kind::Rounded => (0.0, 0.0),
+            Kind::Circle | Kind::Rounded => (0.0, 0.0, Wave),
+            Kind::Clover4 => (4.0, 0.16, Wave),
+            Kind::Clover8 => (8.0, 0.11, Wave),
+            Kind::Cookie4 => (4.0, 0.07, Wave),
+            Kind::Cookie6 => (6.0, 0.085, Wave),
+            Kind::Cookie7 => (7.0, 0.07, Wave),
+            Kind::Cookie9 => (9.0, 0.055, Wave),
+            Kind::Cookie12 => (12.0, 0.035, Wave),
+            Kind::Pentagon => (5.0, 0.09, Wave),
+            Kind::Sunny => (8.0, 0.05, Soft),
+            Kind::VerySunny => (8.0, 0.11, Spike),
+            Kind::Flower => (8.0, 0.2, Puff),
+            Kind::Puffy => (10.0, 0.06, Puff),
+            Kind::Burst => (12.0, 0.17, Spike),
+            Kind::SoftBurst => (10.0, 0.1, Soft),
         }
     }
 }
@@ -134,8 +176,8 @@ mod imp {
                 ));
                 builder.to_path()
             } else {
-                let (lobes, depth) = self.kind.get().params();
-                outline(w, h, lobes, depth * self.depth.get(), self.angle.get())
+                let (lobes, depth, profile) = self.kind.get().params();
+                outline(w, h, lobes, depth * self.depth.get(), self.angle.get(), profile)
             };
             if self.fill.get() {
                 snapshot.append_fill(&path, gsk::FillRule::Winding, &widget.color());
@@ -148,7 +190,7 @@ mod imp {
         }
     }
 
-    fn outline(w: f32, h: f32, lobes: f64, depth: f64, angle: f64) -> gsk::Path {
+    pub(super) fn outline(w: f32, h: f32, lobes: f64, depth: f64, angle: f64, profile: Profile) -> gsk::Path {
         let (cx, cy) = (w as f64 / 2.0, h as f64 / 2.0);
         let radius = cx.min(cy);
         let builder = gsk::PathBuilder::new();
@@ -156,10 +198,10 @@ mod imp {
             builder.add_circle(&graphene::Point::new(cx as f32, cy as f32), radius as f32);
             return builder.to_path();
         }
-        const STEPS: usize = 144;
+        const STEPS: usize = 240;
         for i in 0..STEPS {
             let t = i as f64 / STEPS as f64 * std::f64::consts::TAU;
-            let r = radius * (1.0 + depth * (lobes * (t + angle)).cos()) / (1.0 + depth);
+            let r = radius * (1.0 + depth * profile.at(lobes * (t + angle))) / (1.0 + depth);
             let (x, y) = ((cx + r * t.cos()) as f32, (cy + r * t.sin()) as f32);
             if i == 0 {
                 builder.move_to(x, y);
@@ -176,6 +218,27 @@ glib::wrapper! {
     pub struct Shape(ObjectSubclass<imp::Shape>)
         @extends gtk::Widget,
         @implements gtk::Accessible, gtk::Buildable, gtk::ConstraintTarget;
+}
+
+/// A list row's leading icon in a small shape: a clover when `on`.
+pub fn badge(icon: &str, on: bool) -> Shape {
+    let shape = Shape::new(
+        if on { Kind::Clover4 } else { Kind::Cookie4 },
+        34,
+        true,
+        Some(&crate::icons::icon(icon)),
+    );
+    shape.add_css_class("row-badge");
+    if on {
+        shape.add_css_class("on");
+    }
+    shape
+}
+
+/// The outline of `kind` in a `w`×`h` box, for widgets that draw it themselves.
+pub fn path(kind: Kind, w: f32, h: f32, angle: f64) -> gsk::Path {
+    let (lobes, depth, profile) = kind.params();
+    imp::outline(w, h, lobes, depth, angle, profile)
 }
 
 impl Shape {
@@ -243,6 +306,25 @@ impl Shape {
 
     pub fn kind(&self) -> Kind {
         self.imp().kind.get()
+    }
+
+    /// Becomes `hover` while the pointer is over `target`, and back after.
+    pub fn morph_on_hover(&self, target: &impl IsA<gtk::Widget>, hover: Kind) {
+        let rest = self.kind();
+        let motion = gtk::EventControllerMotion::new();
+        let weak = self.downgrade();
+        motion.connect_enter(move |_, _, _| {
+            if let Some(s) = weak.upgrade() {
+                s.morph(hover);
+            }
+        });
+        let weak = self.downgrade();
+        motion.connect_leave(move |_| {
+            if let Some(s) = weak.upgrade() {
+                s.morph(rest);
+            }
+        });
+        target.add_controller(motion);
     }
 
     /// Mahoraga's wheel: clicks round by a random number of notches, either
