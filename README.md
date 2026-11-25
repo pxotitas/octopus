@@ -1,9 +1,22 @@
-# octopus
+<p align="center">
+  <img src="assets/logo.svg" width="128" alt="logo do octopus">
+</p>
 
-[![repo no github](https://img.shields.io/badge/github-pxotitas%2Foctopus-blue?logo=github)](https://github.com/pxotitas/octopus)
-[![licença](https://img.shields.io/badge/licen%C3%A7a-gpl--3.0--or--later-blue)](https://github.com/pxotitas/octopus/blob/main/LICENSE)
-[![rust](https://img.shields.io/badge/feito%20com-rust-orange?logo=rust)](https://github.com/pxotitas/octopus)
-[![estrelas no github](https://img.shields.io/github/stars/pxotitas/octopus?label=estrelas&logo=github&color=yellow&style=flat)](https://github.com/pxotitas/octopus/stargazers)
+<h1 align="center">octopus</h1>
+
+<p align="center">
+  <a href="https://pxotitas.github.io/octopus/pt/">site</a> ·
+  <a href="https://pxotitas.github.io/octopus/pt/docs/">docs</a> ·
+  <a href="https://pxotitas.github.io/octopus/pt/media/">screenshots e vídeos</a> ·
+  <a href="https://pxotitas.github.io/octopus/pt/changelog/">changelog</a>
+</p>
+
+<p align="center">
+  <a href="https://github.com/pxotitas/octopus"><img src="https://img.shields.io/badge/github-pxotitas%2Foctopus-blue?logo=github" alt="repo no github"></a>
+  <a href="https://github.com/pxotitas/octopus/blob/main/LICENSE"><img src="https://img.shields.io/badge/licen%C3%A7a-gpl--3.0--or--later-blue" alt="licença"></a>
+  <a href="https://github.com/pxotitas/octopus"><img src="https://img.shields.io/badge/feito%20com-rust-orange?logo=rust" alt="rust"></a>
+  <a href="https://github.com/pxotitas/octopus/stargazers"><img src="https://img.shields.io/github/stars/pxotitas/octopus?label=estrelas&logo=github&color=yellow&style=flat" alt="estrelas no github"></a>
+</p>
 
 shell m3 cozy pro niri: uma barra vertical minimalista na waybar, com tudo
 que é maior (central de controle, dash, menus, notificações) num companion
@@ -18,12 +31,79 @@ português ou inglês. as cores saem do wallpaper via matugen.
 
 ## showcase
 
-<a href="screenshots/showcase.mp4">
-  <img src="screenshots/showcase.webp" alt="octopus no niri, com o dash aberto" width="100%">
-</a>
+o vídeo inteiro, com som, tá no [site](https://pxotitas.github.io/octopus/pt/media/). aqui ele tá cortado em clipes curtos; clica num pra abrir.
 
-<sub>clica pra ver o vídeo: dash, letras, clima, wallpapers, central de
-controle, tela de bloqueio, spotlight, emoji e configurações.</sub>
+<details>
+<summary><b>dash</b>: visão geral, música e a letra sincronizada</summary>
+<br>
+
+<img src="screenshots/clips/dash.webp" alt="dash" width="100%">
+
+</details>
+
+<details>
+<summary><b>clima e wallpapers</b>: a previsão, depois o seletor de wallpaper</summary>
+<br>
+
+<img src="screenshots/clips/weather.webp" alt="clima e wallpapers" width="100%">
+
+</details>
+
+<details>
+<summary><b>central de controle</b>: atalhos, sliders e o player</summary>
+<br>
+
+<img src="screenshots/clips/control-center.webp" alt="central de controle" width="100%">
+
+</details>
+
+<details>
+<summary><b>tela de bloqueio</b>: shapes que mudam a cada tecla, com a letra sendo cantada</summary>
+<br>
+
+<img src="screenshots/clips/lock.webp" alt="tela de bloqueio" width="100%">
+
+</details>
+
+<details>
+<summary><b>launchers</b>: o rofi e o spotlight</summary>
+<br>
+
+<img src="screenshots/clips/launchers.webp" alt="launchers" width="100%">
+
+</details>
+
+<details>
+<summary><b>emoji</b>: o seletor, com busca</summary>
+<br>
+
+<img src="screenshots/clips/emoji.webp" alt="emoji" width="100%">
+
+</details>
+
+<details>
+<summary><b>configurações</b>: cores, idioma, barra, widgets e dock</summary>
+<br>
+
+<img src="screenshots/clips/settings.webp" alt="configurações" width="100%">
+
+</details>
+
+<details>
+<summary><b>conta no spotlight</b>: digitando uma soma com <code>=</code></summary>
+<br>
+
+<img src="screenshots/clips/calculator.webp" alt="conta no spotlight" width="100%">
+
+</details>
+
+<details>
+<summary><b>paleta do wallpaper</b>: um wallpaper novo repinta o shell inteiro</summary>
+<br>
+
+<img src="screenshots/clips/palette.webp" alt="paleta do wallpaper" width="100%">
+
+</details>
 
 ## screenshots
 
