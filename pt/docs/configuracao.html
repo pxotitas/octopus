@@ -46,7 +46,7 @@
 <main>
 <div class="docs">
   <aside class="docs-nav">
-    <ul><li><a href="./">visão geral</a></li><li><a href="estrutura.html">estrutura</a></li><li><a href="atalhos.html">atalhos e comandos</a></li><li><a href="configuracao.html" aria-current="page">configuração</a><ul class="toc"><li><a href="#quando-vale">quando vale</a></li><li><a href="#css-pessoal">css pessoal</a></li><li><a href="#dock">dock</a></li></ul></li><li><a href="tema.html">tema</a></li><li><a href="problemas.html">quando algo quebra</a></li></ul>
+    <ul><li><a href="./">visão geral</a></li><li><a href="estrutura.html">estrutura</a></li><li><a href="atalhos.html">atalhos e comandos</a></li><li><a href="configuracao.html" aria-current="page">configuração</a><ul class="toc"><li><a href="#quando-vale">quando vale</a></li><li><a href="#css-pessoal">css pessoal</a></li><li><a href="#dock">dock</a></li><li><a href="#widgets-de-desktop">widgets de desktop</a></li></ul></li><li><a href="tema.html">tema</a></li><li><a href="problemas.html">quando algo quebra</a></li></ul>
   </aside>
   <article class="doc">
     <h1>configuração</h1>
@@ -69,7 +69,13 @@ size = 44                  # tamanho dos ícones, em pixels
 magnify = true             # os ícones crescem embaixo do ponteiro
 
 [weather]
-place = &quot;&quot;                 # vazio usa o ip
+place = &quot;&quot;                 # uma cidade, ou &quot;lat,lon&quot;; vazio usa o ip
+
+[desktop]
+enabled = true             # widgets embaixo das janelas
+widgets = [&quot;weather&quot;, &quot;github&quot;]
+position = &quot;top-right&quot;     # ou top-left, bottom-right, bottom-left
+github = &quot;&quot;                # um usuário do github, pro widget de commits
 
 [notifications]
 timeout_ms = 5000
@@ -84,6 +90,10 @@ lyrics = true</code></pre>
 <h2 id="dock">dock</h2>
 <ul><li><strong>fixa</strong>: ocupa o espaço dela, as janelas não passam por baixo</li><li><strong>esconde sozinha</strong>: some e volta quando o ponteiro encosta na borda de baixo</li><li><strong>inteligente</strong>: só sai da frente quando uma janela do workspace fica embaixo dela</li></ul>
 <p>clique: abre, foca ou alterna entre as janelas do app. meio: janela nova. direito: menu com as janelas, fixar e fechar.</p>
+<h2 id="widgets-de-desktop">widgets de desktop</h2>
+<p>uma camada embaixo das janelas, então eles aparecem onde nenhuma janela cobre:</p>
+<ul><li><strong>weather</strong>: o clima agora num cookie grande, e os próximos quatro dias. um clique abre a aba de clima.</li><li><strong>github</strong>: os últimos commits de <code>github</code>, pela busca pública de commits do github (sem token). um clique abre o commit.</li></ul>
+<p>mudar o <code>[desktop]</code> nas configurações reinicia o octopus sozinho.</p>
     <p class="edit"><a href="https://github.com/pxotitas/octopus/blob/pt-br/docs/configuracao.md">editar essa página no github</a></p>
   </article>
 </div>

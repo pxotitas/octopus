@@ -46,7 +46,7 @@
 <main>
 <div class="docs">
   <aside class="docs-nav">
-    <ul><li><a href="./">visão geral</a></li><li><a href="estrutura.html">estrutura</a></li><li><a href="atalhos.html" aria-current="page">atalhos e comandos</a><ul class="toc"><li><a href="#niri-niri-kdl">niri (niri.kdl)</a></li><li><a href="#spotlight">spotlight</a></li><li><a href="#comandos">comandos</a></li></ul></li><li><a href="configuracao.html">configuração</a></li><li><a href="tema.html">tema</a></li><li><a href="problemas.html">quando algo quebra</a></li></ul>
+    <ul><li><a href="./">visão geral</a></li><li><a href="estrutura.html">estrutura</a></li><li><a href="atalhos.html" aria-current="page">atalhos e comandos</a><ul class="toc"><li><a href="#niri-niri-kdl">niri (niri.kdl)</a></li><li><a href="#spotlight">spotlight</a></li><li><a href="#clima">clima</a></li><li><a href="#comandos">comandos</a></li></ul></li><li><a href="configuracao.html">configuração</a></li><li><a href="tema.html">tema</a></li><li><a href="problemas.html">quando algo quebra</a></li></ul>
   </aside>
   <article class="doc">
     <h1>atalhos e comandos</h1>
@@ -54,11 +54,16 @@
 <div class="table"><table><thead><tr><th>atalho</th><th>faz</th></tr></thead><tbody><tr><td>Mod+Space, XF86LaunchB</td><td>spotlight</td></tr><tr><td>Mod+D</td><td>rofi (apps)</td></tr><tr><td>Mod+Shift+D</td><td>fuzzel (vem do teu config.kdl, não do octopus)</td></tr><tr><td>Mod+C</td><td>central de controle</td></tr><tr><td>Mod+A</td><td>dash</td></tr><tr><td>Mod+Shift+V</td><td>clipboard</td></tr><tr><td>Mod+Period</td><td>emoji</td></tr><tr><td>Mod+Shift+E</td><td>energia</td></tr><tr><td>Mod+Comma</td><td>configurações</td></tr><tr><td>Mod+L</td><td>bloquear</td></tr><tr><td>Mod+Shift+W</td><td>matuwall</td></tr></tbody></table></div>
 <h2 id="spotlight">spotlight</h2>
 <ul><li>digitar: apps e as ações deles (ex. "nova janela privativa")</li><li>uma conta (<code>2*(3+4)</code>, <code>sqrt 16</code>, <code>1,5 x 2</code>): calculadora, enter copia</li><li><code>/nome</code>: arquivos na pasta pessoal (usa o <code>fd</code>)</li><li><code>&gt;</code>: bloquear, suspender, sair, reiniciar, desligar</li></ul>
+<h2 id="clima">clima</h2>
+<p>a linha no topo da aba de clima (depois da setinha) aceita perguntas, em português ou inglês:</p>
+<ul><li><code>amanhã</code>, <code>ontem</code>, <code>hoje</code>, <code>agora</code>, <code>depois de amanhã</code>, <code>anteontem</code></li><li>um dia da semana: <code>quinta</code>, <code>próxima quinta</code>, <code>sexta passada</code></li><li>dias a partir de hoje: <code>+3</code>, <code>-2</code>, <code>em 4 dias</code>, <code>3 dias atrás</code></li><li>uma data: <code>28/11</code>, <code>2026-12-01</code>, <code>30 de novembro</code></li><li><code>semana</code>, <code>próxima semana</code>, <code>semana passada</code>, <code>fim de semana</code></li></ul>
+<p>vai de uma semana atrás até duas pra frente. esc volta pro agora.</p>
 <h2 id="comandos">comandos</h2>
 <pre><code>octopus                    o daemon (o niri inicia sozinho)
 octopus toggle &lt;painel&gt;    control-center, dash, wifi, bluetooth, audio,
                            tray, clipboard, emoji, power, launcher
 octopus open wallpapers    dash na aba de wallpapers
+octopus open weather [p]   a aba de clima, perguntando p (amanhã, semana…)
 octopus settings           janela de configurações
 octopus lock               bloquear
 octopus close              fecha qualquer painel

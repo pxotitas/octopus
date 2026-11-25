@@ -46,7 +46,7 @@
 <main>
 <div class="docs">
   <aside class="docs-nav">
-    <ul><li><a href="./">overview</a></li><li><a href="structure.html">structure</a></li><li><a href="shortcuts.html">shortcuts and commands</a></li><li><a href="configuration.html" aria-current="page">configuration</a><ul class="toc"><li><a href="#when-it-applies">when it applies</a></li><li><a href="#your-own-css">your own css</a></li><li><a href="#dock">dock</a></li></ul></li><li><a href="theme.html">theme</a></li><li><a href="troubleshooting.html">when something breaks</a></li></ul>
+    <ul><li><a href="./">overview</a></li><li><a href="structure.html">structure</a></li><li><a href="shortcuts.html">shortcuts and commands</a></li><li><a href="configuration.html" aria-current="page">configuration</a><ul class="toc"><li><a href="#when-it-applies">when it applies</a></li><li><a href="#your-own-css">your own css</a></li><li><a href="#dock">dock</a></li><li><a href="#desktop-widgets">desktop widgets</a></li></ul></li><li><a href="theme.html">theme</a></li><li><a href="troubleshooting.html">when something breaks</a></li></ul>
   </aside>
   <article class="doc">
     <h1>configuration</h1>
@@ -69,7 +69,13 @@ size = 44                  # icon size, in pixels
 magnify = true             # icons swell under the pointer
 
 [weather]
-place = &quot;&quot;                 # empty uses your ip
+place = &quot;&quot;                 # a city, or &quot;lat,lon&quot;; empty uses your ip
+
+[desktop]
+enabled = true             # widgets under the windows
+widgets = [&quot;weather&quot;, &quot;github&quot;]
+position = &quot;top-right&quot;     # or top-left, bottom-right, bottom-left
+github = &quot;&quot;                # a github user, for the commits widget
 
 [notifications]
 timeout_ms = 5000
@@ -84,6 +90,10 @@ lyrics = true</code></pre>
 <h2 id="dock">dock</h2>
 <ul><li><strong>fixed</strong>: keeps its own space, windows don't go under it</li><li><strong>autohide</strong>: goes away and comes back when the pointer touches the bottom edge</li><li><strong>smart</strong>: only steps aside when a window on the workspace sits under it</li></ul>
 <p>click: opens, focuses or cycles through the app's windows. middle: new window. right: a menu with the windows, pin and close.</p>
+<h2 id="desktop-widgets">desktop widgets</h2>
+<p>a layer under the windows, so they show wherever no window covers them:</p>
+<ul><li><strong>weather</strong>: now in a big cookie, and the next four days. a click opens the weather tab.</li><li><strong>github</strong>: the latest commits of <code>github</code>, from github's public commit search (no token). a click opens the commit.</li></ul>
+<p>changing <code>[desktop]</code> in the settings restarts octopus on its own.</p>
     <p class="edit"><a href="https://github.com/pxotitas/octopus/blob/eng/docs/configuration.md">edit this page on github</a></p>
   </article>
 </div>

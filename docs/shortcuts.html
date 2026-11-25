@@ -46,7 +46,7 @@
 <main>
 <div class="docs">
   <aside class="docs-nav">
-    <ul><li><a href="./">overview</a></li><li><a href="structure.html">structure</a></li><li><a href="shortcuts.html" aria-current="page">shortcuts and commands</a><ul class="toc"><li><a href="#niri-niri-kdl">niri (niri.kdl)</a></li><li><a href="#spotlight">spotlight</a></li><li><a href="#commands">commands</a></li></ul></li><li><a href="configuration.html">configuration</a></li><li><a href="theme.html">theme</a></li><li><a href="troubleshooting.html">when something breaks</a></li></ul>
+    <ul><li><a href="./">overview</a></li><li><a href="structure.html">structure</a></li><li><a href="shortcuts.html" aria-current="page">shortcuts and commands</a><ul class="toc"><li><a href="#niri-niri-kdl">niri (niri.kdl)</a></li><li><a href="#spotlight">spotlight</a></li><li><a href="#weather">weather</a></li><li><a href="#commands">commands</a></li></ul></li><li><a href="configuration.html">configuration</a></li><li><a href="theme.html">theme</a></li><li><a href="troubleshooting.html">when something breaks</a></li></ul>
   </aside>
   <article class="doc">
     <h1>shortcuts and commands</h1>
@@ -54,11 +54,16 @@
 <div class="table"><table><thead><tr><th>shortcut</th><th>does</th></tr></thead><tbody><tr><td>Mod+Space, XF86LaunchB</td><td>spotlight</td></tr><tr><td>Mod+D</td><td>rofi (apps)</td></tr><tr><td>Mod+Shift+D</td><td>fuzzel (comes from your config.kdl, not from octopus)</td></tr><tr><td>Mod+C</td><td>control center</td></tr><tr><td>Mod+A</td><td>dash</td></tr><tr><td>Mod+Shift+V</td><td>clipboard</td></tr><tr><td>Mod+Period</td><td>emoji</td></tr><tr><td>Mod+Shift+E</td><td>power</td></tr><tr><td>Mod+Comma</td><td>settings</td></tr><tr><td>Mod+L</td><td>lock</td></tr><tr><td>Mod+Shift+W</td><td>matuwall</td></tr></tbody></table></div>
 <h2 id="spotlight">spotlight</h2>
 <ul><li>type: apps and their actions (e.g. "new private window")</li><li>a sum (<code>2*(3+4)</code>, <code>sqrt 16</code>, <code>1,5 x 2</code>): calculator, enter copies it</li><li><code>/name</code>: files in your home folder (uses <code>fd</code>)</li><li><code>&gt;</code>: lock, suspend, log out, restart, shut down</li></ul>
+<h2 id="weather">weather</h2>
+<p>the line at the top of the weather tab (after the chevron) takes questions, in portuguese or english:</p>
+<ul><li><code>tomorrow</code>, <code>yesterday</code>, <code>today</code>, <code>now</code>, <code>day after tomorrow</code></li><li>a weekday: <code>thursday</code>, <code>next thursday</code>, <code>last friday</code></li><li>days from today: <code>+3</code>, <code>-2</code>, <code>in 4 days</code>, <code>2 days ago</code></li><li>a date: <code>11/28</code> (day first: <code>28/11</code>), <code>2026-12-01</code>, <code>nov 30</code></li><li><code>week</code>, <code>next week</code>, <code>last week</code>, <code>weekend</code></li></ul>
+<p>it reaches a week back and two weeks ahead. escape goes back to now.</p>
 <h2 id="commands">commands</h2>
 <pre><code>octopus                    the daemon (niri starts it)
 octopus toggle &lt;panel&gt;     control-center, dash, wifi, bluetooth, audio,
                            tray, clipboard, emoji, power, launcher
 octopus open wallpapers    the dash on its wallpapers tab
+octopus open weather [q]   the weather tab, asking it q (tomorrow, week…)
 octopus settings           the settings window
 octopus lock               lock
 octopus close              closes any panel
