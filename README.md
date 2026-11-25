@@ -1,9 +1,9 @@
 # octopus
 
-[![GitHub repo](https://img.shields.io/badge/GitHub-pxotitas%2Foctopus-blue?logo=github)](https://github.com/pxotitas/octopus)
-[![License](https://img.shields.io/github/license/pxotitas/octopus)](https://github.com/pxotitas/octopus/blob/main/LICENSE)
-[![Rust](https://img.shields.io/badge/Made%20with-Rust-orange?logo=rust)](https://github.com/pxotitas/octopus)
-[![GitHub stars](https://img.shields.io/github/stars/pxotitas/octopus?style=social)](https://github.com/pxotitas/octopus/stargazers)
+[![github repo](https://img.shields.io/badge/github-pxotitas%2Foctopus-blue?logo=github)](https://github.com/pxotitas/octopus)
+[![license](https://img.shields.io/badge/license-gpl--3.0--or--later-blue)](https://github.com/pxotitas/octopus/blob/main/LICENSE)
+[![rust](https://img.shields.io/badge/made%20with-rust-orange?logo=rust)](https://github.com/pxotitas/octopus)
+[![github stars](https://img.shields.io/github/stars/pxotitas/octopus?label=stars&logo=github&color=yellow&style=flat)](https://github.com/pxotitas/octopus/stargazers)
 
 a cozy m3 shell for niri: a minimal vertical bar on waybar, with everything
 bigger (control center, dash, menus, notifications) in a companion written
@@ -16,14 +16,129 @@ english. the colors come from the wallpaper through matugen.
 > [`main`](https://github.com/pxotitas/octopus/tree/main); in portuguese, on
 > [`pt-br`](https://github.com/pxotitas/octopus/tree/pt-br).
 
+## showcase
+
+<a href="screenshots/showcase.mp4">
+  <img src="screenshots/showcase.webp" alt="octopus on niri, with the dash open" width="100%">
+</a>
+
+<sub>click to watch the video: the dash, lyrics, weather, wallpapers, control
+center, lock screen, spotlight, emoji and settings.</sub>
+
+## screenshots
+
+all of them are in [`screenshots/`](screenshots). click a group to open it.
+
+<details>
+<summary><b>desktop</b>: the bar, the dock, notifications and the osd</summary>
+<br>
+
+the vertical bar on the left and the dock at the bottom.
+
+<img src="screenshots/desktop.webp" alt="desktop with the bar and the dock" width="100%">
+
+a notification, with the app's icon.
+
+<img src="screenshots/notification.webp" alt="a notification" width="100%">
+
+the osd, for volume and brightness.
+
+<img src="screenshots/osd.webp" alt="volume osd" width="100%">
+
+</details>
+
+<details>
+<summary><b>control center</b>: quick toggles, sliders, player and notifications</summary>
+<br>
+
+<img src="screenshots/control-center.webp" alt="control center" width="100%">
+
+</details>
+
+<details>
+<summary><b>dash</b>: clock, calendar, weather, player and wallpapers</summary>
+<br>
+
+the overview, opened from the clock on the bar.
+
+<img src="screenshots/dash.webp" alt="dash overview" width="100%">
+
+the wallpapers tab; picking one also makes the palette.
+
+<img src="screenshots/wallpapers.webp" alt="wallpaper picker in the dash" width="100%">
+
+</details>
+
+<details>
+<summary><b>menus</b>: wi-fi, bluetooth, sound, tray and power</summary>
+<br>
+
+wi-fi
+
+<img src="screenshots/wifi.webp" alt="wi-fi menu" width="100%">
+
+bluetooth
+
+<img src="screenshots/bluetooth.webp" alt="bluetooth menu" width="100%">
+
+sound, with output, microphone and devices
+
+<img src="screenshots/audio.webp" alt="sound menu" width="100%">
+
+tray
+
+<img src="screenshots/tray.webp" alt="tray menu" width="100%">
+
+power
+
+<img src="screenshots/power.webp" alt="power menu" width="100%">
+
+</details>
+
+<details>
+<summary><b>launchers</b>: the spotlight and rofi</summary>
+<br>
+
+the spotlight (mod+space): apps, `=` for math, `/` for files and `>` for power.
+
+<img src="screenshots/launcher.webp" alt="spotlight" width="100%">
+
+rofi (mod+d), with the apps ranked by use.
+
+<img src="screenshots/rofi.webp" alt="rofi" width="100%">
+
+</details>
+
+<details>
+<summary><b>tools</b>: clipboard and emoji</summary>
+<br>
+
+clipboard (mod+shift+v)
+
+<img src="screenshots/clipboard.webp" alt="clipboard history" width="100%">
+
+emoji (mod+.)
+
+<img src="screenshots/emoji.webp" alt="emoji picker" width="100%">
+
+</details>
+
+<details>
+<summary><b>settings</b>: colors, language, bar, widgets and dock</summary>
+<br>
+
+<img src="screenshots/settings.webp" alt="settings window" width="100%">
+
+</details>
+
 ## pieces
 
 | part | what |
 |---|---|
 | `waybar/` | the vertical bar: logo, workspaces, clock, tray (with the animated arrow from `tray-arrow.c`), a battery pill with its percentage and the group with a drawer |
 | `companion/` | `octopus`, the daemon: control center, dash (with a wallpaper picker), spotlight, menus (wi-fi, bluetooth, sound, tray, clipboard, emoji, power), dock, settings, notifications, osd and the lock screen |
-| `scripts/` | theme, battery, weather, lyrics, emoji, wofi and matuwall |
-| `matugen/` | color templates for the companion, waybar, fuzzel, wofi and matuwall |
+| `scripts/` | theme, battery, weather, lyrics, emoji, rofi and matuwall |
+| `matugen/` | color templates for the companion, waybar, fuzzel, rofi and matuwall |
 | `niri.kdl` | autostart, shortcuts and layer rules, included from niri's config |
 
 more in [`docs/`](docs/README.md).
@@ -32,7 +147,7 @@ more in [`docs/`](docs/README.md).
 
 needs: `pam waybar matugen matuwall awww cliphist wl-clipboard wtype
 playerctl cava brightnessctl networkmanager bluez-utils libpulse python
-unicode-emoji unicode-cldr fd gcc wofi gtk3 gtk4 gtk4-layer-shell
+unicode-emoji unicode-cldr fd gcc rofi gtk3 gtk4 gtk4-layer-shell
 ttf-material-symbols-variable rust`.
 
 the repo lives in `~/.config/octopus` itself:
@@ -79,4 +194,4 @@ css, make a `~/.config/octopus/style.css`; it reloads on its own.
 
 gpl-3.0-or-later. some parts come from [impasto](https://github.com/andreumassanet/impasto)
 and [velatura](https://github.com/pxdritz1/velatura); see
-[`NOTICE.md`](https://github.com/pxotitas/octopus/blob/main/NOTICE.md) on main.
+[`notice.md`](https://github.com/pxotitas/octopus/blob/main/NOTICE.md) on main.
