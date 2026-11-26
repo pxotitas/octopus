@@ -11,7 +11,7 @@ uma árvore na esquerda: cinco categorias grandes, cada uma com seus galhos.
 - **aparência**: cores (modo, estilo da paleta, contraste) e idioma
 - **barra**: o editor, presets, forma e ancoragem
 - **painéis**: dash, notificações, clima, música e calendário
-- **área de trabalho**: widgets, contribuições e a dock
+- **área de trabalho**: widgets (com as opções de cada um) e a dock
 - **sistema**: tela de bloqueio e sobre
 
 `octopus settings bar/editor` (ou só `octopus settings bar`) abre direto numa
@@ -139,6 +139,34 @@ widgets = ["weather", "contributions"]  # também clock, media, calendar, agenda
                                         # system, battery, note, photo
 github = ""                # um usuário do github, pro calendário de contribuições
 contributions_colors = "github"  # ou "theme", a cor do wallpaper
+card = "surface"           # a cor dos cards: surface, tonal, primary, none
+corners = 32               # de 0 a 48
+snap = 0                   # uma grade pra encaixar ao organizar, em px; 0 é solto
+
+[desktop.clock]
+face = "analog"            # ou "digital", horas sobre minutos
+seconds = true             # a onda em volta, no analógico
+hours = 24                 # ou 12, no digital
+
+[desktop.weather]
+days = 4                   # os próximos dias embaixo, de 0 a 6
+details = true             # o lugar e a sensação térmica
+
+[desktop.agenda]
+count = 6
+
+[desktop.system]
+meters = ["cpu", "memory", "disk"]
+
+[desktop.battery]
+time = true                # quanto falta pra encher ou acabar
+
+[desktop.note]
+size = 15                  # o texto, em px
+
+[desktop.photo]
+fit = "cover"              # ou "contain", a foto inteira
+shuffle = 0                # minutos entre fotos da mesma pasta; 0 fica numa só
 ```
 
 ## quando vale
@@ -187,14 +215,18 @@ uma camada embaixo das janelas, então eles aparecem onde nenhuma janela cobre:
 - **contributions**: o calendário do perfil de `github`, os quadradinhos verdes, com o total do
   ano e a sequência atual. passe o mouse num quadrado pra ver o dia. mostra quantas semanas
   couberem na largura e atualiza a cada meia hora (sem token).
-- **clock**: analógico, num cookie.
+- **clock**: analógico ou digital, num cookie.
 - **media**: o que está tocando, com os controles.
 - **calendar**: o mês inteiro, com os seus eventos.
 - **agenda**: o que vem por aí nas suas agendas.
 - **system**: processador, memória e disco, em barras.
 - **battery**: uma pílula grande com o raio, e quanto falta pra encher ou acabar.
 - **note**: uma nota que se salva enquanto você digita.
-- **photo**: uma foto sua, preenchendo o card; o botão ao passar o mouse troca ela.
+- **photo**: uma foto sua, preenchendo o card ou inteira; o botão ao passar o mouse
+  troca ela, e ela pode passar sozinha pelas fotos da pasta.
+
+em **área de trabalho → widgets**, a cor, os cantos e a grade dos cards ficam
+no topo; o ⚙ de cada widget abre as opções dele embaixo.
 
 eles ficam parados até você organizar: clique direito na área de trabalho e
 escolha **organizar widgets** (ou `octopus desktop arrange`). a área de
