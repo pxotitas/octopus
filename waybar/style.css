@@ -83,6 +83,58 @@ tooltip label {
   color: @error;
 }
 
+/* the extra modules from the settings' editor: an icon, the value under it */
+
+#cpu,
+#memory,
+#temperature,
+#backlight,
+#wireplumber.bar {
+  font-family: "Rubik", sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  color: @on_surface_variant;
+  padding: 6px 0;
+  border-radius: 12px;
+  transition: background 180ms ease, color 180ms ease;
+}
+
+#temperature.critical {
+  color: @error;
+}
+
+#idle_inhibitor,
+#mpris,
+#custom-notifications,
+#custom-power.bar {
+  font-family: "Material Symbols Rounded";
+  font-size: 16px;
+  color: @on_surface;
+  padding: 6px 0;
+  border-radius: 12px;
+  transition: background 180ms ease, color 180ms ease;
+}
+
+#idle_inhibitor.activated {
+  color: @primary;
+}
+
+#custom-power.bar {
+  color: @error;
+}
+
+#cpu:hover,
+#memory:hover,
+#temperature:hover,
+#backlight:hover,
+#wireplumber.bar:hover,
+#idle_inhibitor:hover,
+#mpris:hover,
+#custom-notifications:hover,
+#custom-power.bar:hover {
+  background: @surface_container_highest;
+}
+
 /* workspaces: dots, the focused one stretched into a pill */
 
 #workspaces {
