@@ -252,6 +252,28 @@ levelbar block.empty {
   color: @error;
 }
 
+.cc-settings {
+  padding: 0;
+  background: none;
+}
+
+.cc-settings shape {
+  color: @surface_container_highest;
+  transition: color 180ms ease;
+}
+
+.cc-settings:hover shape {
+  color: @secondary_container;
+}
+
+.cc-settings .icon {
+  color: @on_surface_variant;
+}
+
+window.octopus-caffeine {
+  background: none;
+}
+
 .tile {
   background: @surface_container_high;
   border-radius: 20px;
@@ -2991,4 +3013,27 @@ togglebutton.widget-tune:checked {
 
 .widget-options > .settings-item {
   background: none;
+}
+
+/* settings: lists turned on and ordered */
+
+.settings-item.off .settings-item-title {
+  color: @on_surface_variant;
+}
+
+button.order-step {
+  min-width: 32px;
+  min-height: 32px;
+  padding: 0;
+  border-radius: 999px;
+  background: none;
+  color: @on_surface_variant;
+}
+
+button.order-step:hover {
+  background: alpha(@on_surface, 0.08);
+}
+
+button.order-step:disabled {
+  opacity: 0.3;
 }

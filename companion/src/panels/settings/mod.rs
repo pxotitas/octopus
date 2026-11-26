@@ -12,9 +12,11 @@ mod bar_presets;
 mod bar_preview;
 mod bar_shape;
 mod calendar;
+mod control_center;
 mod desktop;
 mod desktop_options;
 mod look;
+mod ordered;
 mod panels;
 mod rows;
 mod system;
@@ -67,6 +69,7 @@ pub const MAJORS: [Major; 5] = [
         shape: Kind::Cookie9,
         categories: &[
             category("dash", "dash", "o que abre no relógio"),
+            category("control-center", "central de controle", "partes, botões, sliders e cafeína"),
             category("notifications", "notificações", "quanto tempo e onde aparecem"),
             category("weather", "clima", "onde e em que unidade"),
             category("calendar", "calendário", "o seu google agenda, ou qualquer ical"),
@@ -143,6 +146,7 @@ fn build_page(ctx: &Rc<Ctx>, id: &str) -> gtk::Widget {
         "bar/shape" => bar_shape::build(ctx),
         "bar/anchor" => bar_anchor::build(ctx),
         "panels/dash" => panels::dash(ctx),
+        "panels/control-center" => control_center::build(ctx),
         "panels/notifications" => panels::notifications(ctx),
         "panels/weather" => panels::weather(ctx),
         "panels/calendar" => calendar::build(ctx),

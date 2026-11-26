@@ -22,6 +22,7 @@ pub struct Config {
     pub lock: Lock,
     pub dock: Dock,
     pub desktop: Desktop,
+    pub control_center: ControlCenter,
 }
 
 impl Default for Config {
@@ -39,6 +40,7 @@ impl Default for Config {
             lock: Lock::default(),
             dock: Dock::default(),
             desktop: Desktop::default(),
+            control_center: ControlCenter::default(),
         }
     }
 }
@@ -247,6 +249,41 @@ pub struct Dash {
 impl Default for Dash {
     fn default() -> Self {
         Self { page: "overview".into() }
+    }
+}
+
+/// What the control center shows, and in what order.
+#[derive(Debug, Clone, Deserialize, Serialize, PartialEq)]
+#[serde(default)]
+pub struct ControlCenter {
+    /// "header", "tiles", "sliders", "media", "notifications".
+    pub sections: Vec<String>,
+    /// "wifi", "bluetooth", "mic", "theme", "caffeine", "dnd".
+    pub tiles: Vec<String>,
+    /// "volume", "mic", "brightness", "keyboard".
+    pub sliders: Vec<String>,
+    pub date: bool,
+    pub weather: bool,
+    /// The gear that opens the settings, beside power.
+    pub settings: bool,
+    pub power: bool,
+    /// The bars dancing behind the player.
+    pub visualizer: bool,
+}
+
+impl Default for ControlCenter {
+    fn default() -> Self {
+        let list = |items: &[&str]| items.iter().map(|s| s.to_string()).collect();
+        Self {
+            sections: list(&["header", "tiles", "sliders", "media", "notifications"]),
+            tiles: list(&["wifi", "bluetooth", "mic", "theme"]),
+            sliders: list(&["volume", "mic", "brightness", "keyboard"]),
+            date: true,
+            weather: true,
+            settings: true,
+            power: true,
+            visualizer: true,
+        }
     }
 }
 
