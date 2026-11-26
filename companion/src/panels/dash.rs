@@ -40,7 +40,7 @@ impl Dash {
 
         let rail = gtk::Box::new(gtk::Orientation::Vertical, 6);
         rail.add_css_class("dash-rail");
-        rail.set_valign(gtk::Align::Start);
+        rail.set_valign(gtk::Align::Fill);
 
         let lyrics = LyricsView::new(&s.media, lyrics);
         let weather = WeatherPanel::new(s);
@@ -93,6 +93,29 @@ impl Dash {
             group.get_or_insert(button.clone());
             rail.append(&button);
         }
+
+        // the settings, apart from the tabs at the rail's foot
+        let gap = gtk::Box::new(gtk::Orientation::Vertical, 0);
+        gap.set_vexpand(true);
+        rail.append(&gap);
+        let settings = gtk::Button::new();
+        settings.add_css_class("rail-item");
+        settings.add_css_class("rail-settings");
+        let content = gtk::Box::new(gtk::Orientation::Vertical, 4);
+        let indicator = gtk::Box::new(gtk::Orientation::Horizontal, 0);
+        indicator.add_css_class("rail-indicator");
+        indicator.set_halign(gtk::Align::Center);
+        let glyph = icons::icon("settings");
+        glyph.set_hexpand(true);
+        indicator.append(&glyph);
+        content.append(&indicator);
+        let text = gtk::Label::new(Some(t("ajustes")));
+        text.add_css_class("rail-label");
+        content.append(&text);
+        settings.set_child(Some(&content));
+        settings.set_tooltip_text(Some(t("configurações")));
+        settings.connect_clicked(|_| crate::exec::spawn("octopus", &["settings"]));
+        rail.append(&settings);
 
         root.append(&rail);
         root.append(&stack);
@@ -227,9 +250,9 @@ fn overview(s: &Rc<Services>, to_weather: impl Fn() + 'static) -> gtk::Box {
     top.append(&face);
     left.append(&top);
 
-    let calendar = gtk::Calendar::new();
+    let calendar = crate::widgets::agenda::calendar(&s.calendar, "dash-calendar");
     calendar.add_css_class("card");
-    calendar.add_css_class("dash-calendar");
+    calendar.add_css_class("dash-calendar-card");
     left.append(&calendar);
 
     let player = media::player(&s.media, media::Size::Card, None);
