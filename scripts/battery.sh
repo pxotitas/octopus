@@ -20,7 +20,8 @@ step=$(( (capacity + 2) / 5 * 5 ))
 classes="\"b-$step\""
 
 case $status in
-  Charging | Full) classes="$classes, \"charging\""; state="carregando" ;;
+  Charging) classes="$classes, \"charging\", \"bolt\""; state="carregando" ;;
+  Full) classes="$classes, \"charging\""; state="carregando" ;;
   *) state="na bateria" ;;
 esac
 [ "$status" = "Full" ] && state="carregada"
@@ -28,5 +29,10 @@ if [ "$capacity" -le 15 ] && [ "$status" != "Charging" ]; then
   classes="$classes, \"low\""
 fi
 
+# the pill's text is only drawn while charging: a bolt in its middle.
+# Otherwise it stays, invisible, since waybar hides a module with no text.
+glyph="$capacity"
+[ "$status" = "Charging" ] && glyph="bolt"
+
 printf '{"text": "%s", "tooltip": "%s%% · %s", "class": [%s], "percentage": %s}\n' \
-  "$capacity" "$capacity" "$state" "$classes" "$capacity"
+  "$glyph" "$capacity" "$state" "$classes" "$capacity"

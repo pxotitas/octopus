@@ -168,6 +168,14 @@ tooltip label {
   background: @error;
 }
 
+/* charging: a bolt in the middle of the pill */
+#custom-battery.bolt {
+  font-family: "Material Symbols Rounded";
+  font-size: 13px;
+  color: @surface_bright;
+  text-shadow: 0 0 2px alpha(@on_surface, 0.8);
+}
+
 /* clock: hours over minutes */
 
 /* the M3 "bun" shape, drawn by matugen in the theme's colors */
