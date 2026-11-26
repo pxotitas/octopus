@@ -3,6 +3,7 @@
 pub mod audio;
 pub mod bluetooth;
 pub mod brightness;
+pub mod calendar;
 pub mod cava;
 pub mod contributions;
 pub mod lyrics;
@@ -26,6 +27,7 @@ pub struct Services {
     pub bluetooth: Rc<bluetooth::Bluetooth>,
     pub media: Rc<media::Media>,
     pub weather: Rc<weather::Weather>,
+    pub calendar: Rc<calendar::Calendar>,
     pub cava: Rc<cava::Cava>,
     pub notifications: Rc<notifications::Notifications>,
     pub theme: Rc<theme::Theme>,
@@ -42,6 +44,7 @@ impl Services {
             bluetooth: bluetooth::Bluetooth::new(),
             media: media::Media::new(),
             weather: weather::Weather::new(&config.weather.place, config.weather.unit == "fahrenheit"),
+            calendar: calendar::Calendar::new(&config.calendar.urls),
             cava: cava::Cava::new(),
             notifications: notifications::Notifications::new(),
             theme: theme::Theme::new(),

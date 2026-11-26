@@ -237,6 +237,7 @@ dependencies = [
  "iana-time-zone",
  "num-traits",
  "pure-rust-locales",
+ "serde",
  "windows-link",
 ]
 

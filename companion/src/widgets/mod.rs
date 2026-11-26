@@ -1,3 +1,4 @@
+pub mod agenda;
 pub mod anim;
 pub mod art;
 pub mod cava;

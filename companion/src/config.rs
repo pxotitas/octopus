@@ -15,6 +15,7 @@ pub struct Config {
     pub bar: Bar,
     pub dash: Dash,
     pub weather: Weather,
+    pub calendar: CalendarConfig,
     pub brightness: Brightness,
     pub notifications: Notifications,
     pub media: Media,
@@ -31,6 +32,7 @@ impl Default for Config {
             bar: Bar::default(),
             dash: Dash::default(),
             weather: Weather::default(),
+            calendar: CalendarConfig::default(),
             brightness: Brightness::default(),
             notifications: Notifications::default(),
             media: Media::default(),
@@ -330,6 +332,15 @@ impl Default for Weather {
             unit: "celsius".into(),
         }
     }
+}
+
+/// Calendars to show, by their iCal address: Google Calendar's "secret
+/// address in iCal format" (Settings → the calendar → Integrate calendar),
+/// or any other .ics link.
+#[derive(Debug, Clone, Deserialize, Serialize, Default, PartialEq)]
+#[serde(default)]
+pub struct CalendarConfig {
+    pub urls: Vec<String>,
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize, Default, PartialEq)]
