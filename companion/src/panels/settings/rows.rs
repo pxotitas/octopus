@@ -3,6 +3,7 @@
 
 use std::rc::Rc;
 
+use gtk::glib;
 use gtk::prelude::*;
 
 use crate::i18n::t;
@@ -136,6 +137,19 @@ pub fn slider(min: f64, max: f64, step: f64, value: f64, show: impl Fn(f64) -> S
     scale.set_value(value);
     scale.set_hexpand(true);
     scale.set_draw_value(false);
+    // the wheel scrolls the page; it only changes a slider by dragging
+    let wheel = gtk::EventControllerScroll::new(gtk::EventControllerScrollFlags::VERTICAL);
+    wheel.set_propagation_phase(gtk::PropagationPhase::Capture);
+    wheel.connect_scroll(|controller, _, dy| {
+        let page = controller.widget().and_then(|w| w.ancestor(gtk::ScrolledWindow::static_type())).and_downcast::<gtk::ScrolledWindow>();
+        if let Some(page) = page {
+            let adj = page.vadjustment();
+            let unit = if controller.unit() == gtk::gdk::ScrollUnit::Surface { 1.0 } else { 50.0 };
+            adj.set_value(adj.value() + dy * unit);
+        }
+        glib::Propagation::Stop
+    });
+    scale.add_controller(wheel);
     let shown = gtk::Label::new(Some(&show(value)));
     shown.add_css_class("percent");
     let holder = gtk::Box::new(gtk::Orientation::Horizontal, 8);
