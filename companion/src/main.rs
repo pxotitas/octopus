@@ -103,7 +103,16 @@ fn run_daemon() -> glib::ExitCode {
     if RESTART.load(std::sync::atomic::Ordering::Relaxed) {
         use std::os::unix::process::CommandExt;
         exec::end_streams();
-        if let Ok(exe) = std::env::current_exe() {
+        // after an update the running binary is gone and Linux names it
+        // "… (deleted)"; the new one sits at the same path
+        let exe = std::env::current_exe().map(|exe| {
+            let name = exe.to_string_lossy().into_owned();
+            match name.strip_suffix(" (deleted)") {
+                Some(path) => std::path::PathBuf::from(path),
+                None => exe,
+            }
+        });
+        if let Ok(exe) = exe {
             let err = std::process::Command::new(exe).exec();
             eprintln!("octopus: cannot restart: {err}");
         }
