@@ -51,8 +51,10 @@
   <p class="lead">the parts of octopus that are nicer to see than to read about. every picture here is a real screenshot; click one to see it full size.</p>
   <nav class="jump" aria-label="on this page">
     <a class="chip" href="#bar-editor"><span class="symbol">side_navigation</span>bar editor</a>
+    <a class="chip" href="#modules"><span class="symbol">construction</span>your own modules</a>
     <a class="chip" href="#presets"><span class="symbol">view_column</span>bar presets</a>
     <a class="chip" href="#widgets"><span class="symbol">widgets</span>desktop widgets</a>
+    <a class="chip" href="#calendar"><span class="symbol">calendar_month</span>calendar</a>
     <a class="chip" href="#colors"><span class="symbol">palette</span>colors</a>
     <a class="chip" href="#lock"><span class="symbol">lock</span>lock screen</a>
     <a class="chip" href="#weather"><span class="symbol">partly_cloudy_day</span>ask the weather</a>
@@ -63,19 +65,34 @@
   <div class="showcase-text">
     <span class="shape-badge big" data-shape="cookie9" data-hover="flower"><span class="symbol">side_navigation</span></span>
     <h2>a real editor for the bar</h2>
-    <p class="lead">the settings draw the bar as it will look. drag a module to another spot, tap one to change it, and drag new ones in from the catalog.</p>
+    <p class="lead">the settings draw the bar as it will look. tap a module to change it; drag it to move it. the <em>+</em> under the bar opens a menu: add one from the catalog, or make your own.</p>
     <ul class="points">
-      <li><span class="symbol">drag_pan</span><span>fifteen modules: cpu, memory, temperature, brightness, music, volume, keep awake and more</span></li>
-      <li><span class="symbol">format_paint</span><span>each module with its own background, corners and options, like the clock's bun or 12 hours</span></li>
+      <li><span class="symbol">add_circle</span><span>the catalog: search, filter by kind, pick the part of the bar, then click a card or drag it in</span></li>
+      <li><span class="symbol">format_paint</span><span>each module with its own background, m3 shape and options, like the clock's bun or 12 hours</span></li>
       <li><span class="symbol">bolt</span><span>the bar changes when you apply, without restarting</span></li>
     </ul>
+    <button class="shot showcase-inset" type="button" data-full="../assets/screenshots/settings-catalog.webp" data-label="the catalog">
+      <img src="../assets/screenshots/thumbs/settings-catalog.webp" alt="the catalog: search, filters and cards of modules" width="720" height="450" loading="lazy">
+        <span>the catalog</span>
+    </button>
   </div>
-  <button class="shot showcase-shot" type="button" data-full="../assets/screenshots/settings-editor.webp" data-label="the bar editor">
-    <img src="../assets/screenshots/thumbs/settings-editor.webp" alt="the bar editor: the preview on the left, the clock's options beside it" width="720" height="450" loading="lazy">
+  <button class="shot showcase-shot" type="button" data-full="../assets/screenshots/settings-editor.webp" data-label="the bar editor, with the + menu open">
+    <img src="../assets/screenshots/thumbs/settings-editor.webp" alt="the bar editor: the preview, the + menu open with add a module and make a module" width="720" height="450" loading="lazy">
   </button>
 </section>
 
-<section class="showcase flip" id="presets" data-reveal>
+<section class="showcase flip" id="modules" data-reveal>
+  <div class="showcase-text">
+    <span class="shape-badge big tone-c" data-shape="pentagon" data-hover="cookie6"><span class="symbol">construction</span></span>
+    <h2>modules of your own</h2>
+    <p class="lead">a window that builds one, step by step, with the module drawn in a little bar while you fill it in: a name, a material symbol, a command whose output shows under the icon (with a <em>try it</em> button), a command for the click and a look.</p>
+  </div>
+  <button class="shot showcase-shot" type="button" data-full="../assets/screenshots/settings-maker.webp" data-label="making a module">
+    <img src="../assets/screenshots/thumbs/settings-maker.webp" alt="making a module: the icon picked from a search, the command and how often it runs" width="720" height="450" loading="lazy">
+  </button>
+</section>
+
+<section class="showcase" id="presets" data-reveal>
   <div class="showcase-text">
     <span class="shape-badge big tone-b" data-shape="clover4" data-hover="clover8"><span class="symbol">view_column</span></span>
     <h2>whole bars to start from</h2>
@@ -86,27 +103,57 @@
   </button>
 </section>
 
-<section class="showcase" id="widgets" data-reveal>
+<section class="showcase flip" id="widgets" data-reveal>
   <div class="showcase-text">
     <span class="shape-badge big tone-c" data-shape="puffy" data-hover="softburst"><span class="symbol">widgets</span></span>
     <h2>widgets you arrange</h2>
-    <p class="lead">the weather, your github contributions, a clock, the music and a calendar, under the windows. they stay put until you ask: right-click the desktop and pick <em>arrange widgets</em>.</p>
+    <p class="lead">weather, a clock (analog or digital), your github contributions, the music, a calendar, what's coming up, processor and memory, the battery, a note and a photo, under the windows. they stay put until you ask: right-click the desktop and pick <em>arrange widgets</em>.</p>
     <ul class="points">
       <li><span class="symbol">open_with</span><span>drag a widget to move it, its corner to resize it</span></li>
       <li><span class="symbol">business_center</span><span>the case at the bottom holds the rest: drag one out, or drop one back</span></li>
       <li><span class="symbol">keyboard</span><span><kbd>esc</kbd> or <em>done</em> puts them back under the windows</span></li>
     </ul>
-    <button class="shot showcase-inset" type="button" data-full="../assets/screenshots/desktop-menu.webp" data-label="right-click on the desktop">
-      <img src="../assets/screenshots/thumbs/desktop-menu.webp" alt="the desktop's right-click menu" width="720" height="450" loading="lazy">
-      <span>the right-click menu</span>
+    <button class="shot showcase-inset" type="button" data-full="../assets/screenshots/desktop-arrange.webp" data-label="arranging widgets, with the case">
+      <img src="../assets/screenshots/thumbs/desktop-arrange.webp" alt="arranging the widgets: outlines, handles and the case at the bottom" width="720" height="450" loading="lazy">
+        <span>arranging them</span>
     </button>
   </div>
-  <button class="shot showcase-shot" type="button" data-full="../assets/screenshots/desktop-arrange.webp" data-label="arranging widgets, with the case">
-    <img src="../assets/screenshots/thumbs/desktop-arrange.webp" alt="arranging the widgets: outlines, handles and the case at the bottom" width="720" height="450" loading="lazy">
+  <button class="shot showcase-shot" type="button" data-full="../assets/screenshots/desktop-widgets.webp" data-label="the new desktop widgets">
+    <img src="../assets/screenshots/thumbs/desktop-widgets.webp" alt="the desktop with a photo, a note, the weather, what's coming up, processor, memory and disk, a digital clock and the battery" width="720" height="450" loading="lazy">
   </button>
 </section>
 
-<section class="showcase flip" id="colors" data-reveal>
+<section class="showcase" id="widget-options" data-reveal>
+  <div class="showcase-text">
+    <span class="shape-badge big tone-b" data-shape="clover8" data-hover="cookie12"><span class="symbol">tune</span></span>
+    <h2>each one, your way</h2>
+    <p class="lead">the cards' color, their corners and a grid to snap to, for all of them; then each widget's own options under its <span class="symbol">tune</span>: how many days of weather, a digital clock, which meters, a photo that changes on its own…</p>
+  </div>
+  <button class="shot showcase-shot" type="button" data-full="../assets/screenshots/settings-widgets.webp" data-label="settings: the widgets">
+    <img src="../assets/screenshots/thumbs/settings-widgets.webp" alt="the widgets page, the photo's options open: choose, fit and change on its own" width="720" height="450" loading="lazy">
+  </button>
+</section>
+
+<section class="showcase flip" id="calendar" data-reveal>
+  <div class="showcase-text">
+    <span class="shape-badge big" data-shape="cookie12" data-hover="flower"><span class="symbol">calendar_month</span></span>
+    <h2>your calendar, no login</h2>
+    <p class="lead">the dash's calendar and the agenda widget show your events: days with something get a tint, and a click lists them. it reads ical addresses, so a google calendar only needs its secret address: no login, nothing in the cloud console.</p>
+    <ul class="points">
+      <li><span class="symbol">link</span><span>outlook, proton, nextcloud or a holidays feed work the same</span></li>
+      <li><span class="symbol">cloud_off</span><span>it keeps a copy, so the events show offline too</span></li>
+    </ul>
+    <button class="shot showcase-inset" type="button" data-full="../assets/screenshots/settings-calendar.webp" data-label="settings: calendar">
+      <img src="../assets/screenshots/thumbs/settings-calendar.webp" alt="the calendar page: the address field and the four steps to get google's" width="720" height="450" loading="lazy">
+        <span>where to paste it</span>
+    </button>
+  </div>
+  <button class="shot showcase-shot" type="button" data-full="../assets/screenshots/dash.webp" data-label="the dash, with the calendar's events">
+    <img src="../assets/screenshots/thumbs/dash.webp" alt="the dash: the month with the days that have events tinted, and the selected day's events under it" width="720" height="450" loading="lazy">
+  </button>
+</section>
+
+<section class="showcase" id="colors" data-reveal>
   <div class="showcase-text">
     <span class="shape-badge big" data-shape="flower" data-hover="sunny"><span class="symbol">palette</span></span>
     <h2>your wallpaper, your way</h2>
@@ -118,7 +165,7 @@
   </button>
 </section>
 
-<section class="showcase" id="lock" data-reveal>
+<section class="showcase flip" id="lock" data-reveal>
   <div class="showcase-text">
     <span class="shape-badge big tone-b" data-shape="cookie12" data-hover="pentagon"><span class="symbol">lock</span></span>
     <h2>a lock that reacts</h2>
