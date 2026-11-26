@@ -26,6 +26,7 @@ enum Mode {
     Calc,
     Files,
     Power,
+    Remind,
 }
 
 impl Mode {
@@ -35,6 +36,7 @@ impl Mode {
             Mode::Calc => (Kind::Cookie6, "calculate"),
             Mode::Files => (Kind::Clover4, "folder_open"),
             Mode::Power => (Kind::Sunny, "power_settings_new"),
+            Mode::Remind => (Kind::Clover8, "alarm"),
         }
     }
 }
@@ -44,6 +46,7 @@ enum Item {
     Calc(f64),
     File(PathBuf),
     Power(&'static str),
+    Remind(String, bool),
     Hint,
 }
 
@@ -71,10 +74,11 @@ pub struct Launcher {
     generation: Cell<u64>,
     close: Rc<dyn Fn()>,
     power: Rc<dyn Fn(&str)>,
+    remind: Rc<dyn Fn(&str, bool)>,
 }
 
 impl Launcher {
-    pub fn new(close: Rc<dyn Fn()>, power: Rc<dyn Fn(&str)>) -> Rc<Self> {
+    pub fn new(close: Rc<dyn Fn()>, power: Rc<dyn Fn(&str)>, remind: Rc<dyn Fn(&str, bool)>) -> Rc<Self> {
         let root = gtk::Box::new(gtk::Orientation::Vertical, 12);
         root.add_css_class("surface");
         root.add_css_class("launcher");
@@ -114,11 +118,13 @@ impl Launcher {
             generation: Cell::new(0),
             close,
             power,
+            remind,
         });
 
         for (prefix, label) in [
             ("=", t("calcular")),
             ("/", t("arquivos")),
+            ("!", t("lembrete")),
             (">", t("energia")),
         ] {
             let chip = gtk::Button::new();
@@ -245,6 +251,17 @@ impl Launcher {
             });
             return;
         }
+        if let Some(rest) = text.strip_prefix('!') {
+            self.set_mode(Mode::Remind);
+            let rest = rest.trim().to_owned();
+            let items = match crate::services::reminders::parse::parse(&rest, chrono::Local::now()) {
+                Some(q) if q.alarm => vec![Item::Remind(rest.clone(), true), Item::Remind(rest, false)],
+                Some(_) => vec![Item::Remind(rest.clone(), false), Item::Remind(rest, true)],
+                None => vec![Item::Hint],
+            };
+            self.show(items);
+            return;
+        }
         if let Some(rest) = text.strip_prefix('>') {
             self.set_mode(Mode::Power);
             let rest = rest.trim().to_lowercase();
@@ -334,6 +351,25 @@ impl Launcher {
                     .unwrap_or(("", "power_settings_new", ""));
                 (badge(glyph), label.to_owned(), t("sessão").to_owned())
             }
+            Item::Remind(text, alarm) => {
+                let q = crate::services::reminders::parse::parse(text, chrono::Local::now());
+                let when = q.as_ref().map(|q| crate::services::reminders::when(&q.at)).unwrap_or_default();
+                let title = q.map(|q| q.title).filter(|t| !t.is_empty());
+                let kind = if *alarm { t("alarme") } else { t("lembrete") };
+                (
+                    badge(if *alarm { "alarm" } else { "notifications_active" }),
+                    match title {
+                        Some(title) => format!("{title} · {when}"),
+                        None => format!("{kind} · {when}"),
+                    },
+                    if *alarm { t("criar alarme: toca até você parar").to_owned() } else { t("criar lembrete: avisa uma vez").to_owned() },
+                )
+            }
+            Item::Hint if self.mode.get() == Mode::Remind => (
+                badge("alarm"),
+                t("quando e o quê").to_owned(),
+                t("10 min chá · 18h pão · amanhã 9h dentista · alarme 6:45").to_owned(),
+            ),
             Item::Hint => (
                 badge("folder_open"),
                 t("digite o nome de um arquivo").to_owned(),
@@ -399,6 +435,10 @@ impl Launcher {
                 let action = *action;
                 (self.close)();
                 (self.power)(action);
+            }
+            Item::Remind(text, alarm) => {
+                (self.remind)(text, *alarm);
+                (self.close)();
             }
             Item::Hint => {}
         }

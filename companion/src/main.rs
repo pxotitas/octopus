@@ -34,6 +34,8 @@ const USAGE: &str = "usage: octopus [daemon]
        octopus kbd <up|down>
        octopus dnd
        octopus caffeine [on|off]
+       octopus remind <when> <what>   (10 min tea, 18h bread, alarm 6:45)
+       octopus reminders
        octopus luma <image>
        octopus reload
        octopus restart";

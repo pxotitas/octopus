@@ -22,6 +22,7 @@ pub struct Shell {
     app: gtk::Application,
     config: Rc<std::cell::RefCell<config::Config>>,
     settings: Rc<std::cell::RefCell<Option<Rc<Settings>>>>,
+    reminders: std::cell::RefCell<Option<Rc<crate::panels::reminders::App>>>,
     services: Rc<Services>,
     popups: HashMap<&'static str, Rc<Popup>>,
     backdrop: gtk::Window,
@@ -155,7 +156,11 @@ impl Shell {
             let launcher = Lazy::new(
                 {
                     let (close, run) = (close.clone(), run_power.clone());
-                    move || Launcher::new(close.clone(), run.clone())
+                    let reminders = services.reminders.clone();
+                    let remind: Rc<dyn Fn(&str, bool)> = Rc::new(move |text: &str, alarm: bool| {
+                        reminders.quick(text, Some(alarm));
+                    });
+                    move || Launcher::new(close.clone(), run.clone(), remind.clone())
                 },
                 |l| l.root.clone().upcast(),
             );
@@ -306,6 +311,7 @@ impl Shell {
                 app: app.clone(),
                 config: shared.clone(),
                 settings: Rc::default(),
+                reminders: Default::default(),
                 services,
                 popups,
                 backdrop,
@@ -460,6 +466,32 @@ impl Shell {
                 }
                 String::new()
             }
+            ["reminders"] => {
+                self.close_all();
+                if self.reminders.borrow().is_none() {
+                    let shared = self.config.clone();
+                    let persist: Rc<dyn Fn(bool, u32)> = Rc::new(move |enabled: bool, snooze: u32| {
+                        let mut next = shared.borrow().clone();
+                        next.reminders.enabled = enabled;
+                        next.reminders.snooze = snooze;
+                        if let Err(err) = config::save(&next) {
+                            eprintln!("octopus: cannot save reminders: {err}");
+                        }
+                        *shared.borrow_mut() = next;
+                    });
+                    let snooze = self.config.borrow().reminders.snooze;
+                    let app = crate::panels::reminders::App::new(&self.app, &self.services.reminders, snooze, persist);
+                    *self.reminders.borrow_mut() = Some(app);
+                }
+                if let Some(app) = self.reminders.borrow().as_ref() {
+                    app.present();
+                }
+                String::new()
+            }
+            ["remind", rest @ ..] => match self.services.reminders.quick(&rest.join(" "), None) {
+                Some(r) => format!("{} · {}", r.label(), crate::services::reminders::when(&r.at)),
+                None => "?".to_owned(),
+            },
             ["caffeine", rest @ ..] => {
                 let caffeine = &self.services.caffeine;
                 match rest {
