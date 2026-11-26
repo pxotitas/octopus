@@ -7,8 +7,6 @@ use gtk::prelude::*;
 use super::rows::*;
 use super::Ctx;
 use crate::i18n::t;
-use crate::icons;
-use crate::widgets::shape::{Kind, Shape};
 
 pub fn lock(ctx: &Rc<Ctx>) -> gtk::Widget {
     let column = page(t("tela de bloqueio"), t("shapes que giram a cada tecla, a hora e a música"));
@@ -28,9 +26,9 @@ pub fn about(_ctx: &Rc<Ctx>) -> gtk::Widget {
 
     let hero = gtk::Box::new(gtk::Orientation::Horizontal, 18);
     hero.add_css_class("settings-about");
-    let badge = Shape::new(Kind::Cookie9, 72, true, Some(&icons::icon("change_history")));
-    badge.add_css_class("tree-badge");
-    hero.append(&badge);
+    let logo = super::bar_preview::glyph_widget("octopus", 80);
+    logo.set_valign(gtk::Align::Center);
+    hero.append(&logo);
     let texts = gtk::Box::new(gtk::Orientation::Vertical, 2);
     texts.set_valign(gtk::Align::Center);
     let name = gtk::Label::new(Some("octopus"));

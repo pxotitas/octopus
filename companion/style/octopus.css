@@ -1509,6 +1509,111 @@ button.glyph-chip:checked label {
   color: @on_primary_container;
 }
 
+/* the editor's pickers */
+
+.picker flowboxchild {
+  padding: 0;
+}
+
+button.picker-chip {
+  background: @surface_container_high;
+  border-radius: 16px;
+  min-width: 48px;
+  min-height: 48px;
+  padding: 6px;
+  transition: background 200ms cubic-bezier(0.2, 0, 0, 1), border-radius 240ms cubic-bezier(0.2, 0, 0, 1);
+}
+
+button.picker-chip:hover {
+  background: @surface_container_highest;
+}
+
+button.picker-chip:checked {
+  background: @secondary_container;
+  border-radius: 12px;
+  box-shadow: inset 0 0 0 2px @primary;
+}
+
+button.picker-chip > label {
+  font-size: 20px;
+}
+
+button.picker-chip > label.pm-arch {
+  font-size: 26px;
+}
+
+button.picker-chip .picker-label {
+  font-size: 11px;
+  color: @on_surface_variant;
+}
+
+.picker-corner {
+  min-width: 26px;
+  min-height: 26px;
+}
+
+.picker-corner.corner-round { border-radius: 999px; }
+.picker-corner.corner-soft { border-radius: 8px; }
+.picker-corner.corner-square { border-radius: 2px; }
+
+.picker-bun {
+  min-width: 26px;
+  min-height: 13px;
+  border-radius: 7px;
+}
+
+.picker-corner.bg-tonal, .picker-bun.bg-tonal { background: @secondary_container; }
+.picker-corner.bg-primary, .picker-bun.bg-primary { background: @primary_container; }
+.picker-corner.bg-surface, .picker-bun.bg-surface { background: @surface_container_highest; }
+
+shape.pm-shape.bg-tonal { color: @secondary_container; }
+shape.pm-shape.bg-primary { color: @primary_container; }
+shape.pm-shape.bg-surface { color: @surface_container_highest; }
+shape.pm-shape.bg-tonal label { color: @on_secondary_container; }
+shape.pm-shape.bg-primary label { color: @on_primary_container; }
+
+button.picker-chip:checked shape.pm-shape.bg-surface { color: @surface_container_lowest; }
+
+.preview-module.shaped {
+  padding: 0;
+  background: none;
+}
+
+.custom-icon-preview {
+  font-size: 26px;
+  color: @primary;
+}
+
+button.module-card.create {
+  border: 2px dashed @outline_variant;
+  background: none;
+}
+
+/* workspace styles in the preview */
+
+.ws-pills .pm-dot { min-width: 18px; min-height: 10px; }
+.ws-pills .pm-dot.active { min-height: 22px; }
+.ws-squares .pm-dot { min-width: 12px; min-height: 12px; border-radius: 4px; }
+.ws-squares .pm-dot.active { min-width: 16px; min-height: 16px; }
+.ws-bars .pm-dot { min-width: 4px; min-height: 14px; }
+.ws-bars .pm-dot.active { min-height: 30px; }
+
+/* the battery, charging */
+
+.pm-battery {
+  border-radius: 6px;
+}
+
+.pm-battery-fill.charging {
+  background: @tertiary;
+  border-radius: 6px;
+}
+
+.pm-bolt {
+  font-size: 13px;
+  color: @surface_bright;
+}
+
 /* presets */
 
 .preset-grid flowboxchild {

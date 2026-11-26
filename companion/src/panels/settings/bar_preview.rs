@@ -10,8 +10,9 @@ use gtk::prelude::*;
 use gtk::{gdk, glib};
 
 use super::Ctx;
-use crate::config::Module;
+use crate::config::{Bar, Module};
 use crate::icons;
+use crate::widgets::shape::{Kind, Shape};
 
 /// What the editor hears from the preview.
 pub struct Hooks {
@@ -38,27 +39,37 @@ fn value(text: &str) -> gtk::Label {
     label
 }
 
-/// One module as the bar draws it.
-fn module(id: &str, m: &Module) -> gtk::Box {
-    let item = gtk::Box::new(gtk::Orientation::Vertical, 2);
-    item.add_css_class("preview-module");
-    item.add_css_class(&format!("pm-{id}"));
-    item.set_halign(gtk::Align::Center);
-    if m.background != "none" {
-        item.add_css_class(&format!("bg-{}", m.background));
-    }
-    item.add_css_class(&format!("shape-{}", m.shape));
-    match id {
-        "logo" => {
-            if m.variant == "arch" || m.variant.is_empty() {
-                let glyph = gtk::Label::new(Some("\u{f303}"));
-                glyph.add_css_class("pm-arch");
-                item.append(&glyph);
-            } else {
-                item.append(&icon(&m.variant, "pm-logo"));
-            }
+/// The logo's glyph, as the bar draws it.
+pub fn glyph_widget(variant: &str, size: i32) -> gtk::Widget {
+    use crate::bar::modules::{glyph, Glyph};
+    match glyph(variant) {
+        Glyph::Nerd(c) => {
+            let label = gtk::Label::new(Some(c));
+            label.add_css_class("pm-arch");
+            label.upcast()
         }
+        Glyph::Symbol(name) => icon(name, "pm-logo").upcast(),
+        Glyph::Art(file) => {
+            let path = crate::bar::art::logo_path().with_file_name(file);
+            let path = if path.exists() { path } else { crate::exec::config_dir().join("assets/logo.svg") };
+            let picture = gtk::Picture::for_filename(path);
+            picture.set_content_fit(gtk::ContentFit::Contain);
+            picture.set_size_request(size, size);
+            picture.set_can_shrink(true);
+            picture.upcast()
+        }
+    }
+}
+
+/// The module's insides, without its background.
+fn contents(id: &str, m: &Module, bar: &Bar) -> gtk::Box {
+    let item = gtk::Box::new(gtk::Orientation::Vertical, 2);
+    item.set_halign(gtk::Align::Center);
+    item.set_valign(gtk::Align::Center);
+    match id {
+        "logo" => item.append(&glyph_widget(&m.variant, 30)),
         "workspaces" => {
+            item.add_css_class(&format!("ws-{}", if m.variant.is_empty() { "dots" } else { &m.variant }));
             for (i, active) in [false, true, false].into_iter().enumerate() {
                 let dot = if m.variant == "numbers" {
                     let n = gtk::Label::new(Some(&(i + 1).to_string()));
@@ -79,9 +90,6 @@ fn module(id: &str, m: &Module) -> gtk::Box {
             let now = chrono::Local::now();
             let hour = if m.variant == "12h" { (now.hour() + 11) % 12 + 1 } else { now.hour() };
             item.set_spacing(0);
-            if m.shape == "bun" {
-                item.add_css_class("bun");
-            }
             for text in [format!("{hour:02}"), format!("{:02}", now.minute())] {
                 let half = gtk::Label::new(Some(&text));
                 half.add_css_class("pm-clock");
@@ -90,13 +98,19 @@ fn module(id: &str, m: &Module) -> gtk::Box {
         }
         "tray" => item.append(&icon("keyboard_arrow_down", "pm-icon")),
         "battery" => {
-            let pill = gtk::Box::new(gtk::Orientation::Vertical, 0);
+            // charging, to show the bolt
+            let pill = gtk::Overlay::new();
             pill.add_css_class("pm-battery");
             pill.set_halign(gtk::Align::Center);
             let fill = gtk::Box::new(gtk::Orientation::Vertical, 0);
             fill.add_css_class("pm-battery-fill");
-            fill.set_vexpand(true);
-            pill.append(&fill);
+            fill.add_css_class("charging");
+            fill.set_size_request(14, 30);
+            pill.set_child(Some(&fill));
+            let bolt = icon("bolt", "pm-bolt");
+            bolt.set_halign(gtk::Align::Center);
+            bolt.set_valign(gtk::Align::Center);
+            pill.add_overlay(&bolt);
             item.append(&pill);
             if m.text {
                 item.append(&value("99"));
@@ -116,6 +130,13 @@ fn module(id: &str, m: &Module) -> gtk::Box {
             }
             if shown.is_empty() {
                 item.append(&icon("tune", "pm-icon"));
+            }
+        }
+        _ if id.starts_with("user-") => {
+            let custom = bar.custom(id).cloned().unwrap_or_default();
+            item.append(&icon(&custom.icon, "pm-icon"));
+            if m.text && !custom.exec.trim().is_empty() {
+                item.append(&value("42"));
             }
         }
         _ => {
@@ -140,6 +161,34 @@ fn module(id: &str, m: &Module) -> gtk::Box {
     item
 }
 
+/// One module as the bar draws it, on its background.
+pub fn module(id: &str, m: &Module, bar: &Bar) -> gtk::Box {
+    let item = gtk::Box::new(gtk::Orientation::Vertical, 0);
+    item.add_css_class("preview-module");
+    item.add_css_class(&format!("pm-{id}"));
+    item.set_halign(gtk::Align::Center);
+    let inside = contents(id, m, bar);
+    let background = if m.background == "none" { "tonal" } else { m.background.as_str() };
+    if let Some(kind) = Kind::from_name(&m.shape) {
+        let size = if id == "clock" { 44 } else { 36 };
+        let shape = Shape::new(kind, size, true, Some(&inside));
+        shape.add_css_class("pm-shape");
+        shape.add_css_class(&format!("bg-{background}"));
+        item.add_css_class("shaped");
+        item.append(&shape);
+        return item;
+    }
+    if m.background != "none" {
+        item.add_css_class(&format!("bg-{}", m.background));
+    }
+    item.add_css_class(&format!("shape-{}", m.shape));
+    if id == "clock" && m.shape == "bun" {
+        item.add_css_class("bun");
+    }
+    item.append(&inside);
+    item
+}
+
 /// A bar that only shows itself, for the presets.
 pub fn still(bar: &crate::config::Bar, height: i32) -> gtk::Box {
     let column = gtk::Box::new(gtk::Orientation::Vertical, 0);
@@ -158,7 +207,7 @@ pub fn still(bar: &crate::config::Bar, height: i32) -> gtk::Box {
             _ => zone.set_valign(gtk::Align::End),
         }
         for id in list {
-            zone.append(&module(id, &bar.module(id)));
+            zone.append(&module(id, &bar.module(id), bar));
         }
         column.append(&zone);
     }
@@ -210,7 +259,7 @@ impl Preview {
                 _ => zone.set_valign(gtk::Align::End),
             }
             for id in list {
-                let item = module(id, &bar.module(id));
+                let item = module(id, &bar.module(id), &bar);
                 if let Some(hooks) = &self.hooks {
                     self.interactive(&item, id, hooks);
                 }

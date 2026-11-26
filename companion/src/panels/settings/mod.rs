@@ -3,7 +3,10 @@
 //! Pages are built the first time they are opened; changes stay in a draft
 //! until applied.
 
+mod bar_anchor;
+mod bar_custom;
 mod bar_editor;
+mod bar_pickers;
 mod bar_presets;
 mod bar_preview;
 mod bar_shape;
@@ -50,7 +53,8 @@ pub const MAJORS: [Major; 5] = [
         categories: &[
             category("editor", "editor", "arraste os módulos, toque num pra mudar como ele é"),
             category("presets", "presets", "barras inteiras pra começar"),
-            category("shape", "forma", "lado, largura, estilo e espaçamento"),
+            category("shape", "forma", "largura, estilo e espaçamento"),
+            category("anchor", "ancoragem", "lado, camada e distância das bordas"),
         ],
     },
     Major {
@@ -134,6 +138,7 @@ fn build_page(ctx: &Rc<Ctx>, id: &str) -> gtk::Widget {
         "bar/editor" => bar_editor::build(ctx),
         "bar/presets" => bar_presets::build(ctx),
         "bar/shape" => bar_shape::build(ctx),
+        "bar/anchor" => bar_anchor::build(ctx),
         "panels/dash" => panels::dash(ctx),
         "panels/notifications" => panels::notifications(ctx),
         "panels/weather" => panels::weather(ctx),
