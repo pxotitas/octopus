@@ -20,7 +20,7 @@ pub struct Entry {
     pub default: (i32, i32),
 }
 
-pub const ENTRIES: [Entry; 5] = [
+pub const ENTRIES: [Entry; 10] = [
     Entry {
         id: "weather",
         icon: "partly_cloudy_day",
@@ -62,9 +62,54 @@ pub const ENTRIES: [Entry; 5] = [
         icon: "calendar_month",
         shape: Kind::Clover4,
         title: "calendário",
-        about: "o mês inteiro",
+        about: "o mês, com os seus eventos",
         min: (260, 260),
-        default: (300, 300),
+        default: (300, 360),
+    },
+    Entry {
+        id: "agenda",
+        icon: "event_upcoming",
+        shape: Kind::Cookie6,
+        title: "agenda",
+        about: "os próximos eventos do seu calendário",
+        min: (260, 160),
+        default: (320, 260),
+    },
+    Entry {
+        id: "system",
+        icon: "monitor_heart",
+        shape: Kind::Cookie12,
+        title: "sistema",
+        about: "processador, memória e disco",
+        min: (240, 170),
+        default: (300, 200),
+    },
+    Entry {
+        id: "battery",
+        icon: "battery_charging_full",
+        shape: Kind::Pentagon,
+        title: "bateria",
+        about: "quanto tem, e quanto dura",
+        min: (220, 120),
+        default: (280, 150),
+    },
+    Entry {
+        id: "note",
+        icon: "sticky_note_2",
+        shape: Kind::Clover8,
+        title: "nota",
+        about: "um bilhete que se guarda sozinho",
+        min: (200, 140),
+        default: (280, 220),
+    },
+    Entry {
+        id: "photo",
+        icon: "photo",
+        shape: Kind::Flower,
+        title: "foto",
+        about: "uma imagem sua, recortada no card",
+        min: (160, 140),
+        default: (300, 220),
     },
 ];
 
@@ -136,8 +181,7 @@ pub fn build(id: &str, s: &Rc<Services>, desktop: &config::Desktop) -> Option<Bu
             let root = gtk::Box::new(gtk::Orientation::Vertical, 0);
             root.add_css_class("desktop-widget");
             root.add_css_class("desktop-calendar");
-            let calendar = gtk::Calendar::new();
-            calendar.add_css_class("dash-calendar");
+            let calendar = crate::widgets::agenda::calendar(&s.calendar, "dash-calendar");
             calendar.set_vexpand(true);
             root.append(&calendar);
             Built {
@@ -146,6 +190,24 @@ pub fn build(id: &str, s: &Rc<Services>, desktop: &config::Desktop) -> Option<Bu
                 click: None,
             }
         }
+        "agenda" => {
+            let root = gtk::Box::new(gtk::Orientation::Vertical, 10);
+            root.add_css_class("desktop-widget");
+            root.add_css_class("desktop-agenda");
+            let title = gtk::Label::new(Some(crate::i18n::t("próximos")));
+            title.add_css_class("desktop-title");
+            title.set_xalign(0.0);
+            root.append(&title);
+            let list = crate::widgets::agenda::upcoming(&s.calendar, 6);
+            let scroll = gtk::ScrolledWindow::builder().hscrollbar_policy(gtk::PolicyType::Never).child(&list).build();
+            scroll.set_vexpand(true);
+            root.append(&scroll);
+            Built { content: root.upcast(), resize: Box::new(|_, _| {}), click: None }
+        }
+        "system" => Built { content: super::system::build().upcast(), resize: Box::new(|_, _| {}), click: None },
+        "battery" => Built { content: super::battery::build().upcast(), resize: Box::new(|_, _| {}), click: None },
+        "note" => Built { content: super::note::build().upcast(), resize: Box::new(|_, _| {}), click: None },
+        "photo" => Built { content: super::photo::build().upcast(), resize: Box::new(|_, _| {}), click: None },
         _ => return None,
     })
 }

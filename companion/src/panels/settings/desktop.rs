@@ -8,12 +8,17 @@ use super::rows::*;
 use super::Ctx;
 use crate::i18n::t;
 
-const WIDGETS: [(&str, &str, &str, &str); 5] = [
+const WIDGETS: [(&str, &str, &str, &str); 10] = [
     ("weather", "partly_cloudy_day", "clima", "agora num cookie, e os próximos dias"),
     ("contributions", "commit", "contribuições", "os quadradinhos do seu perfil no github"),
     ("clock", "schedule", "relógio", "analógico, num cookie"),
     ("media", "music_note", "música", "o que está tocando, com os controles"),
-    ("calendar", "calendar_month", "calendário", "o mês inteiro"),
+    ("calendar", "calendar_month", "calendário", "o mês, com os seus eventos"),
+    ("agenda", "event_upcoming", "agenda", "os próximos eventos do seu calendário"),
+    ("system", "monitor_heart", "sistema", "processador, memória e disco"),
+    ("battery", "battery_charging_full", "bateria", "quanto tem, e quanto dura"),
+    ("note", "sticky_note_2", "nota", "um bilhete que se guarda sozinho"),
+    ("photo", "photo", "foto", "uma imagem sua, recortada no card"),
 ];
 
 pub fn widgets(ctx: &Rc<Ctx>) -> gtk::Widget {

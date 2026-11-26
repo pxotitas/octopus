@@ -4,10 +4,14 @@
 //! from its corner, and the case at the bottom holds the ones not in use.
 //! Where they sit is kept in ~/.local/state/octopus/desktop.json.
 
+mod battery;
 mod catalog;
 mod contributions;
 mod layout;
 mod menu;
+mod note;
+mod photo;
+mod system;
 mod tray;
 mod weather;
 
@@ -93,7 +97,7 @@ impl Desktop {
         window.init_layer_shell();
         window.set_namespace(Some("octopus-desktop"));
         window.set_layer(Layer::Bottom);
-        window.set_keyboard_mode(KeyboardMode::None);
+        window.set_keyboard_mode(KeyboardMode::OnDemand);
         window.set_exclusive_zone(-1);
         for edge in [Edge::Top, Edge::Bottom, Edge::Left, Edge::Right] {
             window.set_anchor(edge, true);
@@ -261,7 +265,7 @@ impl Desktop {
             return;
         }
         self.window.set_layer(if on { Layer::Top } else { Layer::Bottom });
-        self.window.set_keyboard_mode(if on { KeyboardMode::Exclusive } else { KeyboardMode::None });
+        self.window.set_keyboard_mode(if on { KeyboardMode::Exclusive } else { KeyboardMode::OnDemand });
         if on {
             self.window.add_css_class("editing");
             self.tray.refresh(&self.config, &self.names());
@@ -442,16 +446,6 @@ impl Desktop {
                 }
             })));
         }
-        if !self.editing.get() {
-            self.window.set_keyboard_mode(KeyboardMode::OnDemand);
-        }
-        let weak = Rc::downgrade(self);
-        menu::open(&self.fixed, x, y, rows, move || {
-            if let Some(d) = weak.upgrade() {
-                if !d.editing.get() {
-                    d.window.set_keyboard_mode(KeyboardMode::None);
-                }
-            }
-        });
+        menu::open(&self.fixed, x, y, rows, || {});
     }
 }
