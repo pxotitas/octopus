@@ -71,6 +71,10 @@ pub struct Notifications {
     arrivals: Arrivals,
     removals: Listeners<u32>,
     connection: RefCell<Option<zbus::Connection>>,
+    /// The shell's own notifications (alarms, reminders) and what their
+    /// buttons do; an empty action means it was dismissed.
+    local: RefCell<std::collections::HashMap<u32, Rc<dyn Fn(&str)>>>,
+    next_local: std::cell::Cell<u32>,
 }
 
 impl Notifications {
@@ -81,6 +85,8 @@ impl Notifications {
             arrivals: RefCell::new(Vec::new()),
             removals: RefCell::new(Vec::new()),
             connection: RefCell::new(None),
+            local: RefCell::default(),
+            next_local: std::cell::Cell::new(0x4000_0000),
         });
 
         let (tx, rx) = async_channel::unbounded();
@@ -131,6 +137,39 @@ impl Notifications {
         }
     }
 
+    /// Shows a notification from the shell itself; `on_action` gets the key
+    /// of the button pressed, or "" when it's dismissed. Critical ones stay
+    /// until answered and get past do-not-disturb.
+    pub fn post(
+        &self,
+        icon: &str,
+        summary: &str,
+        body: &str,
+        actions: &[(&str, &str)],
+        critical: bool,
+        on_action: impl Fn(&str) + 'static,
+    ) -> u32 {
+        let id = self.next_local.get() + 1;
+        self.next_local.set(id);
+        self.local.borrow_mut().insert(id, Rc::new(on_action));
+        self.add(
+            Notification {
+                id,
+                app_name: "octopus".into(),
+                app_icon: icon.into(),
+                summary: summary.into(),
+                body: body.into(),
+                image: None,
+                actions: actions.iter().map(|(k, l)| (k.to_string(), l.to_string())).collect(),
+                critical,
+                timeout: if critical { 0 } else { -1 },
+                time: chrono::Local::now(),
+            },
+            0,
+        );
+        id
+    }
+
     pub fn dismiss(&self, id: u32) {
         self.remove(id, Reason::Dismissed);
     }
@@ -150,11 +189,19 @@ impl Notifications {
         for f in self.removals.borrow().iter() {
             f(id);
         }
-        self.signal("NotificationClosed", (id, reason as u32));
+        let local = self.local.borrow_mut().remove(&id);
+        match local {
+            Some(f) => f(""),
+            None => self.signal("NotificationClosed", (id, reason as u32)),
+        }
     }
 
     pub fn invoke(&self, id: u32, action: &str) {
-        self.signal("ActionInvoked", (id, action.to_owned()));
+        let local = self.local.borrow_mut().remove(&id);
+        match local {
+            Some(f) => f(action),
+            None => self.signal("ActionInvoked", (id, action.to_owned())),
+        }
         self.remove(id, Reason::Dismissed);
     }
 
