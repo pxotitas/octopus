@@ -92,21 +92,22 @@ impl Default for Dock {
 #[serde(default)]
 pub struct Desktop {
     pub enabled: bool,
-    /// In order, top to bottom: "weather", "github".
+    /// "weather", "contributions". Drag a widget to move it, its corner
+    /// to resize it; where they sit is kept in ~/.local/state/octopus.
     pub widgets: Vec<String>,
-    /// "top-right", "top-left", "bottom-right" or "bottom-left".
-    pub position: String,
-    /// The github user whose commits to show; empty hides that widget.
+    /// The github user whose contributions to show; empty hides that widget.
     pub github: String,
+    /// "github" for the profile's greens, "theme" for the wallpaper's color.
+    pub contributions_colors: String,
 }
 
 impl Default for Desktop {
     fn default() -> Self {
         Self {
             enabled: true,
-            widgets: vec!["weather".into(), "github".into()],
-            position: "top-right".into(),
+            widgets: vec!["weather".into(), "contributions".into()],
             github: String::new(),
+            contributions_colors: "github".into(),
         }
     }
 }

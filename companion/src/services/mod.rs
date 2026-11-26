@@ -4,7 +4,7 @@ pub mod audio;
 pub mod bluetooth;
 pub mod brightness;
 pub mod cava;
-pub mod github;
+pub mod contributions;
 pub mod lyrics;
 pub mod media;
 pub mod network;

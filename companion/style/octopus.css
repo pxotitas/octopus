@@ -1890,21 +1890,25 @@ shape.desktop-github-badge label {
   font-weight: 700;
 }
 
-button.commit-row {
-  border-radius: 16px;
-  padding: 8px 12px;
-  background: @surface_container_high;
+shape.resize-handle {
+  color: @secondary_container;
+  opacity: 0;
+  transition: opacity 200ms cubic-bezier(0.2, 0, 0, 1);
 }
 
-button.commit-row:hover {
-  background: @surface_container_highest;
+shape.resize-handle label {
+  color: @on_secondary_container;
+  font-size: 16px;
 }
 
-.commit-meta {
-  font-size: 11px;
-  color: @on_surface_variant;
+.desktop-frame:hover shape.resize-handle {
+  opacity: 1;
 }
 
-.commit-message {
-  font-weight: 500;
+contributions.contrib-grid {
+  color: @primary;
+}
+
+.contrib-total {
+  font-weight: 700;
 }
