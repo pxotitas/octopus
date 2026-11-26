@@ -4,12 +4,14 @@
 //! until applied.
 
 mod bar_anchor;
-mod bar_custom;
+mod bar_catalog;
 mod bar_editor;
+mod bar_maker;
 mod bar_pickers;
 mod bar_presets;
 mod bar_preview;
 mod bar_shape;
+mod calendar;
 mod desktop;
 mod look;
 mod panels;
@@ -66,6 +68,7 @@ pub const MAJORS: [Major; 5] = [
             category("dash", "dash", "o que abre no relógio"),
             category("notifications", "notificações", "quanto tempo e onde aparecem"),
             category("weather", "clima", "onde e em que unidade"),
+            category("calendar", "calendário", "o seu google agenda, ou qualquer ical"),
             category("music", "música", "letras e o tempo delas"),
         ],
     },
@@ -142,6 +145,7 @@ fn build_page(ctx: &Rc<Ctx>, id: &str) -> gtk::Widget {
         "panels/dash" => panels::dash(ctx),
         "panels/notifications" => panels::notifications(ctx),
         "panels/weather" => panels::weather(ctx),
+        "panels/calendar" => calendar::build(ctx),
         "panels/music" => panels::music(ctx),
         "desktop/widgets" => desktop::widgets(ctx),
         "desktop/contributions" => desktop::contributions(ctx),

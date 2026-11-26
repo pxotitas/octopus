@@ -52,11 +52,9 @@ pub fn glyph_widget(variant: &str, size: i32) -> gtk::Widget {
         Glyph::Art(file) => {
             let path = crate::bar::art::logo_path().with_file_name(file);
             let path = if path.exists() { path } else { crate::exec::config_dir().join("assets/logo.svg") };
-            let picture = gtk::Picture::for_filename(path);
-            picture.set_content_fit(gtk::ContentFit::Contain);
-            picture.set_size_request(size, size);
-            picture.set_can_shrink(true);
-            picture.upcast()
+            let image = gtk::Image::from_file(path);
+            image.set_pixel_size(size);
+            image.upcast()
         }
     }
 }

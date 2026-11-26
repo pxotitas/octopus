@@ -14,13 +14,6 @@ pub enum Group {
     Shortcuts,
 }
 
-pub const GROUPS: [(Group, &str); 4] = [
-    (Group::Essentials, "essenciais"),
-    (Group::System, "sistema"),
-    (Group::Media, "áudio e mídia"),
-    (Group::Shortcuts, "atalhos"),
-];
-
 pub struct Info {
     pub id: &'static str,
     pub name: &'static str,
