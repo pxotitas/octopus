@@ -1,17 +1,22 @@
 //! Widgets on the desktop, in one screen-sized layer under the windows.
-//! Dragging a widget moves it; dragging the handle in its corner resizes it.
-//! Both happen in the layer's fixed coordinates, so nothing jumps, and the
-//! result is kept in ~/.local/state/octopus/desktop.json.
+//! They stay put until "arrange widgets" (right-click on the desktop): then
+//! the layer rises over the windows, a widget moves when dragged and resizes
+//! from its corner, and the case at the bottom holds the ones not in use.
+//! Where they sit is kept in ~/.local/state/octopus/desktop.json.
 
+mod catalog;
 mod contributions;
 mod layout;
+mod menu;
+mod tray;
 mod weather;
 
 use std::cell::{Cell, RefCell};
 use std::collections::HashMap;
-use std::rc::Rc;
+use std::rc::{Rc, Weak};
 
 use gtk::prelude::*;
+use gtk::{gdk, glib};
 use gtk4_layer_shell::{Edge, KeyboardMode, Layer, LayerShell};
 
 use crate::config;
@@ -24,112 +29,66 @@ const MARGIN: i32 = 28;
 const THRESHOLD: f64 = 5.0;
 
 struct Item {
-    name: String,
+    id: &'static str,
     frame: gtk::Overlay,
     content: gtk::Widget,
     handle: gtk::Widget,
+    remove: gtk::Widget,
     min: (i32, i32),
     resize: Box<dyn Fn(i32, i32)>,
     click: Option<Box<dyn Fn()>>,
 }
 
 #[derive(Clone, Copy)]
-enum Grab {
+enum Hold {
+    Click,
     Move { x: f64, y: f64 },
     Resize { w: i32, h: i32 },
 }
 
+struct Grab {
+    item: Rc<Item>,
+    kind: Hold,
+    moved: bool,
+}
+
 pub struct Desktop {
-    _window: gtk::Window,
+    window: gtk::Window,
     fixed: gtk::Fixed,
-    items: Vec<Item>,
+    tray: tray::Tray,
+    services: Rc<Services>,
+    config: config::Desktop,
+    items: RefCell<Vec<Rc<Item>>>,
     layout: RefCell<HashMap<String, Rect>>,
-    grab: Cell<Option<(usize, Grab, bool)>>,
+    grab: RefCell<Option<Grab>>,
+    editing: Cell<bool>,
+    screen: (i32, i32),
+    left_edge: i32,
+    on_change: Rc<dyn Fn(Vec<String>)>,
 }
 
 impl Desktop {
-    pub fn new(app: &gtk::Application, s: &Rc<Services>, config: &config::Config) -> Option<Rc<Self>> {
-        let desktop = &config.desktop;
-        if !desktop.enabled || desktop.widgets.is_empty() {
+    pub fn new(
+        app: &gtk::Application,
+        s: &Rc<Services>,
+        config: &config::Config,
+        on_change: Rc<dyn Fn(Vec<String>)>,
+    ) -> Option<Rc<Self>> {
+        if !config.desktop.enabled {
             return None;
         }
-
-        let screen = gtk::gdk::Display::default()
+        let screen = gdk::Display::default()
             .and_then(|d| d.monitors().item(0))
-            .and_downcast::<gtk::gdk::Monitor>()
+            .and_downcast::<gdk::Monitor>()
             .map(|m| m.geometry())
             .map(|g| (g.width(), g.height()))
             .unwrap_or((1440, 900));
         let left_edge = if config.bar.right() { MARGIN } else { config.bar.width as i32 + 40 };
 
-        let mut items = Vec::new();
-        let mut next_y = MARGIN;
-        let saved = layout::load();
-        let mut layout = HashMap::new();
-        for name in &desktop.widgets {
-            let (content, min, default, resize, click): (gtk::Widget, (i32, i32), (i32, i32), Box<dyn Fn(i32, i32)>, Option<Box<dyn Fn()>>) =
-                match name.as_str() {
-                    "weather" => {
-                        let w = weather::Weather::new(s);
-                        let root = w.root.clone().upcast();
-                        (
-                            root,
-                            (300, 220),
-                            (380, 270),
-                            Box::new(move |width, height| w.resize(width, height)),
-                            Some(Box::new(|| crate::exec::spawn("octopus", &["open", "weather"]))),
-                        )
-                    }
-                    "contributions" | "github" if !desktop.github.is_empty() => (
-                        contributions::build(&desktop.github, desktop.contributions_colors != "theme").upcast(),
-                        (280, 170),
-                        (560, 230),
-                        Box::new(|_, _| {}),
-                        None,
-                    ),
-                    _ => continue,
-                };
-            let rect = saved.get(name).copied().unwrap_or_else(|| {
-                let rect = Rect { x: screen.0 - default.0 - MARGIN, y: next_y, w: default.0, h: default.1 };
-                next_y += default.1 + 16;
-                rect
-            });
-            layout.insert(name.clone(), rect);
-
-            let frame = gtk::Overlay::new();
-            frame.add_css_class("desktop-frame");
-            content.set_size_request(rect.w, rect.h);
-            frame.set_child(Some(&content));
-            let handle = Shape::new(Kind::Cookie4, 30, true, Some(&icons::icon("open_in_full")));
-            handle.add_css_class("resize-handle");
-            handle.set_halign(gtk::Align::End);
-            handle.set_valign(gtk::Align::End);
-            handle.set_margin_end(6);
-            handle.set_margin_bottom(6);
-            handle.set_tooltip_text(Some(crate::i18n::t("arrasta pra mudar o tamanho")));
-            frame.add_overlay(&handle);
-            resize(rect.w, rect.h);
-            items.push(Item {
-                name: name.clone(),
-                frame,
-                content,
-                handle: handle.upcast(),
-                min,
-                resize,
-                click,
-            });
-        }
-        if items.is_empty() {
-            return None;
-        }
-
         let fixed = gtk::Fixed::new();
-        for item in &items {
-            let rect = layout[&item.name];
-            fixed.put(&item.frame, rect.x.max(left_edge) as f64, rect.y as f64);
-        }
-
-        let window = gtk::Window::builder().application(app).child(&fixed).build();
+        let stage = gtk::Overlay::new();
+        stage.set_child(Some(&fixed));
+        let window = gtk::Window::builder().application(app).child(&stage).build();
         window.add_css_class("octopus-desktop");
         window.init_layer_shell();
         window.set_namespace(Some("octopus-desktop"));
@@ -140,66 +99,249 @@ impl Desktop {
             window.set_anchor(edge, true);
         }
 
-        let desktop = Rc::new(Self {
-            _window: window.clone(),
-            fixed: fixed.clone(),
-            items,
-            layout: RefCell::new(layout),
-            grab: Cell::new(None),
+        let desktop = Rc::new_cyclic(|weak: &Weak<Self>| {
+            let add = weak.clone();
+            let done = weak.clone();
+            let tray = tray::Tray::new(
+                &config.desktop,
+                Rc::new(move |id: &str| {
+                    if let Some(d) = add.upgrade() {
+                        d.add(id, None, true);
+                    }
+                }),
+                Rc::new(move || {
+                    if let Some(d) = done.upgrade() {
+                        d.set_editing(false);
+                    }
+                }),
+            );
+            Self {
+                window: window.clone(),
+                fixed: fixed.clone(),
+                tray,
+                services: s.clone(),
+                config: config.desktop.clone(),
+                items: RefCell::default(),
+                layout: RefCell::new(layout::load()),
+                grab: RefCell::default(),
+                editing: Cell::new(false),
+                screen,
+                left_edge,
+                on_change,
+            }
         });
-        desktop.gestures(left_edge);
+        desktop.tray.root.set_visible(false);
+        stage.add_overlay(&desktop.tray.root);
+
+        for id in &config.desktop.widgets {
+            desktop.add(id, None, false);
+        }
+        desktop.gestures();
         window.present();
         Some(desktop)
     }
 
-    fn gestures(self: &Rc<Self>, left_edge: i32) {
+    fn names(&self) -> Vec<String> {
+        self.items.borrow().iter().map(|i| i.id.to_owned()).collect()
+    }
+
+    fn changed(&self) {
+        let names = self.names();
+        self.tray.refresh(&self.config, &names);
+        (self.on_change)(names);
+    }
+
+    fn clamp(&self, rect: Rect) -> Rect {
+        let (sw, sh) = self.screen;
+        Rect {
+            x: rect.x.clamp(self.left_edge, (sw - rect.w).max(self.left_edge)),
+            y: rect.y.clamp(0, (sh - rect.h).max(0)),
+            ..rect
+        }
+    }
+
+    /// Top right first, then down the column, then the next column left.
+    fn free_spot(&self, w: i32, h: i32) -> Rect {
+        let taken: Vec<Rect> = self.items.borrow().iter().filter_map(|i| self.layout.borrow().get(i.id).copied()).collect();
+        let overlaps = |r: &Rect| taken.iter().any(|t| r.x < t.x + t.w && t.x < r.x + r.w && r.y < t.y + t.h && t.y < r.y + r.h);
+        let (sw, sh) = self.screen;
+        let mut rect = Rect { x: sw - w - MARGIN, y: MARGIN, w, h };
+        while overlaps(&rect) && rect.x > self.left_edge {
+            rect.y += 24;
+            if rect.y + h > sh - MARGIN {
+                rect.y = MARGIN;
+                rect.x -= 48;
+            }
+        }
+        self.clamp(rect)
+    }
+
+    /// Places a widget; `at` is where it was dropped, centered under the pointer.
+    fn add(self: &Rc<Self>, id: &str, at: Option<(f64, f64)>, by_hand: bool) -> bool {
+        let Some(entry) = catalog::entry(id) else { return false };
+        if self.items.borrow().iter().any(|i| i.id == entry.id) {
+            return false;
+        }
+        let Some(built) = catalog::build(entry.id, &self.services, &self.config) else { return false };
+        let saved = self.layout.borrow().get(entry.id).copied();
+        let (w, h) = saved.map(|r| (r.w, r.h)).unwrap_or(entry.default);
+        let rect = match (at, saved) {
+            (Some((x, y)), _) => self.clamp(Rect { x: x as i32 - w / 2, y: y as i32 - h / 2, w, h }),
+            (None, Some(rect)) => self.clamp(rect),
+            (None, None) => self.free_spot(w, h),
+        };
+
+        let frame = gtk::Overlay::new();
+        frame.add_css_class("desktop-frame");
+        built.content.set_size_request(rect.w, rect.h);
+        frame.set_child(Some(&built.content));
+        let handle = Shape::new(Kind::Cookie4, 30, true, Some(&icons::icon("open_in_full")));
+        handle.add_css_class("resize-handle");
+        handle.set_halign(gtk::Align::End);
+        handle.set_valign(gtk::Align::End);
+        handle.set_margin_end(20);
+        handle.set_margin_bottom(6);
+        // room at the top right for the remove button, on the card's corner
+        built.content.set_margin_top(14);
+        built.content.set_margin_end(14);
+        handle.set_tooltip_text(Some(crate::i18n::t("arrasta pra mudar o tamanho")));
+        frame.add_overlay(&handle);
+        let remove = icons::button("close", crate::i18n::t("guardar na maleta"));
+        remove.add_css_class("remove-widget");
+        remove.set_halign(gtk::Align::End);
+        remove.set_valign(gtk::Align::Start);
+
+        let weak = Rc::downgrade(self);
+        let gone = entry.id;
+        remove.connect_clicked(move |_| {
+            if let Some(d) = weak.upgrade() {
+                d.remove(gone);
+            }
+        });
+        frame.add_overlay(&remove);
+        (built.resize)(rect.w, rect.h);
+        self.fixed.put(&frame, rect.x as f64, rect.y as f64);
+        if by_hand {
+            frame.add_css_class("arriving");
+            let f = frame.clone();
+            glib::timeout_add_local_once(std::time::Duration::from_millis(30), move || f.remove_css_class("arriving"));
+        }
+
+        self.items.borrow_mut().push(Rc::new(Item {
+            id: entry.id,
+            frame,
+            content: built.content,
+            handle: handle.upcast(),
+            remove: remove.upcast(),
+            min: entry.min,
+            resize: built.resize,
+            click: built.click,
+        }));
+        self.layout.borrow_mut().insert(entry.id.to_owned(), rect);
+        if by_hand {
+            layout::save(&self.layout.borrow());
+            self.changed();
+        }
+        true
+    }
+
+    fn remove(&self, id: &str) {
+        let item = {
+            let mut items = self.items.borrow_mut();
+            let Some(index) = items.iter().position(|i| i.id == id) else { return };
+            items.remove(index)
+        };
+        self.fixed.remove(&item.frame);
+        self.changed();
+        crate::memory::release_soon();
+    }
+
+    pub fn set_editing(&self, on: bool) {
+        if self.editing.replace(on) == on {
+            return;
+        }
+        self.window.set_layer(if on { Layer::Top } else { Layer::Bottom });
+        self.window.set_keyboard_mode(if on { KeyboardMode::Exclusive } else { KeyboardMode::None });
+        if on {
+            self.window.add_css_class("editing");
+            self.tray.refresh(&self.config, &self.names());
+        } else {
+            self.window.remove_css_class("editing");
+            self.tray.set_receiving(false);
+        }
+        self.tray.root.set_visible(on);
+    }
+
+    fn item_at(&self, x: f64, y: f64) -> Option<(Rc<Item>, gtk::Widget)> {
+        let picked = self.fixed.pick(x, y, gtk::PickFlags::DEFAULT)?;
+        let item = self
+            .items
+            .borrow()
+            .iter()
+            .find(|i| picked == i.frame || picked.is_ancestor(&i.frame))
+            .cloned()?;
+        Some((item, picked))
+    }
+
+    fn gestures(self: &Rc<Self>) {
         let drag = gtk::GestureDrag::new();
-        drag.set_button(gtk::gdk::BUTTON_PRIMARY);
+        drag.set_button(gdk::BUTTON_PRIMARY);
 
         let weak = Rc::downgrade(self);
         drag.connect_drag_begin(move |gesture, x, y| {
             let Some(d) = weak.upgrade() else { return };
-            let Some(picked) = d.fixed.pick(x, y, gtk::PickFlags::DEFAULT) else {
+            let Some((item, picked)) = d.item_at(x, y) else {
                 gesture.set_state(gtk::EventSequenceState::Denied);
                 return;
             };
-            let found = d.items.iter().enumerate().find(|(_, item)| picked.is_ancestor(&item.frame) || picked == item.frame);
-            let Some((index, item)) = found else {
+            let within = |w: &gtk::Widget| picked == *w || picked.is_ancestor(w);
+            let kind = if !d.editing.get() {
+                if item.click.is_none() {
+                    gesture.set_state(gtk::EventSequenceState::Denied);
+                    return;
+                }
+                Hold::Click
+            } else if within(&item.remove) {
                 gesture.set_state(gtk::EventSequenceState::Denied);
                 return;
-            };
-            let on_handle = picked == item.handle || picked.is_ancestor(&item.handle);
-            let grab = if on_handle {
-                Grab::Resize { w: item.content.width(), h: item.content.height() }
+            } else if within(&item.handle) {
+                Hold::Resize { w: item.content.width(), h: item.content.height() }
             } else {
                 let (x, y) = d.fixed.child_position(&item.frame);
-                Grab::Move { x, y }
+                Hold::Move { x, y }
             };
-            d.grab.set(Some((index, grab, false)));
+            if !matches!(kind, Hold::Click) {
+                item.frame.add_css_class("held");
+            }
+            *d.grab.borrow_mut() = Some(Grab { item, kind, moved: false });
         });
 
         let weak = Rc::downgrade(self);
-        drag.connect_drag_update(move |_, dx, dy| {
+        drag.connect_drag_update(move |gesture, dx, dy| {
             let Some(d) = weak.upgrade() else { return };
-            let Some((index, grab, mut moved)) = d.grab.get() else { return };
-            if !moved && dx.hypot(dy) < THRESHOLD {
+            let mut grab = d.grab.borrow_mut();
+            let Some(grab) = grab.as_mut() else { return };
+            if !grab.moved && dx.hypot(dy) < THRESHOLD {
                 return;
             }
-            moved = true;
-            d.grab.set(Some((index, grab, moved)));
-            let item = &d.items[index];
-            let (screen_w, screen_h) = (d.fixed.width() as f64, d.fixed.height() as f64);
-            match grab {
-                Grab::Move { x, y } => {
+            grab.moved = true;
+            let item = &grab.item;
+            let (sw, sh) = (d.screen.0 as f64, d.screen.1 as f64);
+            match grab.kind {
+                Hold::Click => {}
+                Hold::Move { x, y } => {
                     let (w, h) = (item.frame.width() as f64, item.frame.height() as f64);
-                    let x = (x + dx).clamp(left_edge as f64, (screen_w - w).max(left_edge as f64));
-                    let y = (y + dy).clamp(0.0, (screen_h - h).max(0.0));
+                    let x = (x + dx).clamp(d.left_edge as f64, (sw - w).max(d.left_edge as f64));
+                    let y = (y + dy).clamp(0.0, (sh - h).max(0.0));
                     d.fixed.move_(&item.frame, x.round(), y.round());
+                    if let Some((px, py)) = gesture.start_point() {
+                        d.tray.set_receiving(d.tray.contains(&d.fixed, px + dx, py + dy));
+                    }
                 }
-                Grab::Resize { w, h } => {
+                Hold::Resize { w, h } => {
                     let (x, y) = d.fixed.child_position(&item.frame);
-                    let w = (w as f64 + dx).clamp(item.min.0 as f64, screen_w - x) as i32;
-                    let h = (h as f64 + dy).clamp(item.min.1 as f64, screen_h - y) as i32;
+                    let w = (w as f64 + dx).clamp(item.min.0 as f64, (sw - x).max(item.min.0 as f64)) as i32;
+                    let h = (h as f64 + dy).clamp(item.min.1 as f64, (sh - y).max(item.min.1 as f64)) as i32;
                     item.content.set_size_request(w, h);
                     (item.resize)(w, h);
                 }
@@ -207,24 +349,109 @@ impl Desktop {
         });
 
         let weak = Rc::downgrade(self);
-        drag.connect_drag_end(move |_, _, _| {
+        drag.connect_drag_end(move |gesture, dx, dy| {
             let Some(d) = weak.upgrade() else { return };
-            let Some((index, grab, moved)) = d.grab.take() else { return };
-            let item = &d.items[index];
-            if !moved {
-                if matches!(grab, Grab::Move { .. }) {
-                    if let Some(click) = &item.click {
-                        click();
-                    }
+            let Some(grab) = d.grab.borrow_mut().take() else { return };
+            grab.item.frame.remove_css_class("held");
+            if !grab.moved {
+                if let (Hold::Click, Some(click)) = (grab.kind, &grab.item.click) {
+                    click();
                 }
                 return;
             }
-            let (x, y) = d.fixed.child_position(&item.frame);
-            let (w, h) = item.content.size_request();
+            if matches!(grab.kind, Hold::Move { .. }) {
+                let over = gesture
+                    .start_point()
+                    .is_some_and(|(px, py)| d.tray.contains(&d.fixed, px + dx, py + dy));
+                d.tray.set_receiving(false);
+                if over {
+                    d.remove(grab.item.id);
+                    return;
+                }
+            }
+            let (x, y) = d.fixed.child_position(&grab.item.frame);
+            let (w, h) = grab.item.content.size_request();
             let mut layout = d.layout.borrow_mut();
-            layout.insert(item.name.clone(), Rect { x: x as i32, y: y as i32, w, h });
+            layout.insert(grab.item.id.to_owned(), Rect { x: x as i32, y: y as i32, w, h });
             layout::save(&layout);
         });
         self.fixed.add_controller(drag);
+
+        let context = gtk::GestureClick::new();
+        context.set_button(gdk::BUTTON_SECONDARY);
+        let weak = Rc::downgrade(self);
+        context.connect_pressed(move |_, _, x, y| {
+            if let Some(d) = weak.upgrade() {
+                d.open_menu(x, y);
+            }
+        });
+        self.fixed.add_controller(context);
+
+        let drop = gtk::DropTarget::new(String::static_type(), gdk::DragAction::COPY);
+        let weak = Rc::downgrade(self);
+        drop.connect_drop(move |_, value, x, y| {
+            let (Some(d), Ok(id)) = (weak.upgrade(), value.get::<String>()) else { return false };
+            if d.tray.contains(&d.fixed, x, y) {
+                return false;
+            }
+            d.add(&id, Some((x, y)), true)
+        });
+        self.fixed.add_controller(drop);
+
+        let keys = gtk::EventControllerKey::new();
+        let weak = Rc::downgrade(self);
+        keys.connect_key_pressed(move |_, key, _, _| {
+            if key == gdk::Key::Escape {
+                if let Some(d) = weak.upgrade() {
+                    d.set_editing(false);
+                }
+                return glib::Propagation::Stop;
+            }
+            glib::Propagation::Proceed
+        });
+        self.window.add_controller(keys);
+    }
+
+    fn open_menu(self: &Rc<Self>, x: f64, y: f64) {
+        let row = |icon, label, danger, action: Rc<dyn Fn()>| menu::Row { icon, label, danger, action };
+        let weak = Rc::downgrade(self);
+        let mut rows = vec![if self.editing.get() {
+            row("check", "terminar de organizar", false, Rc::new(move || {
+                if let Some(d) = weak.upgrade() {
+                    d.set_editing(false);
+                }
+            }))
+        } else {
+            row("dashboard_customize", "organizar widgets", false, Rc::new(move || {
+                if let Some(d) = weak.upgrade() {
+                    d.set_editing(true);
+                }
+            }))
+        }];
+        rows.push(row("wallpaper", "trocar o wallpaper", false, Rc::new(|| {
+            crate::exec::spawn("octopus", &["open", "wallpapers"]);
+        })));
+        rows.push(row("settings", "configurar a área de trabalho", false, Rc::new(|| {
+            crate::exec::spawn("octopus", &["settings", "desktop"]);
+        })));
+        if let Some((item, _)) = self.item_at(x, y) {
+            let weak = Rc::downgrade(self);
+            rows.push(row("inventory_2", "guardar esse widget", true, Rc::new(move || {
+                if let Some(d) = weak.upgrade() {
+                    d.remove(item.id);
+                }
+            })));
+        }
+        if !self.editing.get() {
+            self.window.set_keyboard_mode(KeyboardMode::OnDemand);
+        }
+        let weak = Rc::downgrade(self);
+        menu::open(&self.fixed, x, y, rows, move || {
+            if let Some(d) = weak.upgrade() {
+                if !d.editing.get() {
+                    d.window.set_keyboard_mode(KeyboardMode::None);
+                }
+            }
+        });
     }
 }

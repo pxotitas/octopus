@@ -144,6 +144,11 @@ impl Clock {
         clock
     }
 
+    pub fn set_size(&self, size: i32) {
+        self.imp().size.set(size);
+        self.queue_resize();
+    }
+
     /// Redraws about 4 times a second, only while on screen.
     fn start(&self) {
         let imp = self.imp();
