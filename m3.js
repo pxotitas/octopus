@@ -66,10 +66,14 @@ for (const badge of document.querySelectorAll(".shape-badge")) {
   const hover = radii(badge.dataset.hover || badge.dataset.shape);
   let current = rest.slice();
   outline.setAttribute("d", path(current));
-  if (still || !badge.dataset.hover) continue;
 
   let frame = 0;
   const morph = (target) => {
+    if (still) {
+      current = target;
+      outline.setAttribute("d", path(current));
+      return;
+    }
     cancelAnimationFrame(frame);
     const from = current.slice();
     const start = performance.now();
@@ -81,6 +85,8 @@ for (const badge of document.querySelectorAll(".shape-badge")) {
     };
     frame = requestAnimationFrame(step);
   };
+  badge.morphTo = (kind) => morph(radii(kind));
+  if (still || !badge.dataset.hover) continue;
   const host = badge.closest("a, button, .feature, .insight") || badge;
   host.addEventListener("pointerenter", () => morph(hover));
   host.addEventListener("pointerleave", () => morph(rest));

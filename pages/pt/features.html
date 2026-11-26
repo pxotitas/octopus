@@ -1,0 +1,149 @@
+<div class="theatre" data-mode="theatre">
+<div class="curtain" aria-hidden="true"><span class="drape left"></span><span class="drape right"></span></div>
+<div class="spot" aria-hidden="true"></div>
+
+<section class="proscenium">
+  <p class="overline" data-reveal="rise">um espetáculo em seis atos</p>
+  <h1 data-reveal="rise" style="--i:1">algumas features</h1>
+  <p class="lead" data-reveal="rise" style="--i:2">as partes do octopus que são mais legais de testar do que de ler.
+  role a página pra ver a peça, ou escolha como você quer assistir.</p>
+  <div class="modes" role="radiogroup" aria-label="como ver essa página" data-reveal="rise" style="--i:3">
+    <button type="button" role="radio" data-mode="theatre"><span class="symbol">theater_comedy</span>teatro</button>
+    <button type="button" role="radio" data-mode="gallery"><span class="symbol">gallery_thumbnail</span>galeria</button>
+    <button type="button" role="radio" data-mode="script"><span class="symbol">article</span>roteiro</button>
+  </div>
+  <a class="cue" href="#act-1" data-reveal="rise" style="--i:4"><span class="symbol">keyboard_double_arrow_down</span></a>
+</section>
+
+<article class="act" id="act-1">
+  <header class="act-head" data-reveal="curtain">
+    <span class="numeral">i</span>
+    <h2>pergunte o clima</h2>
+  </header>
+  <section class="ask" data-reveal="rise">
+    <div class="ask-text">
+      <span class="shape-badge big tone-c" data-shape="sunny" data-hover="burst"><span class="symbol">partly_cloudy_day</span></span>
+      <p class="lead">a aba do clima aceita perguntas depois de um <code>&gt;</code>: amanhã,
+      ontem, quinta que vem, sexta passada, <code>+3</code>, <code>28/11</code>, a semana ou o
+      fim de semana. uma semana pra trás e duas pra frente, do open-meteo. testa aí:</p>
+      <label class="field">
+        <span class="symbol">chevron_right</span>
+        <input type="text" placeholder="amanhã, ontem, semana…" aria-label="pergunte o clima">
+      </label>
+      <div class="chips">
+        <button class="chip" type="button" data-ask="agora">agora</button>
+        <button class="chip" type="button" data-ask="amanhã">amanhã</button>
+        <button class="chip" type="button" data-ask="ontem">ontem</button>
+        <button class="chip" type="button" data-ask="fim de semana">fim de semana</button>
+        <button class="chip" type="button" data-ask="semana">semana</button>
+      </div>
+    </div>
+    <figure class="ask-shot framed" data-depth="0.06">
+      <img src="{{rel}}assets/screenshots/weather.webp" data-base="{{rel}}assets/screenshots/" alt="a aba do clima" width="1440" height="900">
+      <figcaption data-now="agora">&gt; agora</figcaption>
+    </figure>
+  </section>
+</article>
+
+<article class="act" id="act-2">
+  <header class="act-head" data-reveal="curtain">
+    <span class="numeral">ii</span>
+    <h2>os shapes</h2>
+  </header>
+  <p class="lead" data-reveal="rise">cada badge, card e canto de botão do shell é um dos shapes expressivos do
+  m3, desenhado como uma onda polar, então qualquer um vira qualquer outro. passa o mouse num.</p>
+  <div class="shape-cast" data-stagger></div>
+</article>
+
+<article class="act" id="act-3">
+  <header class="act-head" data-reveal="curtain">
+    <span class="numeral">iii</span>
+    <h2>widgets que você move</h2>
+  </header>
+  <div class="split-act">
+    <div data-reveal="rise">
+      <p class="lead">embaixo das janelas moram o clima e as suas contribuições no github, os quadradinhos
+      do seu perfil. arraste um widget pra mover, arraste o canto pra mudar o tamanho, e ele continua
+      ali depois de reiniciar. o calendário mostra quantas semanas couberem na largura.</p>
+      <pre><code>[desktop]
+widgets = ["weather", "contributions"]
+github = "seu-usuario"
+contributions_colors = "github"  # ou "theme"</code></pre>
+    </div>
+    <div class="desk" data-reveal="tilt" aria-label="uma área de trabalho pra brincar">
+      <div class="desk-widget" style="--x:6%;--y:8%;--w:62%;--h:46%">
+        <div class="desk-head"><span class="shape-badge small tone-c" data-shape="softburst"><span class="symbol">commit</span></span>contribuições<b class="desk-total"></b></div>
+        <div class="contrib" aria-hidden="true"></div>
+        <span class="grip symbol" title="arraste pra mudar o tamanho">open_in_full</span>
+      </div>
+      <div class="desk-widget" style="--x:52%;--y:52%;--w:42%;--h:40%">
+        <div class="desk-weather">
+          <span class="shape-badge big" data-shape="cookie9"><span class="symbol">cloud</span></span>
+          <div><b>24°</b><span>nublado</span></div>
+        </div>
+        <span class="grip symbol" title="arraste pra mudar o tamanho">open_in_full</span>
+      </div>
+      <p class="desk-hint"><span class="symbol">pan_tool</span>arraste eles por aí</p>
+    </div>
+  </div>
+</article>
+
+<article class="act" id="act-4">
+  <header class="act-head" data-reveal="curtain">
+    <span class="numeral">iv</span>
+    <h2>uma barra na dela</h2>
+  </header>
+  <div class="split-act">
+    <div class="bar-mock" data-reveal="rise" aria-hidden="true">
+      <span class="logo symbol">change_history</span>
+      <span class="dots"><i></i><i class="on"></i><i></i></span>
+      <span class="bun"><b class="hh">00</b><b class="mm">00</b></span>
+      <span class="battery"><i></i></span>
+    </div>
+    <div data-reveal="rise" style="--i:1">
+      <p class="lead">uma waybar vertical de poucos pixels: os workspaces, o relógio no shape bun do m3,
+      a bandeja e uma bateria desenhada pela carga de verdade. tudo que é maior abre dela como painel.</p>
+      <p class="lead">esse aí em cima é o relógio, no seu horário.</p>
+    </div>
+  </div>
+</article>
+
+<article class="act" id="act-5">
+  <header class="act-head" data-reveal="curtain">
+    <span class="numeral">v</span>
+    <h2>um bloqueio que reage</h2>
+  </header>
+  <p class="lead" data-reveal="rise">na tela de bloqueio, cada tecla que você aperta troca os shapes por outros.
+  digita alguma coisa aqui, nada sai dessa página:</p>
+  <div class="lock-demo" data-reveal="rise">
+    <div class="lock-shapes" aria-hidden="true"></div>
+    <label class="field"><span class="symbol">lock</span><input type="password" placeholder="digite qualquer coisa" aria-label="digite pra trocar os shapes" autocomplete="off"></label>
+  </div>
+</article>
+
+<article class="act" id="act-6">
+  <header class="act-head" data-reveal="curtain">
+    <span class="numeral">vi</span>
+    <h2>o dash, e o seu wallpaper em tudo</h2>
+  </header>
+  <figure class="stage framed" data-reveal="gild" data-depth="0.04">
+    <img src="{{rel}}assets/screenshots/dash.webp" alt="o dash" width="1440" height="900" loading="lazy">
+    <figcaption>um trilho de navegação à esquerda, um relógio analógico num cookie, notificações e o clima lado a lado.</figcaption>
+  </figure>
+  <div class="split-act">
+    <p class="lead" data-reveal="rise">escolha um wallpaper e o matugen repinta a barra, os painéis, o rofi,
+    o fuzzel e o resto do sistema.</p>
+    <video data-reveal="tilt" src="{{rel}}assets/clips/hq/palette.mp4" poster="{{rel}}assets/clips/hq/palette.webp" autoplay muted loop playsinline></video>
+  </div>
+</article>
+
+<section class="finale" data-reveal="curtain">
+  <p class="overline">fecham-se as cortinas</p>
+  <h2>esse foi o espetáculo</h2>
+  <div class="actions">
+    <a class="button filled" href="../#install"><span class="symbol">download</span>instalar</a>
+    <a class="button tonal" href="../docs/"><span class="symbol">menu_book</span>ler as docs</a>
+    <a class="button text" href="../media/">mais screenshots</a>
+  </div>
+</section>
+</div>

@@ -22,7 +22,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,400..600,0..1,0&display=block" rel="stylesheet">
-  <link rel="stylesheet" href="../../style.css?v=2c4128f4">
+  <link rel="stylesheet" href="../../style.css?v=ed06ee64">
 </head>
 <body>
 <header class="top">
@@ -35,6 +35,7 @@
       <span>octopus</span>
     </a>
     <div class="links">
+      <a href="../../pt/features/">algumas features</a>
       <a href="../../pt/docs/" aria-current="page">docs</a>
       <a href="../../pt/media/">mídia</a>
       <a href="../../pt/changelog/">changelog</a>
@@ -73,9 +74,9 @@ place = &quot;&quot;                 # uma cidade, ou &quot;lat,lon&quot;; vazio
 
 [desktop]
 enabled = true             # widgets embaixo das janelas
-widgets = [&quot;weather&quot;, &quot;github&quot;]
-position = &quot;top-right&quot;     # ou top-left, bottom-right, bottom-left
-github = &quot;&quot;                # um usuário do github, pro widget de commits
+widgets = [&quot;weather&quot;, &quot;contributions&quot;]
+github = &quot;&quot;                # um usuário do github, pro calendário de contribuições
+contributions_colors = &quot;github&quot;  # ou &quot;theme&quot;, a cor do wallpaper
 
 [notifications]
 timeout_ms = 5000
@@ -92,7 +93,8 @@ lyrics = true</code></pre>
 <p>clique: abre, foca ou alterna entre as janelas do app. meio: janela nova. direito: menu com as janelas, fixar e fechar.</p>
 <h2 id="widgets-de-desktop">widgets de desktop</h2>
 <p>uma camada embaixo das janelas, então eles aparecem onde nenhuma janela cobre:</p>
-<ul><li><strong>weather</strong>: o clima agora num cookie grande, e os próximos quatro dias. um clique abre a aba de clima.</li><li><strong>github</strong>: os últimos commits de <code>github</code>, pela busca pública de commits do github (sem token). um clique abre o commit.</li></ul>
+<ul><li><strong>weather</strong>: o clima agora num cookie grande, e os próximos quatro dias. um clique abre a aba de clima.</li><li><strong>contributions</strong>: o calendário do perfil de <code>github</code>, os quadradinhos verdes, com o total do ano e a sequência atual. passe o mouse num quadrado pra ver o dia. mostra quantas semanas couberem na largura e atualiza a cada meia hora (sem token).</li></ul>
+<p>arraste um widget pra mover, e arraste o puxador no canto pra mudar o tamanho. onde eles ficam é guardado em <code>~/.local/state/octopus/desktop.json</code>; apague esse arquivo pra voltar pro canto.</p>
 <p>mudar o <code>[desktop]</code> nas configurações reinicia o octopus sozinho.</p>
     <p class="edit"><a href="https://github.com/pxotitas/octopus/blob/pt-br/docs/configuracao.md">editar essa página no github</a></p>
   </article>
@@ -101,6 +103,6 @@ lyrics = true</code></pre>
 <footer>
   <p>gpl-3.0-or-later · feito por <a href="https://github.com/pxotitas">pxotitas</a>, com partes do <a href="https://github.com/andreumassanet/impasto">impasto</a> e do <a href="https://github.com/pxdritz1/velatura">velatura</a>.</p>
 </footer>
-<script src="../../m3.js?v=92a4685c" defer></script>
+<script src="../../m3.js?v=ed8545c4" defer></script>
 </body>
 </html>

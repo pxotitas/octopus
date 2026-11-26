@@ -14,7 +14,7 @@ LANGS = {
         "html": "en",
         "tagline": "a cozy m3 shell for niri",
         "description": "a cozy material 3 shell for niri: a vertical waybar and a rust + gtk4 companion.",
-        "nav": {"docs": "docs", "media": "media", "changelog": "changelog"},
+        "nav": {"features": "some features", "docs": "docs", "media": "media", "changelog": "changelog"},
         "switch": "português",
         "footer": "gpl-3.0-or-later · made by {me}, with parts from {impasto} and {velatura}.",
     },
@@ -23,13 +23,13 @@ LANGS = {
         "html": "pt-BR",
         "tagline": "um shell m3 cozy pro niri",
         "description": "um shell material 3 cozy pro niri: uma waybar vertical e um companion em rust + gtk4.",
-        "nav": {"docs": "docs", "media": "mídia", "changelog": "changelog"},
+        "nav": {"features": "algumas features", "docs": "docs", "media": "mídia", "changelog": "changelog"},
         "switch": "english",
         "footer": "gpl-3.0-or-later · feito por {me}, com partes do {impasto} e do {velatura}.",
     },
 }
 
-SECTIONS = {"docs": "docs/", "media": "media/", "changelog": "changelog/"}
+SECTIONS = {"features": "features/", "docs": "docs/", "media": "media/", "changelog": "changelog/"}
 
 
 def versioned(name):
@@ -38,7 +38,7 @@ def versioned(name):
     return f"{name}?v={digest}"
 
 
-def page(lang, path, title, body, other, section=None, scripts=(), base=None):
+def page(lang, path, title, body, other, section=None, scripts=(), base=None, styles=()):
     """path: where the page is written, from the site root (e.g. "pt/docs/tema.html").
     other: the same page in the other language, from the site root.
     base: an absolute prefix for pages served from any path, like the 404."""
@@ -60,6 +60,7 @@ def page(lang, path, title, body, other, section=None, scripts=(), base=None):
         impasto='<a href="https://github.com/andreumassanet/impasto">impasto</a>',
         velatura='<a href="https://github.com/pxdritz1/velatura">velatura</a>',
     )
+    sheets = "".join(f'\n  <link rel="stylesheet" href="{rel}{versioned(s)}">' for s in styles)
     tags = "".join(f'\n<script src="{rel}{versioned(s)}" defer></script>' for s in (*scripts, "m3.js"))
 
     return f"""<!DOCTYPE html>
@@ -86,7 +87,7 @@ def page(lang, path, title, body, other, section=None, scripts=(), base=None):
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,400..600,0..1,0&display=block" rel="stylesheet">
-  <link rel="stylesheet" href="{rel}{versioned('style.css')}">
+  <link rel="stylesheet" href="{rel}{versioned('style.css')}">{sheets}
 </head>
 <body>
 <header class="top">
