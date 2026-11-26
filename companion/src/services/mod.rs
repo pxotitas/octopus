@@ -41,7 +41,7 @@ impl Services {
             wifi: network::Wifi::new(),
             bluetooth: bluetooth::Bluetooth::new(),
             media: media::Media::new(),
-            weather: weather::Weather::new(&config.weather.place),
+            weather: weather::Weather::new(&config.weather.place, config.weather.unit == "fahrenheit"),
             cava: cava::Cava::new(),
             notifications: notifications::Notifications::new(),
             theme: theme::Theme::new(),

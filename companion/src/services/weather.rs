@@ -114,7 +114,7 @@ pub struct Weather {
 }
 
 impl Weather {
-    pub fn new(place: &str) -> Rc<Self> {
+    pub fn new(place: &str, fahrenheit: bool) -> Rc<Self> {
         let weather = Rc::new(Self {
             reading: Store::new(None),
         });
@@ -126,7 +126,11 @@ impl Weather {
                 let place = place.clone();
                 glib::spawn_future_local(async move {
                     let script = exec::script("weather.py");
-                    let Some(out) = exec::output("python3", &[&script, &place]).await else {
+                    let mut args = vec![script.as_str(), place.as_str()];
+                    if fahrenheit {
+                        args.push("--fahrenheit");
+                    }
+                    let Some(out) = exec::output("python3", &args).await else {
                         return;
                     };
                     let available = serde_json::from_str::<Answer>(&out).is_ok_and(|a| a.available);

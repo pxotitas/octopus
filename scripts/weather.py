@@ -23,6 +23,7 @@ from datetime import date, datetime
 LANG = os.environ.get("OCTOPUS_LANG", "pt")
 TIMEOUT = 12
 PAST_DAYS, FUTURE_DAYS = 7, 14
+UNIT = "celsius"
 CACHE = pathlib.Path(os.environ.get("XDG_CACHE_HOME", pathlib.Path.home() / ".cache")) / "octopus" / "place.json"
 PLACE_TTL = 6 * 3600
 
@@ -155,6 +156,7 @@ def forecast(lat, lon):
         "past_days": PAST_DAYS,
         "forecast_days": FUTURE_DAYS + 1,
         "wind_speed_unit": "kmh",
+        "temperature_unit": UNIT,
         "current": ",".join([
             "temperature_2m", "apparent_temperature", "relative_humidity_2m", "is_day",
             "precipitation", "weather_code", "cloud_cover", "pressure_msl",
@@ -277,7 +279,9 @@ def report(place):
 
 if __name__ == "__main__":
     # Every argument is part of the place, so callers need not quote it.
-    place = " ".join(sys.argv[1:]).strip()
+    words = [w for w in sys.argv[1:] if w != "--fahrenheit"]
+    UNIT = "fahrenheit" if "--fahrenheit" in sys.argv[1:] else "celsius"
+    place = " ".join(words).strip()
     try:
         print(json.dumps(report(place), ensure_ascii=False))
     except PlaceNotFound as error:
