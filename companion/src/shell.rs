@@ -54,7 +54,7 @@ impl Shell {
                 })
             };
 
-            let cc = panels::control_center::build(&services, open.clone());
+            let cc = panels::control_center::build(&services, &config.control_center, open.clone());
             let dash = Dash::new(&services, config.media.lyrics);
             dash.select(&config.dash.page);
 
@@ -459,6 +459,16 @@ impl Shell {
                     self.osd.show(icon, p);
                 }
                 String::new()
+            }
+            ["caffeine", rest @ ..] => {
+                let caffeine = &self.services.caffeine;
+                match rest {
+                    ["on"] => caffeine.set(true),
+                    ["off"] => caffeine.set(false),
+                    [] => caffeine.toggle(),
+                    _ => {}
+                }
+                if *caffeine.on.get() { "on" } else { "off" }.to_owned()
             }
             ["dnd"] => {
                 let on = !*self.services.notifications.dnd.get();
