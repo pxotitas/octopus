@@ -55,6 +55,7 @@ impl Shell {
 
             let cc = panels::control_center::build(&services, open.clone());
             let dash = Dash::new(&services, config.media.lyrics);
+            dash.select(&config.dash.page);
 
             let mut popups = HashMap::new();
             popups.insert(
@@ -257,6 +258,7 @@ impl Shell {
                 &services.notifications,
                 config.notifications.timeout_ms,
                 config.notifications.max_popups,
+                &config.notifications.position,
             );
 
             for name in ["control-center", "dash"] {
@@ -266,7 +268,7 @@ impl Shell {
                 }
             }
 
-            let lock = crate::lock::Lock::new(app, &services, config.media.lyrics);
+            let lock = crate::lock::Lock::new(app, &services, config.lock.lyrics);
 
             let dock = config.dock.enabled.then(|| {
                 let shared = shared.clone();
@@ -283,7 +285,21 @@ impl Shell {
                 )
             });
 
-            let desktop = crate::desktop::Desktop::new(app, &services, &config);
+            let desktop = {
+                let shared = shared.clone();
+                crate::desktop::Desktop::new(
+                    app,
+                    &services,
+                    &config,
+                    Rc::new(move |widgets: Vec<String>| {
+                        let mut config = shared.borrow_mut();
+                        config.desktop.widgets = widgets;
+                        if let Err(err) = config::save(&config) {
+                            eprintln!("octopus: cannot save the desktop: {err}");
+                        }
+                    }),
+                )
+            };
 
             Shell {
                 app: app.clone(),
@@ -333,9 +349,16 @@ impl Shell {
         let audio = &self.services.audio;
         match words.as_slice() {
             ["toggle", name] => self.toggle(alias(name)),
-            ["settings"] => {
+            ["settings", page @ ..] => {
                 self.close_all();
-                self.open_settings();
+                self.open_settings(page.first().copied());
+                String::new()
+            }
+            ["desktop", "arrange"] => {
+                self.close_all();
+                if let Some(desktop) = &self._desktop {
+                    desktop.set_editing(true);
+                }
                 String::new()
             }
             ["tray-status"] => {
@@ -468,7 +491,7 @@ impl Shell {
         }
     }
 
-    fn open_settings(&self) {
+    fn open_settings(&self, page: Option<&str>) {
         let existing = self.settings.borrow().clone();
         let settings = match existing {
             Some(s) => s,
@@ -476,21 +499,18 @@ impl Shell {
                 let popups: Vec<Rc<Popup>> = self.popups.values().cloned().collect();
                 let current = self.config.clone();
                 let app = self.app.clone();
-                let apply: Rc<dyn Fn(config::Config)> = Rc::new(move |next: config::Config| {
+                let opened = self.config.borrow().desktop.widgets.clone();
+                let apply: Rc<dyn Fn(config::Config)> = Rc::new(move |mut next: config::Config| {
+                    // the desktop places and puts away its widgets by itself;
+                    // keep what it did unless the settings changed the list
+                    if next.desktop.widgets == opened {
+                        next.desktop.widgets = current.borrow().desktop.widgets.clone();
+                    }
                     if let Err(err) = config::save(&next) {
                         eprintln!("octopus: cannot save settings: {err}");
                     }
-                    let (old_language, old_dock, old_desktop) = {
-                        let current = current.borrow();
-                        (current.language.clone(), current.dock.clone(), current.desktop.clone())
-                    };
-                    if next.language != old_language
-                        || next.dock.enabled != old_dock.enabled
-                        || next.dock.mode != old_dock.mode
-                        || next.dock.size != old_dock.size
-                        || next.dock.magnify != old_dock.magnify
-                        || next.desktop != old_desktop
-                    {
+                    if current.borrow().restart_for(&next) {
+                        *current.borrow_mut() = next;
                         crate::restart(&app);
                         return;
                     }
@@ -517,6 +537,9 @@ impl Shell {
                 s
             }
         };
+        if let Some(page) = page {
+            settings.show_page(page);
+        }
         settings.present();
     }
 

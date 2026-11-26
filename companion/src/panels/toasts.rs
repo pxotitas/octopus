@@ -33,6 +33,7 @@ impl Toasts {
         service: &Rc<Notifications>,
         timeout_ms: u32,
         max: usize,
+        position: &str,
     ) -> Rc<Self> {
         let window = gtk::Window::builder()
             .application(app)
@@ -44,10 +45,12 @@ impl Toasts {
         window.set_namespace(Some("octopus-notifications"));
         window.set_layer(Layer::Top);
         window.set_keyboard_mode(KeyboardMode::None);
-        window.set_anchor(Edge::Top, true);
-        window.set_anchor(Edge::Right, true);
-        window.set_margin(Edge::Top, 8);
-        window.set_margin(Edge::Right, 8);
+        let vertical = if position.starts_with("bottom") { Edge::Bottom } else { Edge::Top };
+        let side = if position.ends_with("left") { Edge::Left } else { Edge::Right };
+        for edge in [vertical, side] {
+            window.set_anchor(edge, true);
+            window.set_margin(edge, 8);
+        }
 
         let column = gtk::Box::new(gtk::Orientation::Vertical, 0);
         column.add_css_class("toasts");
