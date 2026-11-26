@@ -414,6 +414,27 @@ shape.tile-icon label {
   color: @on_error;
 }
 
+.notification.critical .notification-actions > button {
+  background: alpha(@on_error, 0.16);
+}
+
+.notification.critical .notification-actions > button label {
+  color: @on_error;
+  font-weight: 600;
+}
+
+.notification.critical .notification-actions > button:hover {
+  background: alpha(@on_error, 0.26);
+}
+
+.notification.critical .notification-actions > button:first-child {
+  background: @on_error;
+}
+
+.notification.critical .notification-actions > button:first-child label {
+  color: @error;
+}
+
 shape.notification-icon {
   color: @surface_container;
 }
@@ -3036,4 +3057,191 @@ button.order-step:hover {
 
 button.order-step:disabled {
   opacity: 0.3;
+}
+
+/* lembretes */
+
+window.reminders-app {
+  background: @surface;
+}
+
+.reminders-root {
+  padding: 22px 22px 18px;
+}
+
+shape.reminders-badge {
+  color: @primary_container;
+}
+
+shape.reminders-badge .icon {
+  color: @on_primary_container;
+  font-size: 26px;
+}
+
+.reminders-title {
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.reminders-count, .reminders-sub {
+  color: @on_surface_variant;
+  font-size: 13px;
+}
+
+.reminders-quick entry {
+  min-height: 48px;
+  border-radius: 999px;
+  padding: 0 18px;
+  background: @surface_container_high;
+  border: none;
+  box-shadow: none;
+}
+
+.reminders-quick entry.error {
+  box-shadow: inset 0 0 0 2px @error;
+}
+
+togglebutton.reminders-alarm-toggle, button.reminders-add {
+  min-width: 48px;
+  min-height: 48px;
+  padding: 0;
+  border-radius: 999px;
+  background: @surface_container_high;
+  transition: border-radius 200ms cubic-bezier(0.2, 0, 0, 1), background 200ms ease;
+}
+
+togglebutton.reminders-alarm-toggle:checked {
+  background: @tertiary_container;
+  color: @on_tertiary_container;
+  border-radius: 16px;
+}
+
+button.reminders-add {
+  background: @primary;
+  color: @on_primary;
+  border-radius: 16px;
+}
+
+.reminders-preview {
+  margin-left: 18px;
+  font-size: 13px;
+  color: @on_surface_variant;
+}
+
+.reminders-preview.ready {
+  color: @primary;
+  font-weight: 600;
+}
+
+.reminders-section {
+  margin: 10px 6px 2px;
+  font-size: 13px;
+  font-weight: 700;
+  color: @primary;
+}
+
+.reminder {
+  background: @surface_container;
+  border-radius: 24px;
+  transition: opacity 200ms ease;
+}
+
+.reminder.off {
+  opacity: 0.6;
+}
+
+button.reminder-open {
+  padding: 12px 16px 12px 12px;
+  border-radius: 24px;
+  background: none;
+}
+
+button.reminder-open:hover {
+  background: alpha(@on_surface, 0.04);
+}
+
+shape.reminder-badge {
+  color: @secondary_container;
+}
+
+shape.reminder-badge .icon {
+  color: @on_secondary_container;
+}
+
+.reminder-time {
+  font-size: 26px;
+  font-weight: 700;
+}
+
+.reminder-title {
+  font-weight: 600;
+}
+
+.reminder-sub {
+  font-size: 12px;
+  color: @on_surface_variant;
+}
+
+.reminder-editor {
+  padding: 4px 16px 16px;
+}
+
+.reminder-editor entry {
+  border-radius: 14px;
+  min-height: 42px;
+  background: @surface_container_high;
+  border: none;
+  box-shadow: none;
+}
+
+.reminder-clock spinbutton {
+  font-size: 34px;
+  font-weight: 700;
+  border-radius: 18px;
+  background: @surface_container_high;
+  border: none;
+  box-shadow: none;
+}
+
+.reminder-clock spinbutton text {
+  min-width: 72px;
+  font-size: 34px;
+  font-weight: 700;
+}
+
+.reminder-clock spinbutton button {
+  background: none;
+  border: none;
+  color: @on_surface_variant;
+}
+
+.reminder-colon {
+  font-size: 34px;
+  font-weight: 700;
+}
+
+menubutton.reminder-day > button {
+  border-radius: 999px;
+  background: @secondary_container;
+  color: @on_secondary_container;
+  padding: 6px 16px;
+}
+
+button.reminder-delete {
+  color: @error;
+  border-radius: 999px;
+  min-width: 40px;
+  min-height: 40px;
+}
+
+.reminders-empty {
+  padding: 40px 10px;
+}
+
+shape.reminders-empty-shape {
+  color: @surface_container_highest;
+}
+
+.reminders-foot {
+  padding-top: 4px;
 }

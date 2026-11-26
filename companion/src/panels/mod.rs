@@ -9,6 +9,7 @@ pub mod emoji;
 pub mod lyrics;
 pub mod osd;
 pub mod power;
+pub mod reminders;
 pub mod settings;
 pub mod toasts;
 pub mod tray;
