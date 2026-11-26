@@ -252,7 +252,7 @@ mais detalhes em [`docs/`](docs/README.md).
 ## instalar
 
 depende de: `pam waybar matugen matuwall awww cliphist wl-clipboard wtype
-playerctl cava brightnessctl networkmanager bluez-utils libpulse python
+playerctl cava brightnessctl networkmanager bluez-utils libpulse python python-dateutil
 unicode-emoji unicode-cldr fd gcc rofi gtk3 gtk4 gtk4-layer-shell
 ttf-material-symbols-variable rust`.
 

@@ -10,18 +10,27 @@ uma árvore na esquerda: cinco categorias grandes, cada uma com seus galhos.
 
 - **aparência**: cores (modo, estilo da paleta, contraste) e idioma
 - **barra**: o editor, presets, forma e ancoragem
-- **painéis**: dash, notificações, clima e música
+- **painéis**: dash, notificações, clima, música e calendário
 - **área de trabalho**: widgets, contribuições e a dock
 - **sistema**: tela de bloqueio e sobre
 
 `octopus settings bar/editor` (ou só `octopus settings bar`) abre direto numa
-página. as mudanças esperam num rascunho até você apertar **aplicar**.
+página. as mudanças esperam num rascunho até você apertar **aplicar**. a
+engrenagem no pé do trilho do dash também abre ela.
 
 ## o editor da barra
 
 a barra desenhada como ela vai ficar. toque num módulo pra mudar ele no
-inspetor do lado; arraste pra outro lugar, ou pro catálogo pra tirar; arraste
-novos do catálogo.
+inspetor do lado (lugar, visual, comportamento); arraste pra outro lugar, ou
+pra **solte aqui pra tirar** pra tirar ele.
+
+o **+ adicionar** embaixo da barra abre um menu com duas coisas:
+
+- **adicionar módulo**: o catálogo, no lugar do inspetor. busque, filtre por
+  tipo (essenciais, sistema, áudio e mídia, atalhos, seus), escolha a parte
+  da barra, e clique num card ou arraste ele pra barra.
+- **criar módulo**: uma janela que monta um módulo seu, com ele desenhado
+  numa barrinha enquanto você preenche.
 
 | módulo | o que é | opções |
 |---|---|---|
@@ -42,9 +51,11 @@ quadrado) ou qualquer shape m3: cookies, trevos, flor, sol, explosão…
 desenhados nas cores do tema, e de novo quando o wallpaper muda. os **presets
 do módulo** põem fundo e forma num toque.
 
-**criar um módulo** (no fim do catálogo) te dá um seu: um nome, um material
-symbol, um comando cuja saída aparece embaixo do ícone, de quanto em quanto
-tempo ele roda, e um comando pro clique.
+um módulo seu tem um nome, um material symbol (busque, ou digite qualquer
+nome), o que ele mostra (só o ícone, ou o ícone e um valor vindo de um
+comando, com um botão **testar** e de quanto em quanto tempo roda), um
+comando pro clique e um visual. **editar módulo** no inspetor abre a mesma
+janela.
 
 **presets** troca a barra inteira de uma vez: padrão, mínima, monitor, música
 e foco. **ancoragem** escolhe o lado, a camada (embaixo, em cima, ou por cima
@@ -96,6 +107,9 @@ click = ""
 [dash]
 page = "overview"          # ou media, weather, wallpapers
 
+[calendar]
+urls = []                  # endereços ical: o secreto do google, do outlook, do nextcloud…
+
 [weather]
 place = ""                 # uma cidade, ou "lat,lon"; vazio usa o ip
 unit = "celsius"           # ou "fahrenheit"
@@ -121,7 +135,8 @@ magnify = true
 
 [desktop]
 enabled = true
-widgets = ["weather", "contributions"]  # também clock, media, calendar
+widgets = ["weather", "contributions"]  # também clock, media, calendar, agenda,
+                                        # system, battery, note, photo
 github = ""                # um usuário do github, pro calendário de contribuições
 contributions_colors = "github"  # ou "theme", a cor do wallpaper
 ```
@@ -131,6 +146,24 @@ contributions_colors = "github"  # ou "theme", a cor do wallpaper
 - **barra e tempo das letras**: na hora
 - **cores (modo)**: na hora; estilo da paleta e contraste repintam tudo ao aplicar
 - **todo o resto**: o octopus reinicia sozinho ao aplicar
+
+## calendário
+
+o calendário do dash e o da área de trabalho mostram os seus eventos: dias
+com algo ganham uma cor, e um clique no dia lista eles. ele lê endereços
+ical, então um google agenda não precisa de login nem de nada no cloud
+console:
+
+1. abra o google agenda na web, **configurações**
+2. na esquerda, em **configurações das minhas agendas**, escolha a agenda
+3. **integrar agenda**, copie o **endereço secreto no formato ical**
+4. cole em **painéis → calendário** (ou em `[calendar] urls`)
+
+qualquer outro ical funciona igual (outlook, nextcloud, fastmail, um feed de
+feriados). atualiza a cada 15 minutos e guarda uma cópia em
+`~/.cache/octopus/calendar`, então aparece offline também. o endereço secreto
+deixa qualquer um ler a agenda: não compartilhe. eventos que se repetem
+precisam do `python-dateutil`.
 
 ## css pessoal
 
@@ -156,7 +189,12 @@ uma camada embaixo das janelas, então eles aparecem onde nenhuma janela cobre:
   couberem na largura e atualiza a cada meia hora (sem token).
 - **clock**: analógico, num cookie.
 - **media**: o que está tocando, com os controles.
-- **calendar**: o mês inteiro.
+- **calendar**: o mês inteiro, com os seus eventos.
+- **agenda**: o que vem por aí nas suas agendas.
+- **system**: processador, memória e disco, em barras.
+- **battery**: uma pílula grande com o raio, e quanto falta pra encher ou acabar.
+- **note**: uma nota que se salva enquanto você digita.
+- **photo**: uma foto sua, preenchendo o card; o botão ao passar o mouse troca ela.
 
 eles ficam parados até você organizar: clique direito na área de trabalho e
 escolha **organizar widgets** (ou `octopus desktop arrange`). a área de
