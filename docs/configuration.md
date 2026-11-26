@@ -9,7 +9,7 @@ can also edit by hand.
 a tree on the left: five big categories, each with its branches.
 
 - **look**: colors (mode, palette style, contrast) and language
-- **bar**: the editor, presets and shape
+- **bar**: the editor, presets, shape and anchoring
 - **panels**: dash, notifications, weather and music
 - **desktop**: widgets, contributions and the dock
 - **system**: lock screen and about
@@ -25,11 +25,11 @@ new ones in from the catalog.
 
 | module | what it is | options |
 |---|---|---|
-| `logo` | opens the launcher | glyph, what a click opens, background, corners |
-| `workspaces` | niri's workspaces | dots or numbers |
-| `clock` | hours over minutes; opens the dash | 24 or 12 hours, bun/pill/rounded/square, background |
+| `logo` | opens the launcher | the octopus, your distro or a symbol; what a click opens; background and shape |
+| `workspaces` | niri's workspaces | dots, numbers, pills, squares or lines |
+| `clock` | hours over minutes; opens the dash | 24 or 12 hours, background and shape (the bun too) |
 | `tray` | background apps | |
-| `battery` | a pill that fills up | show the percentage |
+| `battery` | a pill that fills up, with a bolt while charging | show the percentage |
 | `controls` | control center, wi-fi, bluetooth, sound, power | which buttons, in a drawer or always shown |
 | `cpu`, `memory`, `temperature` | usage and heat | show the value, background, corners |
 | `brightness`, `volume` | scroll to change | show the value, background, corners |
@@ -37,8 +37,19 @@ new ones in from the catalog.
 | `media` | play and pause | background, corners |
 | `notifications`, `power` | shortcuts | background, corners |
 
+the **shape** behind a module is either rounded corners (pill, rounded,
+square) or any m3 shape: cookies, clovers, flower, sunny, burst… drawn in the
+theme's colors, and drawn again when the wallpaper changes. **module presets**
+set the background and the shape in one tap.
+
+**make a module** (at the end of the catalog) gives you one of your own: a
+name, a material symbol, a command whose output shows under the icon, how
+often it runs, and a command for the click.
+
 **presets** sets the whole bar at once: default, minimal, monitor, music and
-focus. the bar changes when you apply, without restarting.
+focus. **anchoring** chooses the side, the layer (below, on top, or over
+everything), whether windows keep out of its way, and the gaps to the edges.
+the bar changes when you apply, without restarting.
 
 ## octopus.toml
 
@@ -54,6 +65,11 @@ contrast = 0.0             # -1 to 1
 position = "left"          # or "right"
 width = 52
 spacing = 4                # between modules
+layer = "top"              # "bottom", "top" or "overlay"
+exclusive = true           # windows keep out of its way
+margin_top = 8             # gaps to the edges, when floating
+margin_bottom = 8
+margin_edge = 8
 style = "floating"         # or "flush": against the edge, concave corners
 top = ["logo", "workspaces"]
 center = ["clock"]
@@ -61,11 +77,21 @@ bottom = ["tray", "battery", "controls"]
 
 [bar.modules.clock]        # one table per module you changed
 background = "primary"     # none, tonal, primary, surface
-shape = "bun"              # bun (clock only), round, soft, square
-variant = "24h"            # the module's own choice: 12h, numbers, a glyph…
+shape = "bun"              # bun (clock only), round, soft, square, or an m3 shape:
+                           # cookie4…12, clover4, clover8, flower, sunny, burst…
+variant = "24h"            # the module's own: 12h; for the logo "octopus", "arch", "pets"…;
+                           # for workspaces dots, numbers, pills, squares, bars
 text = false               # the value under the icon
 action = ""                # the logo: launcher, spotlight or dash
 items = []                 # the controls' buttons
+
+[[bar.custom]]             # a module of your own; put "user-1" in top/center/bottom
+id = "user-1"
+name = "uptime"
+icon = "timer"             # a material symbol
+exec = "uptime -p"         # its output is the value (turn on text)
+interval = 60
+click = ""
 
 [dash]
 page = "overview"          # or media, weather, wallpapers
