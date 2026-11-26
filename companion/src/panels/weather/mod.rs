@@ -30,14 +30,9 @@ pub struct WeatherPanel {
     query: RefCell<Query>,
 }
 
-const CHIPS: [(&str, &str); 6] = [
-    ("agora", "> agora"),
-    ("ontem", "> ontem"),
-    ("amanhã", "> amanhã"),
-    ("fim de semana", "> fim de semana"),
-    ("semana", "> semana"),
-    ("próxima semana", "> próxima semana"),
-];
+/// The chips write their own label in the language of the shell; the parser
+/// understands both.
+const CHIPS: [&str; 6] = ["agora", "ontem", "amanhã", "fim de semana", "semana", "próxima semana"];
 
 impl WeatherPanel {
     pub fn new(s: &Rc<Services>) -> Rc<Self> {
@@ -84,13 +79,14 @@ impl WeatherPanel {
             query: RefCell::new(Query::Now),
         });
 
-        for (label, text) in CHIPS {
+        for label in CHIPS {
+            let text = format!("> {}", t(label));
             let chip = gtk::Button::with_label(t(label));
             chip.add_css_class("chip");
             let weak = Rc::downgrade(&panel);
             chip.connect_clicked(move |_| {
                 if let Some(p) = weak.upgrade() {
-                    p.ask(text);
+                    p.ask(&text);
                 }
             });
             chips.append(&chip);
