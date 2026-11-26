@@ -10,18 +10,27 @@ a tree on the left: five big categories, each with its branches.
 
 - **look**: colors (mode, palette style, contrast) and language
 - **bar**: the editor, presets, shape and anchoring
-- **panels**: dash, notifications, weather and music
+- **panels**: dash, notifications, weather, music and calendar
 - **desktop**: widgets, contributions and the dock
 - **system**: lock screen and about
 
 `octopus settings bar/editor` (or just `octopus settings bar`) opens straight
-on a page. changes wait in a draft until you press **apply**.
+on a page. changes wait in a draft until you press **apply**. the gear at the
+foot of the dash's rail opens it too.
 
 ## the bar editor
 
 the bar drawn as it will look. tap a module to change it in the inspector
-beside it; drag it to another spot, or to the catalog to take it out; drag
-new ones in from the catalog.
+beside it (place, look, behavior); drag it to another spot, or onto **drop
+here to remove** to take it out.
+
+the **+ add** under the bar opens a menu with two things:
+
+- **add module**: the catalog, in the inspector's place. search, filter by
+  kind (essentials, system, audio and media, shortcuts, yours), pick the part
+  of the bar, then click a card or drag it onto the bar.
+- **make module**: a window that builds one of your own, with the module
+  drawn live in a little bar while you fill it in.
 
 | module | what it is | options |
 |---|---|---|
@@ -42,9 +51,10 @@ square) or any m3 shape: cookies, clovers, flower, sunny, burst… drawn in the
 theme's colors, and drawn again when the wallpaper changes. **module presets**
 set the background and the shape in one tap.
 
-**make a module** (at the end of the catalog) gives you one of your own: a
-name, a material symbol, a command whose output shows under the icon, how
-often it runs, and a command for the click.
+a module of your own has a name, a material symbol (search them, or type
+any name), what it shows (just the icon, or the icon and a value from a
+command, with a **test** button and how often it runs), a command for the
+click and a look. **edit module** in the inspector opens the same window.
 
 **presets** sets the whole bar at once: default, minimal, monitor, music and
 focus. **anchoring** chooses the side, the layer (below, on top, or over
@@ -96,6 +106,9 @@ click = ""
 [dash]
 page = "overview"          # or media, weather, wallpapers
 
+[calendar]
+urls = []                  # ical addresses: google's secret one, outlook's, nextcloud's…
+
 [weather]
 place = ""                 # a city, or "lat,lon"; empty uses your ip
 unit = "celsius"           # or "fahrenheit"
@@ -121,7 +134,8 @@ magnify = true
 
 [desktop]
 enabled = true
-widgets = ["weather", "contributions"]  # also clock, media, calendar
+widgets = ["weather", "contributions"]  # also clock, media, calendar, agenda,
+                                        # system, battery, note, photo
 github = ""                # a github user, for the contributions calendar
 contributions_colors = "github"  # or "theme", the wallpaper's color
 ```
@@ -131,6 +145,23 @@ contributions_colors = "github"  # or "theme", the wallpaper's color
 - **bar and lyrics' timing**: right away
 - **colors (mode)**: right away; palette style and contrast repaint everything when applied
 - **everything else**: octopus restarts on its own when you apply
+
+## calendar
+
+the dash's calendar and the desktop's show your events: days with something
+get a tint, and a click on a day lists them. it reads ical addresses, so a
+google calendar needs no login and nothing in the cloud console:
+
+1. open google calendar on the web, **settings**
+2. on the left, under **settings for my calendars**, pick the calendar
+3. **integrate calendar**, copy the **secret address in ical format**
+4. paste it in **panels → calendar** (or in `[calendar] urls`)
+
+any other ical works the same (outlook, nextcloud, fastmail, a holidays
+feed). it refreshes every 15 minutes and keeps a copy in
+`~/.cache/octopus/calendar`, so it shows offline too. the secret address lets
+anyone read the calendar: don't share it. reading recurring events needs
+`python-dateutil`.
 
 ## your own css
 
@@ -156,7 +187,12 @@ a layer under the windows, so they show wherever no window covers them:
   is wide, and refreshes every half hour (no token).
 - **clock**: analog, on a cookie.
 - **music**: what's playing, with the controls.
-- **calendar**: the whole month.
+- **calendar**: the whole month, with your events.
+- **agenda**: what's coming up from your calendars.
+- **system**: processor, memory and disk, as bars.
+- **battery**: a big pill with the bolt, and how long until full or empty.
+- **note**: a note that saves itself as you type.
+- **photo**: a picture of yours, filling the card; the button on hover picks another.
 
 they stay put until you arrange them: right-click the desktop and pick
 **arrange widgets** (or `octopus desktop arrange`). the desktop comes up over
