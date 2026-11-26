@@ -51,23 +51,29 @@
 </section>
 
 <h2 id="video">o tour inteiro</h2>
-<p class="lead">um minuto e meio, com som, gravado antes do rail de navegação e da aba de clima nova.</p>
+<p class="lead">pouco mais de dois minutos, sem som: todos os clipes abaixo, um depois do outro.</p>
 <video class="tour" src="../../assets/video/showcase.mp4" poster="../../assets/video/showcase.webp" controls preload="metadata" playsinline></video>
 
 <h2 id="clips">clipes</h2>
-<p class="lead">o mesmo tour, um pedaço por vez. eles tocam conforme você rola; clica num pra ver maior. gravados antes do rail de navegação e da aba de clima nova.</p>
+<p class="lead">o mesmo tour, um pedaço por vez. eles tocam conforme você rola; clica num pra ver maior.</p>
 <div class="clips">
   <figure class="clip" id="dash">
     <button type="button" data-video="../../assets/clips/hq/dash.mp4" data-label="dash">
       <video src="../../assets/clips/dash.mp4" poster="../../assets/clips/dash.webp" muted loop playsinline preload="none"></video>
     </button>
-    <figcaption><strong>dash</strong> visão geral, música e a letra sincronizada</figcaption>
+    <figcaption><strong>dash</strong> visão geral, depois a música com a letra sincronizada</figcaption>
+  </figure>
+  <figure class="clip" id="calendar">
+    <button type="button" data-video="../../assets/clips/hq/calendar.mp4" data-label="calendário">
+      <video src="../../assets/clips/calendar.mp4" poster="../../assets/clips/calendar.webp" muted loop playsinline preload="none"></video>
+    </button>
+    <figcaption><strong>calendário</strong> seus eventos no dash, um dia por vez</figcaption>
   </figure>
   <figure class="clip" id="weather">
     <button type="button" data-video="../../assets/clips/hq/weather.mp4" data-label="clima e wallpapers">
       <video src="../../assets/clips/weather.mp4" poster="../../assets/clips/weather.webp" muted loop playsinline preload="none"></video>
     </button>
-    <figcaption><strong>clima e wallpapers</strong> a previsão, depois o seletor de wallpaper</figcaption>
+    <figcaption><strong>clima e wallpapers</strong> perguntando o clima, depois o seletor de wallpaper</figcaption>
   </figure>
   <figure class="clip" id="control-center">
     <button type="button" data-video="../../assets/clips/hq/control-center.mp4" data-label="central de controle">
@@ -75,17 +81,41 @@
     </button>
     <figcaption><strong>central de controle</strong> atalhos, sliders e o player</figcaption>
   </figure>
-  <figure class="clip" id="lock">
-    <button type="button" data-video="../../assets/clips/hq/lock.mp4" data-label="tela de bloqueio">
-      <video src="../../assets/clips/lock.mp4" poster="../../assets/clips/lock.webp" muted loop playsinline preload="none"></video>
+  <figure class="clip" id="widgets">
+    <button type="button" data-video="../../assets/clips/hq/widgets.mp4" data-label="organizando widgets">
+      <video src="../../assets/clips/widgets.mp4" poster="../../assets/clips/widgets.webp" muted loop playsinline preload="none"></video>
     </button>
-    <figcaption><strong>tela de bloqueio</strong> shapes que mudam a cada tecla</figcaption>
+    <figcaption><strong>organizando widgets</strong> o menu do clique direito, movendo um, e a maleta</figcaption>
+  </figure>
+  <figure class="clip" id="settings">
+    <button type="button" data-video="../../assets/clips/hq/settings.mp4" data-label="editor da barra">
+      <video src="../../assets/clips/settings.mp4" poster="../../assets/clips/settings.webp" muted loop playsinline preload="none"></video>
+    </button>
+    <figcaption><strong>editor da barra</strong> a árvore das configurações, presets de módulo e o catálogo</figcaption>
+  </figure>
+  <figure class="clip" id="maker">
+    <button type="button" data-video="../../assets/clips/hq/maker.mp4" data-label="criando um módulo">
+      <video src="../../assets/clips/maker.mp4" poster="../../assets/clips/maker.webp" muted loop playsinline preload="none"></video>
+    </button>
+    <figcaption><strong>criando um módulo</strong> um ícone, um comando, e testando</figcaption>
+  </figure>
+  <figure class="clip" id="palette">
+    <button type="button" data-video="../../assets/clips/hq/palette.mp4" data-label="paleta do wallpaper">
+      <video src="../../assets/clips/palette.mp4" poster="../../assets/clips/palette.webp" muted loop playsinline preload="none"></video>
+    </button>
+    <figcaption><strong>paleta do wallpaper</strong> um wallpaper novo repinta o shell, e volta</figcaption>
   </figure>
   <figure class="clip" id="launchers">
     <button type="button" data-video="../../assets/clips/hq/launchers.mp4" data-label="launchers">
       <video src="../../assets/clips/launchers.mp4" poster="../../assets/clips/launchers.webp" muted loop playsinline preload="none"></video>
     </button>
-    <figcaption><strong>launchers</strong> o rofi e o spotlight</figcaption>
+    <figcaption><strong>launchers</strong> o spotlight e o rofi</figcaption>
+  </figure>
+  <figure class="clip" id="calculator">
+    <button type="button" data-video="../../assets/clips/hq/calculator.mp4" data-label="conta no spotlight">
+      <video src="../../assets/clips/calculator.mp4" poster="../../assets/clips/calculator.webp" muted loop playsinline preload="none"></video>
+    </button>
+    <figcaption><strong>conta no spotlight</strong> contas depois do <code>=</code></figcaption>
   </figure>
   <figure class="clip" id="emoji">
     <button type="button" data-video="../../assets/clips/hq/emoji.mp4" data-label="emoji">
@@ -93,23 +123,11 @@
     </button>
     <figcaption><strong>emoji</strong> o seletor, com busca</figcaption>
   </figure>
-  <figure class="clip" id="settings">
-    <button type="button" data-video="../../assets/clips/hq/settings.mp4" data-label="configurações">
-      <video src="../../assets/clips/settings.mp4" poster="../../assets/clips/settings.webp" muted loop playsinline preload="none"></video>
+  <figure class="clip" id="lock">
+    <button type="button" data-video="../../assets/clips/hq/lock.mp4" data-label="tela de bloqueio">
+      <video src="../../assets/clips/lock.mp4" poster="../../assets/clips/lock.webp" muted loop playsinline preload="none"></video>
     </button>
-    <figcaption><strong>configurações</strong> as configurações antigas, antes da árvore e do editor da barra</figcaption>
-  </figure>
-  <figure class="clip" id="calculator">
-    <button type="button" data-video="../../assets/clips/hq/calculator.mp4" data-label="conta no spotlight">
-      <video src="../../assets/clips/calculator.mp4" poster="../../assets/clips/calculator.webp" muted loop playsinline preload="none"></video>
-    </button>
-    <figcaption><strong>conta no spotlight</strong> uma soma depois do <code>=</code></figcaption>
-  </figure>
-  <figure class="clip" id="palette">
-    <button type="button" data-video="../../assets/clips/hq/palette.mp4" data-label="paleta do wallpaper">
-      <video src="../../assets/clips/palette.mp4" poster="../../assets/clips/palette.webp" muted loop playsinline preload="none"></video>
-    </button>
-    <figcaption><strong>paleta do wallpaper</strong> um wallpaper novo repinta o shell</figcaption>
+    <figcaption><strong>tela de bloqueio</strong> shapes que mudam a cada tecla</figcaption>
   </figure>
 </div>
 

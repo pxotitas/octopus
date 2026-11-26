@@ -1,15 +1,18 @@
 """The media page: the full video, the clips, the screenshots and the brand."""
 
 CLIPS = [
-    ("dash", {"en": ("dash", "overview, music and the synced lyrics"), "pt": ("dash", "visão geral, música e a letra sincronizada")}),
-    ("weather", {"en": ("weather and wallpapers", "the forecast, then the wallpaper picker"), "pt": ("clima e wallpapers", "a previsão, depois o seletor de wallpaper")}),
+    ("dash", {"en": ("dash", "overview, then the music with its synced lyrics"), "pt": ("dash", "visão geral, depois a música com a letra sincronizada")}),
+    ("calendar", {"en": ("calendar", "your events in the dash, a day at a time"), "pt": ("calendário", "seus eventos no dash, um dia por vez")}),
+    ("weather", {"en": ("weather and wallpapers", "asking the weather, then the wallpaper picker"), "pt": ("clima e wallpapers", "perguntando o clima, depois o seletor de wallpaper")}),
     ("control-center", {"en": ("control center", "quick toggles, sliders and the player"), "pt": ("central de controle", "atalhos, sliders e o player")}),
-    ("lock", {"en": ("lock screen", "shapes that change at every key"), "pt": ("tela de bloqueio", "shapes que mudam a cada tecla")}),
-    ("launchers", {"en": ("launchers", "rofi and the spotlight"), "pt": ("launchers", "o rofi e o spotlight")}),
+    ("widgets", {"en": ("arranging widgets", "the right-click menu, moving one, and the case"), "pt": ("organizando widgets", "o menu do clique direito, movendo um, e a maleta")}),
+    ("settings", {"en": ("bar editor", "the settings tree, module presets and the catalog"), "pt": ("editor da barra", "a árvore das configurações, presets de módulo e o catálogo")}),
+    ("maker", {"en": ("making a module", "an icon, a command, and trying it"), "pt": ("criando um módulo", "um ícone, um comando, e testando")}),
+    ("palette", {"en": ("palette from the wallpaper", "a new wallpaper repaints the shell, then back"), "pt": ("paleta do wallpaper", "um wallpaper novo repinta o shell, e volta")}),
+    ("launchers", {"en": ("launchers", "the spotlight and rofi"), "pt": ("launchers", "o spotlight e o rofi")}),
+    ("calculator", {"en": ("spotlight math", "sums typed after <code>=</code>"), "pt": ("conta no spotlight", "contas depois do <code>=</code>")}),
     ("emoji", {"en": ("emoji", "the picker, with search"), "pt": ("emoji", "o seletor, com busca")}),
-    ("settings", {"en": ("settings", "the old settings, before the tree and the bar editor"), "pt": ("configurações", "as configurações antigas, antes da árvore e do editor da barra")}),
-    ("calculator", {"en": ("spotlight math", "a sum typed after <code>=</code>"), "pt": ("conta no spotlight", "uma soma depois do <code>=</code>")}),
-    ("palette", {"en": ("palette from the wallpaper", "a new wallpaper repaints the shell"), "pt": ("paleta do wallpaper", "um wallpaper novo repinta o shell")}),
+    ("lock", {"en": ("lock screen", "shapes that change at every key"), "pt": ("tela de bloqueio", "shapes que mudam a cada tecla")}),
 ]
 
 GROUPS = [
@@ -56,16 +59,16 @@ GROUPS = [
 TEXT = {
     "en": {
         "title": "media", "lead": "octopus standing still and in motion. the screenshots are in english.",
-        "video": "the whole tour", "video_lead": "a minute and a half, with sound, recorded before the navigation rail and the new weather tab.",
-        "clips": "clips", "clips_lead": "the same tour, a piece at a time. they play as you scroll; click one to see it bigger. recorded before the navigation rail and the new weather tab.",
+        "video": "the whole tour", "video_lead": "two minutes and change, without sound: every clip below, one after the other.",
+        "clips": "clips", "clips_lead": "the same tour, a piece at a time. they play as you scroll; click one to see it bigger.",
         "shots": "screenshots", "shots_lead": "click one to see it full size.",
         "brand": "logo and banner", "brand_lead": "for posts, videos or a link to the project.",
         "download": "download", "close": "close",
     },
     "pt": {
         "title": "mídia", "lead": "o octopus parado e em movimento. as screenshots estão em inglês.",
-        "video": "o tour inteiro", "video_lead": "um minuto e meio, com som, gravado antes do rail de navegação e da aba de clima nova.",
-        "clips": "clipes", "clips_lead": "o mesmo tour, um pedaço por vez. eles tocam conforme você rola; clica num pra ver maior. gravados antes do rail de navegação e da aba de clima nova.",
+        "video": "o tour inteiro", "video_lead": "pouco mais de dois minutos, sem som: todos os clipes abaixo, um depois do outro.",
+        "clips": "clipes", "clips_lead": "o mesmo tour, um pedaço por vez. eles tocam conforme você rola; clica num pra ver maior.",
         "shots": "screenshots", "shots_lead": "clica numa pra ver em tamanho real.",
         "brand": "logo e banner", "brand_lead": "pra posts, vídeos ou um link pro projeto.",
         "download": "baixar", "close": "fechar",
