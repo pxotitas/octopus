@@ -54,7 +54,7 @@
     <p>quase tudo dá pra mudar pela janela de configurações (Mod+Comma, ou <code>octopus settings</code>). ela escreve em <code>~/.config/octopus/octopus.toml</code>, que também pode ser editado à mão.</p>
 <h2 id="a-janela-de-configurações">a janela de configurações</h2>
 <p>uma árvore na esquerda: cinco categorias grandes, cada uma com seus galhos.</p>
-<ul><li><strong>aparência</strong>: cores (modo, estilo da paleta, contraste) e idioma</li><li><strong>barra</strong>: o editor, presets, forma e ancoragem</li><li><strong>painéis</strong>: dash, notificações, clima, música e calendário</li><li><strong>área de trabalho</strong>: widgets, contribuições e a dock</li><li><strong>sistema</strong>: tela de bloqueio e sobre</li></ul>
+<ul><li><strong>aparência</strong>: cores (modo, estilo da paleta, contraste) e idioma</li><li><strong>barra</strong>: o editor, presets, forma e ancoragem</li><li><strong>painéis</strong>: dash, notificações, clima, música e calendário</li><li><strong>área de trabalho</strong>: widgets (com as opções de cada um) e a dock</li><li><strong>sistema</strong>: tela de bloqueio e sobre</li></ul>
 <p><code>octopus settings bar/editor</code> (ou só <code>octopus settings bar</code>) abre direto numa página. as mudanças esperam num rascunho até você apertar <strong>aplicar</strong>. a engrenagem no pé do trilho do dash também abre ela.</p>
 <h2 id="o-editor-da-barra">o editor da barra</h2>
 <p>a barra desenhada como ela vai ficar. toque num módulo pra mudar ele no inspetor do lado (lugar, visual, comportamento); arraste pra outro lugar, ou pra <strong>solte aqui pra tirar</strong> pra tirar ele.</p>
@@ -138,7 +138,35 @@ enabled = true
 widgets = [&quot;weather&quot;, &quot;contributions&quot;]  # também clock, media, calendar, agenda,
                                         # system, battery, note, photo
 github = &quot;&quot;                # um usuário do github, pro calendário de contribuições
-contributions_colors = &quot;github&quot;  # ou &quot;theme&quot;, a cor do wallpaper</code></pre>
+contributions_colors = &quot;github&quot;  # ou &quot;theme&quot;, a cor do wallpaper
+card = &quot;surface&quot;           # a cor dos cards: surface, tonal, primary, none
+corners = 32               # de 0 a 48
+snap = 0                   # uma grade pra encaixar ao organizar, em px; 0 é solto
+
+[desktop.clock]
+face = &quot;analog&quot;            # ou &quot;digital&quot;, horas sobre minutos
+seconds = true             # a onda em volta, no analógico
+hours = 24                 # ou 12, no digital
+
+[desktop.weather]
+days = 4                   # os próximos dias embaixo, de 0 a 6
+details = true             # o lugar e a sensação térmica
+
+[desktop.agenda]
+count = 6
+
+[desktop.system]
+meters = [&quot;cpu&quot;, &quot;memory&quot;, &quot;disk&quot;]
+
+[desktop.battery]
+time = true                # quanto falta pra encher ou acabar
+
+[desktop.note]
+size = 15                  # o texto, em px
+
+[desktop.photo]
+fit = &quot;cover&quot;              # ou &quot;contain&quot;, a foto inteira
+shuffle = 0                # minutos entre fotos da mesma pasta; 0 fica numa só</code></pre>
 <h2 id="quando-vale">quando vale</h2>
 <ul><li><strong>barra e tempo das letras</strong>: na hora</li><li><strong>cores (modo)</strong>: na hora; estilo da paleta e contraste repintam tudo ao aplicar</li><li><strong>todo o resto</strong>: o octopus reinicia sozinho ao aplicar</li></ul>
 <h2 id="calendário">calendário</h2>
@@ -152,7 +180,8 @@ contributions_colors = &quot;github&quot;  # ou &quot;theme&quot;, a cor do wall
 <p>clique: abre, foca ou alterna entre as janelas do app. meio: janela nova. direito: menu com as janelas, fixar e fechar.</p>
 <h2 id="widgets-de-desktop">widgets de desktop</h2>
 <p>uma camada embaixo das janelas, então eles aparecem onde nenhuma janela cobre:</p>
-<ul><li><strong>weather</strong>: o clima agora num cookie grande, e os próximos quatro dias. um clique abre a aba de clima.</li><li><strong>contributions</strong>: o calendário do perfil de <code>github</code>, os quadradinhos verdes, com o total do ano e a sequência atual. passe o mouse num quadrado pra ver o dia. mostra quantas semanas couberem na largura e atualiza a cada meia hora (sem token).</li><li><strong>clock</strong>: analógico, num cookie.</li><li><strong>media</strong>: o que está tocando, com os controles.</li><li><strong>calendar</strong>: o mês inteiro, com os seus eventos.</li><li><strong>agenda</strong>: o que vem por aí nas suas agendas.</li><li><strong>system</strong>: processador, memória e disco, em barras.</li><li><strong>battery</strong>: uma pílula grande com o raio, e quanto falta pra encher ou acabar.</li><li><strong>note</strong>: uma nota que se salva enquanto você digita.</li><li><strong>photo</strong>: uma foto sua, preenchendo o card; o botão ao passar o mouse troca ela.</li></ul>
+<ul><li><strong>weather</strong>: o clima agora num cookie grande, e os próximos quatro dias. um clique abre a aba de clima.</li><li><strong>contributions</strong>: o calendário do perfil de <code>github</code>, os quadradinhos verdes, com o total do ano e a sequência atual. passe o mouse num quadrado pra ver o dia. mostra quantas semanas couberem na largura e atualiza a cada meia hora (sem token).</li><li><strong>clock</strong>: analógico ou digital, num cookie.</li><li><strong>media</strong>: o que está tocando, com os controles.</li><li><strong>calendar</strong>: o mês inteiro, com os seus eventos.</li><li><strong>agenda</strong>: o que vem por aí nas suas agendas.</li><li><strong>system</strong>: processador, memória e disco, em barras.</li><li><strong>battery</strong>: uma pílula grande com o raio, e quanto falta pra encher ou acabar.</li><li><strong>note</strong>: uma nota que se salva enquanto você digita.</li><li><strong>photo</strong>: uma foto sua, preenchendo o card ou inteira; o botão ao passar o mouse troca ela, e ela pode passar sozinha pelas fotos da pasta.</li></ul>
+<p>em <strong>área de trabalho → widgets</strong>, a cor, os cantos e a grade dos cards ficam no topo; o ⚙ de cada widget abre as opções dele embaixo.</p>
 <p>eles ficam parados até você organizar: clique direito na área de trabalho e escolha <strong>organizar widgets</strong> (ou <code>octopus desktop arrange</code>). a área de trabalho sobe por cima das janelas; arraste um widget pra mover, o canto pra mudar o tamanho, e use a maleta embaixo pra pôr os outros (arraste um pra fora, ou clique) ou guardar um (solte na maleta, ou no ×). <strong>pronto</strong> ou &lt;kbd&gt;esc&lt;/kbd&gt; termina.</p>
 <p>onde eles ficam é guardado em <code>~/.local/state/octopus/desktop.json</code>; apague esse arquivo pra voltar pro canto.</p>
     <p class="edit"><a href="https://github.com/pxotitas/octopus/blob/pt-br/docs/configuracao.md">editar essa página no github</a></p>
