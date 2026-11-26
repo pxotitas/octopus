@@ -11,7 +11,7 @@ a tree on the left: five big categories, each with its branches.
 - **look**: colors (mode, palette style, contrast) and language
 - **bar**: the editor, presets, shape and anchoring
 - **panels**: dash, notifications, weather, music and calendar
-- **desktop**: widgets, contributions and the dock
+- **desktop**: widgets (with each one's options) and the dock
 - **system**: lock screen and about
 
 `octopus settings bar/editor` (or just `octopus settings bar`) opens straight
@@ -138,6 +138,34 @@ widgets = ["weather", "contributions"]  # also clock, media, calendar, agenda,
                                         # system, battery, note, photo
 github = ""                # a github user, for the contributions calendar
 contributions_colors = "github"  # or "theme", the wallpaper's color
+card = "surface"           # the cards' color: surface, tonal, primary, none
+corners = 32               # 0 to 48
+snap = 0                   # a grid to snap to while arranging, in px; 0 is free
+
+[desktop.clock]
+face = "analog"            # or "digital", hours over minutes
+seconds = true             # the wave round the rim, on the analog one
+hours = 24                 # or 12, on the digital one
+
+[desktop.weather]
+days = 4                   # the next days underneath, 0 to 6
+details = true             # the place and feels like
+
+[desktop.agenda]
+count = 6
+
+[desktop.system]
+meters = ["cpu", "memory", "disk"]
+
+[desktop.battery]
+time = true                # how long until full or empty
+
+[desktop.note]
+size = 15                  # the text, in px
+
+[desktop.photo]
+fit = "cover"              # or "contain", the whole picture
+shuffle = 0                # minutes between photos from the same folder; 0 keeps one
 ```
 
 ## when it applies
@@ -185,14 +213,18 @@ a layer under the windows, so they show wherever no window covers them:
 - **contributions**: the calendar from `github`'s profile, the little green squares, with the
   year's total and the current streak. hover a square for its day. it shows as many weeks as it
   is wide, and refreshes every half hour (no token).
-- **clock**: analog, on a cookie.
+- **clock**: analog or digital, on a cookie.
 - **music**: what's playing, with the controls.
 - **calendar**: the whole month, with your events.
 - **agenda**: what's coming up from your calendars.
 - **system**: processor, memory and disk, as bars.
 - **battery**: a big pill with the bolt, and how long until full or empty.
 - **note**: a note that saves itself as you type.
-- **photo**: a picture of yours, filling the card; the button on hover picks another.
+- **photo**: a picture of yours, filling the card or whole; the button on hover picks
+  another, and it can go through the folder's photos on its own.
+
+in **desktop → widgets**, the cards' color, corners and grid sit at the top;
+each widget's ⚙ opens its own options under it.
 
 they stay put until you arrange them: right-click the desktop and pick
 **arrange widgets** (or `octopus desktop arrange`). the desktop comes up over
