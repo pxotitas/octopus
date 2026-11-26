@@ -54,12 +54,14 @@
     <p>almost everything can be changed from the settings window (Mod+Comma, or <code>octopus settings</code>). it writes to <code>~/.config/octopus/octopus.toml</code>, which you can also edit by hand.</p>
 <h2 id="the-settings-window">the settings window</h2>
 <p>a tree on the left: five big categories, each with its branches.</p>
-<ul><li><strong>look</strong>: colors (mode, palette style, contrast) and language</li><li><strong>bar</strong>: the editor, presets and shape</li><li><strong>panels</strong>: dash, notifications, weather and music</li><li><strong>desktop</strong>: widgets, contributions and the dock</li><li><strong>system</strong>: lock screen and about</li></ul>
+<ul><li><strong>look</strong>: colors (mode, palette style, contrast) and language</li><li><strong>bar</strong>: the editor, presets, shape and anchoring</li><li><strong>panels</strong>: dash, notifications, weather and music</li><li><strong>desktop</strong>: widgets, contributions and the dock</li><li><strong>system</strong>: lock screen and about</li></ul>
 <p><code>octopus settings bar/editor</code> (or just <code>octopus settings bar</code>) opens straight on a page. changes wait in a draft until you press <strong>apply</strong>.</p>
 <h2 id="the-bar-editor">the bar editor</h2>
 <p>the bar drawn as it will look. tap a module to change it in the inspector beside it; drag it to another spot, or to the catalog to take it out; drag new ones in from the catalog.</p>
-<div class="table"><table><thead><tr><th>module</th><th>what it is</th><th>options</th></tr></thead><tbody><tr><td><code>logo</code></td><td>opens the launcher</td><td>glyph, what a click opens, background, corners</td></tr><tr><td><code>workspaces</code></td><td>niri's workspaces</td><td>dots or numbers</td></tr><tr><td><code>clock</code></td><td>hours over minutes; opens the dash</td><td>24 or 12 hours, bun/pill/rounded/square, background</td></tr><tr><td><code>tray</code></td><td>background apps</td><td></td></tr><tr><td><code>battery</code></td><td>a pill that fills up</td><td>show the percentage</td></tr><tr><td><code>controls</code></td><td>control center, wi-fi, bluetooth, sound, power</td><td>which buttons, in a drawer or always shown</td></tr><tr><td><code>cpu</code>, <code>memory</code>, <code>temperature</code></td><td>usage and heat</td><td>show the value, background, corners</td></tr><tr><td><code>brightness</code>, <code>volume</code></td><td>scroll to change</td><td>show the value, background, corners</td></tr><tr><td><code>idle</code></td><td>keeps the screen awake</td><td>background, corners</td></tr><tr><td><code>media</code></td><td>play and pause</td><td>background, corners</td></tr><tr><td><code>notifications</code>, <code>power</code></td><td>shortcuts</td><td>background, corners</td></tr></tbody></table></div>
-<p><strong>presets</strong> sets the whole bar at once: default, minimal, monitor, music and<br>focus. the bar changes when you apply, without restarting.</p>
+<div class="table"><table><thead><tr><th>module</th><th>what it is</th><th>options</th></tr></thead><tbody><tr><td><code>logo</code></td><td>opens the launcher</td><td>the octopus, your distro or a symbol; what a click opens; background and shape</td></tr><tr><td><code>workspaces</code></td><td>niri's workspaces</td><td>dots, numbers, pills, squares or lines</td></tr><tr><td><code>clock</code></td><td>hours over minutes; opens the dash</td><td>24 or 12 hours, background and shape (the bun too)</td></tr><tr><td><code>tray</code></td><td>background apps</td><td></td></tr><tr><td><code>battery</code></td><td>a pill that fills up, with a bolt while charging</td><td>show the percentage</td></tr><tr><td><code>controls</code></td><td>control center, wi-fi, bluetooth, sound, power</td><td>which buttons, in a drawer or always shown</td></tr><tr><td><code>cpu</code>, <code>memory</code>, <code>temperature</code></td><td>usage and heat</td><td>show the value, background, corners</td></tr><tr><td><code>brightness</code>, <code>volume</code></td><td>scroll to change</td><td>show the value, background, corners</td></tr><tr><td><code>idle</code></td><td>keeps the screen awake</td><td>background, corners</td></tr><tr><td><code>media</code></td><td>play and pause</td><td>background, corners</td></tr><tr><td><code>notifications</code>, <code>power</code></td><td>shortcuts</td><td>background, corners</td></tr></tbody></table></div>
+<p>the <strong>shape</strong> behind a module is either rounded corners (pill, rounded, square) or any m3 shape: cookies, clovers, flower, sunny, burst… drawn in the theme's colors, and drawn again when the wallpaper changes. <strong>module presets</strong> set the background and the shape in one tap.</p>
+<p><strong>make a module</strong> (at the end of the catalog) gives you one of your own: a<br>name, a material symbol, a command whose output shows under the icon, how<br>often it runs, and a command for the click.</p>
+<p><strong>presets</strong> sets the whole bar at once: default, minimal, monitor, music and<br>focus. <strong>anchoring</strong> chooses the side, the layer (below, on top, or over<br>everything), whether windows keep out of its way, and the gaps to the edges.<br>the bar changes when you apply, without restarting.</p>
 <h2 id="octopus-toml">octopus.toml</h2>
 <pre><code class="language-toml">language = &quot;auto&quot;          # auto follows LANG; &quot;pt&quot; or &quot;en&quot;
 
@@ -72,6 +74,11 @@ contrast = 0.0             # -1 to 1
 position = &quot;left&quot;          # or &quot;right&quot;
 width = 52
 spacing = 4                # between modules
+layer = &quot;top&quot;              # &quot;bottom&quot;, &quot;top&quot; or &quot;overlay&quot;
+exclusive = true           # windows keep out of its way
+margin_top = 8             # gaps to the edges, when floating
+margin_bottom = 8
+margin_edge = 8
 style = &quot;floating&quot;         # or &quot;flush&quot;: against the edge, concave corners
 top = [&quot;logo&quot;, &quot;workspaces&quot;]
 center = [&quot;clock&quot;]
@@ -79,11 +86,21 @@ bottom = [&quot;tray&quot;, &quot;battery&quot;, &quot;controls&quot;]
 
 [bar.modules.clock]        # one table per module you changed
 background = &quot;primary&quot;     # none, tonal, primary, surface
-shape = &quot;bun&quot;              # bun (clock only), round, soft, square
-variant = &quot;24h&quot;            # the module&#x27;s own choice: 12h, numbers, a glyph…
+shape = &quot;bun&quot;              # bun (clock only), round, soft, square, or an m3 shape:
+                           # cookie4…12, clover4, clover8, flower, sunny, burst…
+variant = &quot;24h&quot;            # the module&#x27;s own: 12h; for the logo &quot;octopus&quot;, &quot;arch&quot;, &quot;pets&quot;…;
+                           # for workspaces dots, numbers, pills, squares, bars
 text = false               # the value under the icon
 action = &quot;&quot;                # the logo: launcher, spotlight or dash
 items = []                 # the controls&#x27; buttons
+
+[[bar.custom]]             # a module of your own; put &quot;user-1&quot; in top/center/bottom
+id = &quot;user-1&quot;
+name = &quot;uptime&quot;
+icon = &quot;timer&quot;             # a material symbol
+exec = &quot;uptime -p&quot;         # its output is the value (turn on text)
+interval = 60
+click = &quot;&quot;
 
 [dash]
 page = &quot;overview&quot;          # or media, weather, wallpapers

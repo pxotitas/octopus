@@ -54,12 +54,14 @@
     <p>quase tudo dá pra mudar pela janela de configurações (Mod+Comma, ou <code>octopus settings</code>). ela escreve em <code>~/.config/octopus/octopus.toml</code>, que também pode ser editado à mão.</p>
 <h2 id="a-janela-de-configurações">a janela de configurações</h2>
 <p>uma árvore na esquerda: cinco categorias grandes, cada uma com seus galhos.</p>
-<ul><li><strong>aparência</strong>: cores (modo, estilo da paleta, contraste) e idioma</li><li><strong>barra</strong>: o editor, presets e forma</li><li><strong>painéis</strong>: dash, notificações, clima e música</li><li><strong>área de trabalho</strong>: widgets, contribuições e a dock</li><li><strong>sistema</strong>: tela de bloqueio e sobre</li></ul>
+<ul><li><strong>aparência</strong>: cores (modo, estilo da paleta, contraste) e idioma</li><li><strong>barra</strong>: o editor, presets, forma e ancoragem</li><li><strong>painéis</strong>: dash, notificações, clima e música</li><li><strong>área de trabalho</strong>: widgets, contribuições e a dock</li><li><strong>sistema</strong>: tela de bloqueio e sobre</li></ul>
 <p><code>octopus settings bar/editor</code> (ou só <code>octopus settings bar</code>) abre direto numa página. as mudanças esperam num rascunho até você apertar <strong>aplicar</strong>.</p>
 <h2 id="o-editor-da-barra">o editor da barra</h2>
 <p>a barra desenhada como ela vai ficar. toque num módulo pra mudar ele no inspetor do lado; arraste pra outro lugar, ou pro catálogo pra tirar; arraste novos do catálogo.</p>
-<div class="table"><table><thead><tr><th>módulo</th><th>o que é</th><th>opções</th></tr></thead><tbody><tr><td><code>logo</code></td><td>abre o launcher</td><td>glifo, o que o clique abre, fundo, cantos</td></tr><tr><td><code>workspaces</code></td><td>os workspaces do niri</td><td>pontos ou números</td></tr><tr><td><code>clock</code></td><td>horas sobre minutos; abre o dash</td><td>24 ou 12 horas, bun/pílula/arredondado/quadrado, fundo</td></tr><tr><td><code>tray</code></td><td>apps em segundo plano</td><td></td></tr><tr><td><code>battery</code></td><td>uma pílula que enche</td><td>mostrar a porcentagem</td></tr><tr><td><code>controls</code></td><td>central de controle, wi-fi, bluetooth, som, energia</td><td>quais botões, numa gaveta ou sempre à mostra</td></tr><tr><td><code>cpu</code>, <code>memory</code>, <code>temperature</code></td><td>uso e calor</td><td>mostrar o valor, fundo, cantos</td></tr><tr><td><code>brightness</code>, <code>volume</code></td><td>role pra mudar</td><td>mostrar o valor, fundo, cantos</td></tr><tr><td><code>idle</code></td><td>mantém a tela acordada</td><td>fundo, cantos</td></tr><tr><td><code>media</code></td><td>tocar e pausar</td><td>fundo, cantos</td></tr><tr><td><code>notifications</code>, <code>power</code></td><td>atalhos</td><td>fundo, cantos</td></tr></tbody></table></div>
-<p><strong>presets</strong> troca a barra inteira de uma vez: padrão, mínima, monitor, música<br>e foco. a barra muda ao aplicar, sem reiniciar.</p>
+<div class="table"><table><thead><tr><th>módulo</th><th>o que é</th><th>opções</th></tr></thead><tbody><tr><td><code>logo</code></td><td>abre o launcher</td><td>o octopus, a sua distro ou um símbolo; o que o clique abre; fundo e forma</td></tr><tr><td><code>workspaces</code></td><td>os workspaces do niri</td><td>pontos, números, pílulas, quadrados ou traços</td></tr><tr><td><code>clock</code></td><td>horas sobre minutos; abre o dash</td><td>24 ou 12 horas, fundo e forma (o bun também)</td></tr><tr><td><code>tray</code></td><td>apps em segundo plano</td><td></td></tr><tr><td><code>battery</code></td><td>uma pílula que enche, com um raio carregando</td><td>mostrar a porcentagem</td></tr><tr><td><code>controls</code></td><td>central de controle, wi-fi, bluetooth, som, energia</td><td>quais botões, numa gaveta ou sempre à mostra</td></tr><tr><td><code>cpu</code>, <code>memory</code>, <code>temperature</code></td><td>uso e calor</td><td>mostrar o valor, fundo, cantos</td></tr><tr><td><code>brightness</code>, <code>volume</code></td><td>role pra mudar</td><td>mostrar o valor, fundo, cantos</td></tr><tr><td><code>idle</code></td><td>mantém a tela acordada</td><td>fundo, cantos</td></tr><tr><td><code>media</code></td><td>tocar e pausar</td><td>fundo, cantos</td></tr><tr><td><code>notifications</code>, <code>power</code></td><td>atalhos</td><td>fundo, cantos</td></tr></tbody></table></div>
+<p>a <strong>forma</strong> atrás de um módulo é ou cantos arredondados (pílula, arredondado, quadrado) ou qualquer shape m3: cookies, trevos, flor, sol, explosão… desenhados nas cores do tema, e de novo quando o wallpaper muda. os <strong>presets do módulo</strong> põem fundo e forma num toque.</p>
+<p><strong>criar um módulo</strong> (no fim do catálogo) te dá um seu: um nome, um material<br>symbol, um comando cuja saída aparece embaixo do ícone, de quanto em quanto<br>tempo ele roda, e um comando pro clique.</p>
+<p><strong>presets</strong> troca a barra inteira de uma vez: padrão, mínima, monitor, música<br>e foco. <strong>ancoragem</strong> escolhe o lado, a camada (embaixo, em cima, ou por cima<br>de tudo), se as janelas saem da frente dela, e a distância das bordas. a<br>barra muda ao aplicar, sem reiniciar.</p>
 <h2 id="octopus-toml">octopus.toml</h2>
 <pre><code class="language-toml">language = &quot;auto&quot;          # auto segue o LANG; &quot;pt&quot; ou &quot;en&quot;
 
@@ -72,6 +74,11 @@ contrast = 0.0             # de -1 a 1
 position = &quot;left&quot;          # ou &quot;right&quot;
 width = 52
 spacing = 4                # entre os módulos
+layer = &quot;top&quot;              # &quot;bottom&quot;, &quot;top&quot; ou &quot;overlay&quot;
+exclusive = true           # as janelas não passam por baixo
+margin_top = 8             # distância das bordas, flutuando
+margin_bottom = 8
+margin_edge = 8
 style = &quot;floating&quot;         # ou &quot;flush&quot;: encostada na borda, cantos côncavos
 top = [&quot;logo&quot;, &quot;workspaces&quot;]
 center = [&quot;clock&quot;]
@@ -79,11 +86,21 @@ bottom = [&quot;tray&quot;, &quot;battery&quot;, &quot;controls&quot;]
 
 [bar.modules.clock]        # uma tabela por módulo que você mudou
 background = &quot;primary&quot;     # none, tonal, primary, surface
-shape = &quot;bun&quot;              # bun (só o relógio), round, soft, square
-variant = &quot;24h&quot;            # a escolha do próprio módulo: 12h, numbers, um glifo…
+shape = &quot;bun&quot;              # bun (só o relógio), round, soft, square, ou um shape m3:
+                           # cookie4…12, clover4, clover8, flower, sunny, burst…
+variant = &quot;24h&quot;            # a escolha do módulo: 12h; pro logo &quot;octopus&quot;, &quot;arch&quot;, &quot;pets&quot;…;
+                           # pros workspaces dots, numbers, pills, squares, bars
 text = false               # o valor embaixo do ícone
 action = &quot;&quot;                # o logo: launcher, spotlight ou dash
 items = []                 # os botões dos controles
+
+[[bar.custom]]             # um módulo seu; ponha &quot;user-1&quot; em top/center/bottom
+id = &quot;user-1&quot;
+name = &quot;uptime&quot;
+icon = &quot;timer&quot;             # um material symbol
+exec = &quot;uptime -p&quot;         # a saída vira o valor (ligue o text)
+interval = 60
+click = &quot;&quot;
 
 [dash]
 page = &quot;overview&quot;          # ou media, weather, wallpapers
