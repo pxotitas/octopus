@@ -107,13 +107,14 @@ pub fn build(id: &str, s: &Rc<Services>, desktop: &config::Desktop) -> Option<Bu
             let root = gtk::Box::new(gtk::Orientation::Vertical, 0);
             root.add_css_class("desktop-bare");
             root.add_css_class("desktop-clock");
-            let clock = Clock::new(entry.default.0);
+            // the face inside the card's padding
+            let clock = Clock::new(entry.default.0 - 28);
             clock.set_hexpand(true);
             clock.set_vexpand(true);
             root.append(&clock);
             Built {
                 content: root.upcast(),
-                resize: Box::new(move |w, h| clock.set_size(w.min(h))),
+                resize: Box::new(move |w, h| clock.set_size((w.min(h) - 28).max(60))),
                 click: None,
             }
         }
