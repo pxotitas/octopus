@@ -575,7 +575,7 @@ const ENTRIES: &[(&str, &str)] = &[
     ("abra calendar.google.com no computador", "open calendar.google.com on a computer"),
     ("na engrenagem, vá em configurações e, na esquerda, clique no seu calendário", "in the gear, go to settings and, on the left, click your calendar"),
     ("em \"integrar agenda\", copie o \"endereço secreto no formato iCal\"", "under \"integrate calendar\", copy the \"secret address in iCal format\""),
-    ("cole aqui embaixo e aplique", "paste it below and apply"),
+    ("cole no campo de endereço e aplique", "paste it in the address field and apply"),
     ("nome e ícone", "name and icon"),
     ("procurar, ou escrever o nome de um material symbol", "search, or type a material symbol's name"),
     ("o que ele mostra", "what it shows"),

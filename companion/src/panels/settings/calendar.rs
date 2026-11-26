@@ -14,7 +14,7 @@ const STEPS: [&str; 4] = [
     "abra calendar.google.com no computador",
     "na engrenagem, vá em configurações e, na esquerda, clique no seu calendário",
     "em \"integrar agenda\", copie o \"endereço secreto no formato iCal\"",
-    "cole aqui embaixo e aplique",
+    "cole no campo de endereço e aplique",
 ];
 
 fn list(ctx: &Rc<Ctx>, holder: &gtk::Box) {
