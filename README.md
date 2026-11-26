@@ -113,7 +113,7 @@ estão todas em [`screenshots/`](screenshots). clica num grupo pra abrir.
 <summary><b>desktop</b>: a barra, os widgets de desktop, notificações e o osd</summary>
 <br>
 
-a barra vertical na esquerda, e os widgets de desktop na direita: o clima e os últimos commits.
+a barra vertical na esquerda, e os widgets de desktop na direita: o clima e as contribuições no github, que dá pra mover e redimensionar.
 
 <img src="screenshots/desktop.webp" alt="desktop com a barra e a dock" width="100%">
 

@@ -26,9 +26,9 @@ place = ""                 # uma cidade, ou "lat,lon"; vazio usa o ip
 
 [desktop]
 enabled = true             # widgets embaixo das janelas
-widgets = ["weather", "github"]
-position = "top-right"     # ou top-left, bottom-right, bottom-left
-github = ""                # um usuário do github, pro widget de commits
+widgets = ["weather", "contributions"]
+github = ""                # um usuário do github, pro calendário de contribuições
+contributions_colors = "github"  # ou "theme", a cor do wallpaper
 
 [notifications]
 timeout_ms = 5000
@@ -63,6 +63,11 @@ direito: menu com as janelas, fixar e fechar.
 uma camada embaixo das janelas, então eles aparecem onde nenhuma janela cobre:
 
 - **weather**: o clima agora num cookie grande, e os próximos quatro dias. um clique abre a aba de clima.
-- **github**: os últimos commits de `github`, pela busca pública de commits do github (sem token). um clique abre o commit.
+- **contributions**: o calendário do perfil de `github`, os quadradinhos verdes, com o total do
+  ano e a sequência atual. passe o mouse num quadrado pra ver o dia. mostra quantas semanas
+  couberem na largura e atualiza a cada meia hora (sem token).
+
+arraste um widget pra mover, e arraste o puxador no canto pra mudar o tamanho. onde eles ficam
+é guardado em `~/.local/state/octopus/desktop.json`; apague esse arquivo pra voltar pro canto.
 
 mudar o `[desktop]` nas configurações reinicia o octopus sozinho.
