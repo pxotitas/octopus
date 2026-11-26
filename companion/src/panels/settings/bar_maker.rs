@@ -291,9 +291,12 @@ pub fn open(parent: &gtk::Window, ctx: &Rc<Ctx>, id: Option<&str>, zone: usize, 
     side.add_css_class("maker-side");
     let caption = gtk::Label::new(Some(t("assim ele fica na barra")));
     caption.add_css_class("settings-item-sub");
-    side.append(&preview);
-    side.append(&caption);
-    side.set_valign(gtk::Align::Center);
+    let middle = gtk::Box::new(gtk::Orientation::Vertical, 12);
+    middle.set_vexpand(true);
+    middle.set_valign(gtk::Align::Center);
+    middle.append(&preview);
+    middle.append(&caption);
+    side.append(&middle);
 
     let body = gtk::Box::new(gtk::Orientation::Horizontal, 0);
     body.append(&side);
