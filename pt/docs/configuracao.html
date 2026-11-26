@@ -47,20 +47,22 @@
 <main>
 <div class="docs">
   <aside class="docs-nav">
-    <ul><li><a href="./">visão geral</a></li><li><a href="estrutura.html">estrutura</a></li><li><a href="atalhos.html">atalhos e comandos</a></li><li><a href="configuracao.html" aria-current="page">configuração</a><ul class="toc"><li><a href="#a-janela-de-configurações">a janela de configurações</a></li><li><a href="#o-editor-da-barra">o editor da barra</a></li><li><a href="#octopus-toml">octopus.toml</a></li><li><a href="#quando-vale">quando vale</a></li><li><a href="#css-pessoal">css pessoal</a></li><li><a href="#dock">dock</a></li><li><a href="#widgets-de-desktop">widgets de desktop</a></li></ul></li><li><a href="tema.html">tema</a></li><li><a href="problemas.html">quando algo quebra</a></li></ul>
+    <ul><li><a href="./">visão geral</a></li><li><a href="estrutura.html">estrutura</a></li><li><a href="atalhos.html">atalhos e comandos</a></li><li><a href="configuracao.html" aria-current="page">configuração</a><ul class="toc"><li><a href="#a-janela-de-configurações">a janela de configurações</a></li><li><a href="#o-editor-da-barra">o editor da barra</a></li><li><a href="#octopus-toml">octopus.toml</a></li><li><a href="#quando-vale">quando vale</a></li><li><a href="#calendário">calendário</a></li><li><a href="#css-pessoal">css pessoal</a></li><li><a href="#dock">dock</a></li><li><a href="#widgets-de-desktop">widgets de desktop</a></li></ul></li><li><a href="tema.html">tema</a></li><li><a href="problemas.html">quando algo quebra</a></li></ul>
   </aside>
   <article class="doc">
     <h1>configuração</h1>
     <p>quase tudo dá pra mudar pela janela de configurações (Mod+Comma, ou <code>octopus settings</code>). ela escreve em <code>~/.config/octopus/octopus.toml</code>, que também pode ser editado à mão.</p>
 <h2 id="a-janela-de-configurações">a janela de configurações</h2>
 <p>uma árvore na esquerda: cinco categorias grandes, cada uma com seus galhos.</p>
-<ul><li><strong>aparência</strong>: cores (modo, estilo da paleta, contraste) e idioma</li><li><strong>barra</strong>: o editor, presets, forma e ancoragem</li><li><strong>painéis</strong>: dash, notificações, clima e música</li><li><strong>área de trabalho</strong>: widgets, contribuições e a dock</li><li><strong>sistema</strong>: tela de bloqueio e sobre</li></ul>
-<p><code>octopus settings bar/editor</code> (ou só <code>octopus settings bar</code>) abre direto numa página. as mudanças esperam num rascunho até você apertar <strong>aplicar</strong>.</p>
+<ul><li><strong>aparência</strong>: cores (modo, estilo da paleta, contraste) e idioma</li><li><strong>barra</strong>: o editor, presets, forma e ancoragem</li><li><strong>painéis</strong>: dash, notificações, clima, música e calendário</li><li><strong>área de trabalho</strong>: widgets, contribuições e a dock</li><li><strong>sistema</strong>: tela de bloqueio e sobre</li></ul>
+<p><code>octopus settings bar/editor</code> (ou só <code>octopus settings bar</code>) abre direto numa página. as mudanças esperam num rascunho até você apertar <strong>aplicar</strong>. a engrenagem no pé do trilho do dash também abre ela.</p>
 <h2 id="o-editor-da-barra">o editor da barra</h2>
-<p>a barra desenhada como ela vai ficar. toque num módulo pra mudar ele no inspetor do lado; arraste pra outro lugar, ou pro catálogo pra tirar; arraste novos do catálogo.</p>
+<p>a barra desenhada como ela vai ficar. toque num módulo pra mudar ele no inspetor do lado (lugar, visual, comportamento); arraste pra outro lugar, ou pra <strong>solte aqui pra tirar</strong> pra tirar ele.</p>
+<p>o <strong>+ adicionar</strong> embaixo da barra abre um menu com duas coisas:</p>
+<ul><li><strong>adicionar módulo</strong>: o catálogo, no lugar do inspetor. busque, filtre por tipo (essenciais, sistema, áudio e mídia, atalhos, seus), escolha a parte da barra, e clique num card ou arraste ele pra barra.</li><li><strong>criar módulo</strong>: uma janela que monta um módulo seu, com ele desenhado numa barrinha enquanto você preenche.</li></ul>
 <div class="table"><table><thead><tr><th>módulo</th><th>o que é</th><th>opções</th></tr></thead><tbody><tr><td><code>logo</code></td><td>abre o launcher</td><td>o octopus, a sua distro ou um símbolo; o que o clique abre; fundo e forma</td></tr><tr><td><code>workspaces</code></td><td>os workspaces do niri</td><td>pontos, números, pílulas, quadrados ou traços</td></tr><tr><td><code>clock</code></td><td>horas sobre minutos; abre o dash</td><td>24 ou 12 horas, fundo e forma (o bun também)</td></tr><tr><td><code>tray</code></td><td>apps em segundo plano</td><td></td></tr><tr><td><code>battery</code></td><td>uma pílula que enche, com um raio carregando</td><td>mostrar a porcentagem</td></tr><tr><td><code>controls</code></td><td>central de controle, wi-fi, bluetooth, som, energia</td><td>quais botões, numa gaveta ou sempre à mostra</td></tr><tr><td><code>cpu</code>, <code>memory</code>, <code>temperature</code></td><td>uso e calor</td><td>mostrar o valor, fundo, cantos</td></tr><tr><td><code>brightness</code>, <code>volume</code></td><td>role pra mudar</td><td>mostrar o valor, fundo, cantos</td></tr><tr><td><code>idle</code></td><td>mantém a tela acordada</td><td>fundo, cantos</td></tr><tr><td><code>media</code></td><td>tocar e pausar</td><td>fundo, cantos</td></tr><tr><td><code>notifications</code>, <code>power</code></td><td>atalhos</td><td>fundo, cantos</td></tr></tbody></table></div>
 <p>a <strong>forma</strong> atrás de um módulo é ou cantos arredondados (pílula, arredondado, quadrado) ou qualquer shape m3: cookies, trevos, flor, sol, explosão… desenhados nas cores do tema, e de novo quando o wallpaper muda. os <strong>presets do módulo</strong> põem fundo e forma num toque.</p>
-<p><strong>criar um módulo</strong> (no fim do catálogo) te dá um seu: um nome, um material<br>symbol, um comando cuja saída aparece embaixo do ícone, de quanto em quanto<br>tempo ele roda, e um comando pro clique.</p>
+<p>um módulo seu tem um nome, um material symbol (busque, ou digite qualquer nome), o que ele mostra (só o ícone, ou o ícone e um valor vindo de um comando, com um botão <strong>testar</strong> e de quanto em quanto tempo roda), um comando pro clique e um visual. <strong>editar módulo</strong> no inspetor abre a mesma janela.</p>
 <p><strong>presets</strong> troca a barra inteira de uma vez: padrão, mínima, monitor, música<br>e foco. <strong>ancoragem</strong> escolhe o lado, a camada (embaixo, em cima, ou por cima<br>de tudo), se as janelas saem da frente dela, e a distância das bordas. a<br>barra muda ao aplicar, sem reiniciar.</p>
 <h2 id="octopus-toml">octopus.toml</h2>
 <pre><code class="language-toml">language = &quot;auto&quot;          # auto segue o LANG; &quot;pt&quot; ou &quot;en&quot;
@@ -105,6 +107,9 @@ click = &quot;&quot;
 [dash]
 page = &quot;overview&quot;          # ou media, weather, wallpapers
 
+[calendar]
+urls = []                  # endereços ical: o secreto do google, do outlook, do nextcloud…
+
 [weather]
 place = &quot;&quot;                 # uma cidade, ou &quot;lat,lon&quot;; vazio usa o ip
 unit = &quot;celsius&quot;           # ou &quot;fahrenheit&quot;
@@ -130,11 +135,16 @@ magnify = true
 
 [desktop]
 enabled = true
-widgets = [&quot;weather&quot;, &quot;contributions&quot;]  # também clock, media, calendar
+widgets = [&quot;weather&quot;, &quot;contributions&quot;]  # também clock, media, calendar, agenda,
+                                        # system, battery, note, photo
 github = &quot;&quot;                # um usuário do github, pro calendário de contribuições
 contributions_colors = &quot;github&quot;  # ou &quot;theme&quot;, a cor do wallpaper</code></pre>
 <h2 id="quando-vale">quando vale</h2>
 <ul><li><strong>barra e tempo das letras</strong>: na hora</li><li><strong>cores (modo)</strong>: na hora; estilo da paleta e contraste repintam tudo ao aplicar</li><li><strong>todo o resto</strong>: o octopus reinicia sozinho ao aplicar</li></ul>
+<h2 id="calendário">calendário</h2>
+<p>o calendário do dash e o da área de trabalho mostram os seus eventos: dias com algo ganham uma cor, e um clique no dia lista eles. ele lê endereços ical, então um google agenda não precisa de login nem de nada no cloud console:</p>
+<ol><li>abra o google agenda na web, <strong>configurações</strong></li><li>na esquerda, em <strong>configurações das minhas agendas</strong>, escolha a agenda</li><li><strong>integrar agenda</strong>, copie o <strong>endereço secreto no formato ical</strong></li><li>cole em <strong>painéis → calendário</strong> (ou em <code>[calendar] urls</code>)</li></ol>
+<p>qualquer outro ical funciona igual (outlook, nextcloud, fastmail, um feed de feriados). atualiza a cada 15 minutos e guarda uma cópia em <code>~/.cache/octopus/calendar</code>, então aparece offline também. o endereço secreto deixa qualquer um ler a agenda: não compartilhe. eventos que se repetem precisam do <code>python-dateutil</code>.</p>
 <h2 id="css-pessoal">css pessoal</h2>
 <p>um <code>~/.config/octopus/style.css</code> é somado por cima do css embutido e recarrega sozinho. bom pra ajustes sem recompilar.</p>
 <h2 id="dock">dock</h2>
@@ -142,7 +152,7 @@ contributions_colors = &quot;github&quot;  # ou &quot;theme&quot;, a cor do wall
 <p>clique: abre, foca ou alterna entre as janelas do app. meio: janela nova. direito: menu com as janelas, fixar e fechar.</p>
 <h2 id="widgets-de-desktop">widgets de desktop</h2>
 <p>uma camada embaixo das janelas, então eles aparecem onde nenhuma janela cobre:</p>
-<ul><li><strong>weather</strong>: o clima agora num cookie grande, e os próximos quatro dias. um clique abre a aba de clima.</li><li><strong>contributions</strong>: o calendário do perfil de <code>github</code>, os quadradinhos verdes, com o total do ano e a sequência atual. passe o mouse num quadrado pra ver o dia. mostra quantas semanas couberem na largura e atualiza a cada meia hora (sem token).</li><li><strong>clock</strong>: analógico, num cookie.</li><li><strong>media</strong>: o que está tocando, com os controles.</li><li><strong>calendar</strong>: o mês inteiro.</li></ul>
+<ul><li><strong>weather</strong>: o clima agora num cookie grande, e os próximos quatro dias. um clique abre a aba de clima.</li><li><strong>contributions</strong>: o calendário do perfil de <code>github</code>, os quadradinhos verdes, com o total do ano e a sequência atual. passe o mouse num quadrado pra ver o dia. mostra quantas semanas couberem na largura e atualiza a cada meia hora (sem token).</li><li><strong>clock</strong>: analógico, num cookie.</li><li><strong>media</strong>: o que está tocando, com os controles.</li><li><strong>calendar</strong>: o mês inteiro, com os seus eventos.</li><li><strong>agenda</strong>: o que vem por aí nas suas agendas.</li><li><strong>system</strong>: processador, memória e disco, em barras.</li><li><strong>battery</strong>: uma pílula grande com o raio, e quanto falta pra encher ou acabar.</li><li><strong>note</strong>: uma nota que se salva enquanto você digita.</li><li><strong>photo</strong>: uma foto sua, preenchendo o card; o botão ao passar o mouse troca ela.</li></ul>
 <p>eles ficam parados até você organizar: clique direito na área de trabalho e escolha <strong>organizar widgets</strong> (ou <code>octopus desktop arrange</code>). a área de trabalho sobe por cima das janelas; arraste um widget pra mover, o canto pra mudar o tamanho, e use a maleta embaixo pra pôr os outros (arraste um pra fora, ou clique) ou guardar um (solte na maleta, ou no ×). <strong>pronto</strong> ou &lt;kbd&gt;esc&lt;/kbd&gt; termina.</p>
 <p>onde eles ficam é guardado em <code>~/.local/state/octopus/desktop.json</code>; apague esse arquivo pra voltar pro canto.</p>
     <p class="edit"><a href="https://github.com/pxotitas/octopus/blob/pt-br/docs/configuracao.md">editar essa página no github</a></p>
