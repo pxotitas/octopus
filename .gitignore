@@ -6,3 +6,4 @@ __pycache__/
 rofi/theme.rasi
 waybar/clock-bun.svg
 waybar/clock-bun-hover.svg
+waybar/art/

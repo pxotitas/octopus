@@ -107,6 +107,46 @@ impl Kind {
             Kind::SoftBurst => (10.0, 0.1, Soft),
         }
     }
+
+    /// The shapes by the names octopus.toml uses.
+    pub const NAMED: [(&'static str, Kind); 15] = [
+        ("circle", Kind::Circle),
+        ("cookie4", Kind::Cookie4),
+        ("cookie6", Kind::Cookie6),
+        ("cookie7", Kind::Cookie7),
+        ("cookie9", Kind::Cookie9),
+        ("cookie12", Kind::Cookie12),
+        ("clover4", Kind::Clover4),
+        ("clover8", Kind::Clover8),
+        ("pentagon", Kind::Pentagon),
+        ("sunny", Kind::Sunny),
+        ("verysunny", Kind::VerySunny),
+        ("flower", Kind::Flower),
+        ("puffy", Kind::Puffy),
+        ("burst", Kind::Burst),
+        ("softburst", Kind::SoftBurst),
+    ];
+
+    pub fn from_name(name: &str) -> Option<Kind> {
+        Self::NAMED.iter().find(|(n, _)| *n == name).map(|(_, k)| *k)
+    }
+}
+
+/// The outline as SVG path data in a `size`×`size` box, for files other
+/// programs draw (Waybar's module backgrounds).
+pub fn svg_path(kind: Kind, size: f64) -> String {
+    let (lobes, depth, profile) = kind.params();
+    let (c, radius) = (size / 2.0, size / 2.0);
+    const STEPS: usize = 180;
+    let mut d = String::new();
+    for i in 0..STEPS {
+        let t = i as f64 / STEPS as f64 * std::f64::consts::TAU;
+        let r = radius * (1.0 + depth * profile.at(lobes * t)) / (1.0 + depth);
+        let (x, y) = (c + r * (t - std::f64::consts::FRAC_PI_2).cos(), c + r * (t - std::f64::consts::FRAC_PI_2).sin());
+        d.push_str(&format!("{}{x:.2},{y:.2} ", if i == 0 { "M" } else { "L" }));
+    }
+    d.push('Z');
+    d
 }
 
 mod imp {

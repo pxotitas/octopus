@@ -40,6 +40,7 @@ impl Shell {
         let shared = Rc::new(std::cell::RefCell::new(config.clone()));
         crate::i18n::init(&config.language);
         crate::services::lyrics::set_offset(config.media.lyrics_offset_ms);
+        crate::bar::art::refresh(&config.bar);
         crate::bar::apply(&config.bar);
         let services = Services::new(&config);
 
@@ -402,6 +403,10 @@ impl Shell {
                     return String::new();
                 }
                 self.toggle(name)
+            }
+            ["bar-refresh"] => {
+                crate::bar::art::refresh(&self.config.borrow().bar);
+                String::new()
             }
             ["lock"] => {
                 self.close_all();

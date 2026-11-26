@@ -59,8 +59,11 @@ pub fn find(id: &str) -> Option<&'static Info> {
 pub type Choice = (&'static str, &'static str);
 
 pub enum Opt {
+    /// A module made in the editor: name, icon, command, click.
+    Custom,
     Background,
-    Shape(&'static [Choice]),
+    /// The shape behind the module; the clock also offers its bun.
+    Shape { bun: bool },
     Variant(&'static str, &'static [Choice]),
     Text,
     Action(&'static [Choice]),
@@ -68,19 +71,49 @@ pub enum Opt {
 }
 
 pub const BACKGROUNDS: [Choice; 4] = [("none", "nenhum"), ("tonal", "tonal"), ("primary", "primário"), ("surface", "superfície")];
-const SHAPES: [Choice; 3] = [("round", "pílula"), ("soft", "arredondado"), ("square", "quadrado")];
-const CLOCK_SHAPES: [Choice; 4] = [("bun", "bun"), ("round", "pílula"), ("soft", "arredondado"), ("square", "quadrado")];
-pub const GLYPHS: [Choice; 6] = [
-    ("arch", "arch"),
-    ("apps", "apps"),
-    ("search", "lupa"),
-    ("grid_view", "grade"),
-    ("change_history", "triângulo"),
-    ("blur_on", "pontos"),
+/// Rounded rectangles; the M3 shapes come from shape::Kind::NAMED.
+pub const CORNERS: [Choice; 3] = [("round", "pílula"), ("soft", "arredondado"), ("square", "quadrado")];
+
+/// How the logo's glyph is drawn.
+pub enum Glyph {
+    /// A Nerd Font character.
+    Nerd(&'static str),
+    /// A Material Symbols name.
+    Symbol(&'static str),
+    /// A picture octopus writes in the theme's colors.
+    Art(&'static str),
+}
+
+pub const GLYPHS: [(&str, &str, Glyph); 20] = [
+    ("octopus", "octopus", Glyph::Art("logo.svg")),
+    ("octopus-line", "octopus, sem o cookie", Glyph::Art("octopus.svg")),
+    ("arch", "arch", Glyph::Nerd("\u{f303}")),
+    ("debian", "debian", Glyph::Nerd("\u{f306}")),
+    ("fedora", "fedora", Glyph::Nerd("\u{f30a}")),
+    ("nixos", "nixos", Glyph::Nerd("\u{f313}")),
+    ("ubuntu", "ubuntu", Glyph::Nerd("\u{f31b}")),
+    ("gentoo", "gentoo", Glyph::Nerd("\u{f30d}")),
+    ("linux", "linux", Glyph::Nerd("\u{f31a}")),
+    ("apps", "apps", Glyph::Symbol("apps")),
+    ("search", "lupa", Glyph::Symbol("search")),
+    ("grid_view", "grade", Glyph::Symbol("grid_view")),
+    ("change_history", "triângulo", Glyph::Symbol("change_history")),
+    ("blur_on", "pontos", Glyph::Symbol("blur_on")),
+    ("auto_awesome", "brilhos", Glyph::Symbol("auto_awesome")),
+    ("pets", "patinha", Glyph::Symbol("pets")),
+    ("rocket_launch", "foguete", Glyph::Symbol("rocket_launch")),
+    ("spa", "flor", Glyph::Symbol("spa")),
+    ("hexagon", "hexágono", Glyph::Symbol("hexagon")),
+    ("menu", "menu", Glyph::Symbol("menu")),
 ];
+
+pub fn glyph(variant: &str) -> &'static Glyph {
+    GLYPHS.iter().find(|(v, _, _)| *v == variant).map(|(_, _, g)| g).unwrap_or(&GLYPHS[2].2)
+}
+
 const ACTIONS: [Choice; 3] = [("launcher", "launcher (rofi)"), ("spotlight", "spotlight"), ("dash", "dash")];
 const HOURS: [Choice; 2] = [("24h", "24 horas"), ("12h", "12 horas")];
-const WORKSPACES: [Choice; 2] = [("dots", "pontos"), ("numbers", "números")];
+pub const WORKSPACES: [Choice; 5] = [("dots", "pontos"), ("numbers", "números"), ("pills", "pílulas"), ("squares", "quadrados"), ("bars", "traços")];
 const DRAWER: [Choice; 2] = [("drawer", "numa gaveta"), ("open", "sempre à mostra")];
 pub const CONTROLS: [Choice; 5] = [
     ("control-center", "central de controle"),
@@ -90,18 +123,38 @@ pub const CONTROLS: [Choice; 5] = [
     ("power", "energia"),
 ];
 
+/// A whole look for one module, in a tap: (name, background, shape).
+pub const LOOKS: [(&str, &str, &str); 8] = [
+    ("limpo", "none", "soft"),
+    ("tonal", "tonal", "soft"),
+    ("pílula", "tonal", "round"),
+    ("cookie", "primary", "cookie9"),
+    ("flor", "tonal", "flower"),
+    ("trevo", "surface", "clover4"),
+    ("sol", "primary", "sunny"),
+    ("explosão", "tonal", "softburst"),
+];
+
 /// What the inspector offers for a module.
 pub fn options(id: &str) -> Vec<Opt> {
+    if id.starts_with("user-") {
+        return vec![Opt::Custom, Opt::Text, Opt::Background, Opt::Shape { bun: false }];
+    }
     match id {
-        "logo" => vec![Opt::Variant("ícone", &GLYPHS), Opt::Action(&ACTIONS), Opt::Background, Opt::Shape(&SHAPES)],
+        "logo" => vec![Opt::Variant("ícone", &[]), Opt::Action(&ACTIONS), Opt::Background, Opt::Shape { bun: false }],
         "workspaces" => vec![Opt::Variant("estilo", &WORKSPACES)],
-        "clock" => vec![Opt::Variant("formato", &HOURS), Opt::Shape(&CLOCK_SHAPES), Opt::Background],
+        "clock" => vec![Opt::Variant("formato", &HOURS), Opt::Background, Opt::Shape { bun: true }],
         "battery" => vec![Opt::Text],
         "controls" => vec![Opt::Variant("botões", &DRAWER), Opt::Items(&CONTROLS)],
         "tray" => vec![],
-        "media" | "idle" | "notifications" | "power" => vec![Opt::Background, Opt::Shape(&SHAPES)],
-        _ => vec![Opt::Text, Opt::Background, Opt::Shape(&SHAPES)],
+        "media" | "idle" | "notifications" | "power" => vec![Opt::Background, Opt::Shape { bun: false }],
+        _ => vec![Opt::Text, Opt::Background, Opt::Shape { bun: false }],
     }
+}
+
+/// Whether the look presets make sense for a module.
+pub fn takes_looks(id: &str) -> bool {
+    !matches!(id, "workspaces" | "battery" | "controls" | "tray")
 }
 
 /// The arrow tray button, when install.sh could build it.
@@ -125,16 +178,20 @@ fn stacked(icon: &str, value: &str, text: bool) -> String {
 }
 
 /// Adds a module's Waybar config and gives back its name in the bar.
-pub fn waybar(id: &str, m: &Module, bar: &Bar, config: &mut Map<String, Value>) -> Option<&'static str> {
-    Some(match id {
+pub fn waybar(id: &str, m: &Module, bar: &Bar, config: &mut Map<String, Value>) -> Option<String> {
+    let name: &str = match id {
         "logo" => {
             let click = match m.action.as_str() {
                 "spotlight" => "octopus toggle launcher",
                 "dash" => "octopus toggle dash",
                 _ => "~/.config/octopus/scripts/rofi.sh",
             };
-            let glyph = if m.variant == "arch" || m.variant.is_empty() { "\u{f303}" } else { m.variant.as_str() };
-            let mut launcher = icon_module(glyph, "", click);
+            let format = match glyph(&m.variant) {
+                Glyph::Nerd(c) | Glyph::Symbol(c) => *c,
+                // a picture behind a blank: waybar hides a module with no text
+                Glyph::Art(_) => " ",
+            };
+            let mut launcher = icon_module(format, "", click);
             launcher["tooltip"] = json!(false);
             config.insert("custom/launcher".into(), launcher);
             "custom/launcher"
@@ -327,12 +384,34 @@ pub fn waybar(id: &str, m: &Module, bar: &Bar, config: &mut Map<String, Value>) 
             config.insert("custom/power#bar".into(), icon_module("power_settings_new", t("energia"), "octopus toggle power"));
             "custom/power#bar"
         }
+        _ if id.starts_with("user-") => {
+            let custom = bar.custom(id)?;
+            let shows_value = m.text && !custom.exec.trim().is_empty();
+            let mut module = json!({
+                "format": stacked(&custom.icon, "{}", shows_value),
+                "justify": "center",
+                "tooltip-format": custom.name,
+            });
+            if !custom.exec.trim().is_empty() {
+                module["exec"] = json!(custom.exec);
+                module["interval"] = json!(custom.interval.max(1));
+            }
+            if !custom.click.trim().is_empty() {
+                module["on-click"] = json!(custom.click);
+            }
+            config.insert(format!("custom/{id}"), module);
+            return Some(format!("custom/{id}"));
+        }
         _ => return None,
-    })
+    };
+    Some(name.to_owned())
 }
 
 /// The CSS selector a module's look applies to.
-pub fn selector(id: &str) -> Option<&'static str> {
+pub fn selector(id: &str) -> Option<String> {
+    if id.starts_with("user-") {
+        return Some(format!("#custom-{id}"));
+    }
     Some(match id {
         "logo" => "#custom-launcher",
         "clock" => "#clock",
@@ -346,7 +425,8 @@ pub fn selector(id: &str) -> Option<&'static str> {
         "notifications" => "#custom-notifications",
         "power" => "#custom-power.bar",
         _ => return None,
-    })
+    }
+    .to_owned())
 }
 
 fn colors(background: &str) -> Option<(&'static str, &'static str)> {
@@ -366,25 +446,81 @@ fn radius(shape: &str) -> &'static str {
     }
 }
 
-/// The module's own look, on top of style.css.
-pub fn css(id: &str, m: &Module) -> String {
-    let mut out = String::new();
-    if id == "logo" && m.variant != "arch" && !m.variant.is_empty() {
-        out.push_str("#custom-launcher { font-family: \"Material Symbols Rounded\"; font-size: 24px; padding: 6px 0; }\n");
+fn workspaces_css(style: &str, width: u32) -> String {
+    let side = |inner: u32| width.saturating_sub(inner) / 2;
+    let (w, h, active_h, radius) = match style {
+        "numbers" => {
+            return format!(
+                "#workspaces button {{ min-height: 20px; margin: 2px {m}px; border-radius: 8px; background: transparent; }}\n\
+#workspaces button label {{ font-size: 11px; font-weight: 600; color: @on_surface_variant; }}\n\
+#workspaces button.active {{ min-height: 26px; background: @primary_container; }}\n\
+#workspaces button.active label {{ color: @on_primary_container; }}\n",
+                m = side(26)
+            )
+        }
+        "pills" => (18, 10, 24, "999px"),
+        "squares" => (12, 12, 12, "4px"),
+        "bars" => (4, 14, 30, "999px"),
+        _ => return String::new(),
+    };
+    let mut css = format!(
+        "#workspaces button {{ min-width: {w}px; min-height: {h}px; margin: 3px {m}px; border-radius: {radius}; }}\n",
+        m = side(w)
+    );
+    if style == "squares" {
+        css.push_str(&format!(
+            "#workspaces button.active {{ min-width: 16px; min-height: 16px; margin: 3px {m}px; }}\n",
+            m = side(16)
+        ));
+    } else {
+        css.push_str(&format!("#workspaces button.active {{ min-height: {active_h}px; }}\n"));
     }
-    if id == "workspaces" && m.variant == "numbers" {
-        out.push_str(
-            "#workspaces button { min-height: 20px; border-radius: 8px; background: transparent; }\n\
-#workspaces button label { font-size: 11px; font-weight: 600; color: @on_surface_variant; }\n\
-#workspaces button.active { min-height: 26px; background: @primary_container; }\n\
-#workspaces button.active label { color: @on_primary_container; }\n",
-        );
+    css
+}
+
+/// The module's own look, on top of style.css.
+pub fn css(id: &str, m: &Module, bar: &Bar) -> String {
+    let mut out = String::new();
+    if id == "logo" {
+        match glyph(&m.variant) {
+            Glyph::Symbol(_) => out.push_str("#custom-launcher { font-family: \"Material Symbols Rounded\"; font-size: 24px; padding: 6px 0; }\n"),
+            Glyph::Art(file) => out.push_str(&format!(
+                "#custom-launcher, #custom-launcher:hover {{ background-image: url(\"art/{file}\"); background-size: contain; \
+background-position: center; background-repeat: no-repeat; min-height: 34px; font-size: 1px; color: transparent; padding: 0; margin-top: 2px; margin-bottom: 4px; }}\n"
+            )),
+            Glyph::Nerd(_) => {}
+        }
+    }
+    if id == "workspaces" {
+        out.push_str(&workspaces_css(&m.variant, bar.width));
     }
     let Some(selector) = selector(id) else { return out };
-    if id == "clock" {
-        if m.shape == "bun" {
-            return out;
+    if id.starts_with("user-") {
+        out.push_str(&format!(
+            "{selector} {{ font-family: \"Rubik\", sans-serif; font-size: 10px; font-weight: 600; color: @on_surface; padding: 6px 0; min-width: {}px; margin-left: 8px; margin-right: 8px; }}\n\
+{selector}:hover {{ background-color: @surface_container_highest; }}\n",
+            bar.width.saturating_sub(16)
+        ));
+    }
+    let shaped = crate::widgets::shape::Kind::from_name(&m.shape).is_some();
+    if id == "clock" && m.shape == "bun" {
+        return out;
+    }
+    if shaped {
+        // an M3 shape, drawn by bar::art in the theme's colors
+        let (_, fg) = colors(if m.background == "none" { "tonal" } else { &m.background }).unwrap_or(("", "@on_surface"));
+        let hover = if id == "clock" { ", #clock:hover".to_owned() } else { format!(", {selector}:hover") };
+        out.push_str(&format!(
+            "{selector}{hover} {{ background-color: transparent; background-image: url(\"art/{id}.svg\"); background-size: contain; \
+background-position: center; background-repeat: no-repeat; border-radius: 0; color: {fg}; min-height: 34px; }}\n"
+        ));
+        if id == "clock" {
+            // the whole column's width, so the shape is as big as it can be
+            out.push_str("#clock { margin-left: 0; margin-right: 0; min-height: 48px; padding: 0; }\n");
         }
+        return out;
+    }
+    if id == "clock" {
         let (bg, fg) = colors(&m.background).unwrap_or(("transparent", "@on_surface"));
         out.push_str(&format!(
             "#clock, #clock:hover {{ background-image: none; background-color: {bg}; color: {fg}; border-radius: {}; }}\n",

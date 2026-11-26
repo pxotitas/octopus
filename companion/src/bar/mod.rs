@@ -1,5 +1,6 @@
 //! Waybar's config and layout CSS, generated from octopus.toml [bar].
 
+pub mod art;
 pub mod modules;
 pub mod presets;
 
@@ -48,13 +49,15 @@ pub fn waybar_config(bar: &Bar) -> String {
     let bottom = zone(&bar.bottom, &mut config);
 
     let flush = bar.style == "flush";
-    let (width, margin) = if flush { (bar.width + CONCAVE, 0) } else { (bar.width, 8) };
-    config.insert("layer".into(), json!("top"));
+    let width = if flush { bar.width + CONCAVE } else { bar.width };
+    let (top_gap, bottom_gap, edge_gap) = if flush { (0, 0, 0) } else { (bar.margin_top, bar.margin_bottom, bar.margin_edge) };
+    config.insert("layer".into(), json!(bar.layer));
+    config.insert("exclusive".into(), json!(bar.exclusive));
     config.insert("position".into(), json!(bar.position));
     config.insert("width".into(), json!(width));
-    config.insert("margin-top".into(), json!(margin));
-    config.insert("margin-bottom".into(), json!(margin));
-    config.insert(if bar.right() { "margin-right" } else { "margin-left" }.into(), json!(margin));
+    config.insert("margin-top".into(), json!(top_gap));
+    config.insert("margin-bottom".into(), json!(bottom_gap));
+    config.insert(if bar.right() { "margin-right" } else { "margin-left" }.into(), json!(edge_gap));
     config.insert("spacing".into(), json!(bar.spacing));
     config.insert("reload_style_on_change".into(), json!(true));
     config.insert("modules-left".into(), Value::Array(top));
@@ -89,16 +92,30 @@ pub fn layout_css(bar: &Bar) -> String {
         pct = side(24),
     );
     for id in bar.placed() {
-        css.push_str(&modules::css(id, &bar.module(id)));
+        css.push_str(&scoped(&modules::css(id, &bar.module(id), bar)));
     }
     css
+}
+
+/// layout.css comes before style.css, so a module's own look needs more
+/// weight than style.css' rules to win.
+fn scoped(css: &str) -> String {
+    css.lines()
+        .map(|line| match line.split_once(" {") {
+            Some((selectors, rest)) => {
+                let selectors: Vec<String> = selectors.split(", ").map(|s| format!("window#waybar {}", s.trim())).collect();
+                format!("{} {{{rest}\n", selectors.join(", "))
+            }
+            None => format!("{line}\n"),
+        })
+        .collect()
 }
 
 /// Writes Waybar's generated files and asks it to reload when they changed.
 pub fn apply(bar: &Bar) {
     let dir = gtk::glib::user_config_dir().join("waybar");
     let _ = std::fs::create_dir_all(&dir);
-    let mut changed = false;
+    let mut changed = art::shapes(bar);
     for (name, text) in [("config.jsonc", waybar_config(bar)), ("layout.css", layout_css(bar))] {
         let path = dir.join(name);
         if std::fs::read_to_string(&path).ok().as_deref() != Some(text.as_str()) {
@@ -130,6 +147,30 @@ mod tests {
         let parsed = parse(&super::waybar_config(&bar));
         assert_eq!(parsed["width"], 52);
         assert_eq!(parsed["modules-right"][2], "group/controls");
+    }
+
+    #[test]
+    fn custom_modules_and_shapes() {
+        use crate::config::{Custom, Module};
+        let mut bar = crate::config::Bar::default();
+        bar.custom.push(Custom { id: "user-1".into(), exec: "date +%S".into(), ..Custom::default() });
+        bar.bottom.insert(0, "user-1".into());
+        bar.bottom.insert(0, "cpu".into());
+        bar.modules.insert("cpu".into(), Module { shape: "flower".into(), background: "primary".into(), ..Module::default_for("cpu") });
+        bar.modules.insert("user-1".into(), Module { text: true, ..Module::default() });
+        bar.modules.insert("logo".into(), Module { variant: "octopus".into(), ..Module::default_for("logo") });
+        bar.modules.insert("workspaces".into(), Module { variant: "bars".into(), ..Module::default() });
+        let parsed = parse(&super::waybar_config(&bar));
+        assert_eq!(parsed["modules-right"][0], "cpu");
+        assert_eq!(parsed["modules-right"][1], "custom/user-1");
+        assert_eq!(parsed["custom/user-1"]["exec"], "date +%S");
+        assert_eq!(parsed["custom/launcher"]["format"], " ");
+        let css = super::layout_css(&bar);
+        assert!(css.contains("url(\"art/cpu.svg\")"));
+        assert!(css.contains("url(\"art/logo.svg\")"));
+        assert!(css.contains("window#waybar #custom-user-1"));
+        assert!(css.contains("min-width: 4px"));
+        assert!(crate::widgets::shape::svg_path(crate::widgets::shape::Kind::Flower, 100.0).starts_with("M50.00,0.00"));
     }
 
     #[test]

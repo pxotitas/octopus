@@ -14,3 +14,5 @@ if [ "$mode" = auto ]; then
 fi
 matugen image "$image" -m "$mode" "${look[@]}" --source-color-index 0 -c "$HOME/.config/octopus/matugen/config.toml"
 [ -f "$HOME/.config/matugen/config.toml" ] && matugen image "$image" -m "$mode" "${look[@]}" --source-color-index 0
+# the bar's pictures (the logo, the shapes behind modules) in the new colors
+octopus bar-refresh >/dev/null 2>&1

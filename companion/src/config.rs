@@ -86,6 +86,15 @@ pub struct Bar {
     pub width: u32,
     /// Pixels between modules.
     pub spacing: u32,
+    /// The layer it sits on: "top", "overlay" (over fullscreen windows too)
+    /// or "bottom" (under floating windows).
+    pub layer: String,
+    /// Whether windows keep out of its way.
+    pub exclusive: bool,
+    /// Gaps to the screen's edges when floating, in pixels.
+    pub margin_top: u32,
+    pub margin_bottom: u32,
+    pub margin_edge: u32,
     pub top: Vec<String>,
     pub center: Vec<String>,
     pub bottom: Vec<String>,
@@ -94,6 +103,38 @@ pub struct Bar {
     pub style: String,
     /// How each module looks and acts, by module name.
     pub modules: BTreeMap<String, Module>,
+    /// Modules made in the editor; placed by their id ("user-1"…).
+    pub custom: Vec<Custom>,
+}
+
+/// A module made in the editor: an icon, and optionally a command whose
+/// output shows under it.
+#[derive(Debug, Clone, Deserialize, Serialize, PartialEq)]
+#[serde(default)]
+pub struct Custom {
+    pub id: String,
+    pub name: String,
+    /// A Material Symbols name.
+    pub icon: String,
+    /// Runs every `interval` seconds; its output is the value. Empty shows
+    /// only the icon.
+    pub exec: String,
+    pub interval: u32,
+    /// Runs on a click.
+    pub click: String,
+}
+
+impl Default for Custom {
+    fn default() -> Self {
+        Self {
+            id: String::new(),
+            name: "meu módulo".into(),
+            icon: "star".into(),
+            exec: String::new(),
+            interval: 30,
+            click: String::new(),
+        }
+    }
 }
 
 impl Default for Bar {
@@ -102,11 +143,17 @@ impl Default for Bar {
             position: "left".into(),
             width: 52,
             spacing: 4,
+            layer: "top".into(),
+            exclusive: true,
+            margin_top: 8,
+            margin_bottom: 8,
+            margin_edge: 8,
             top: vec!["logo".into(), "workspaces".into()],
             center: vec!["clock".into()],
             bottom: vec!["tray".into(), "battery".into(), "controls".into()],
             style: "floating".into(),
             modules: BTreeMap::new(),
+            custom: Vec::new(),
         }
     }
 }
@@ -124,6 +171,16 @@ impl Bar {
     pub fn placed(&self) -> impl Iterator<Item = &String> {
         self.top.iter().chain(&self.center).chain(&self.bottom)
     }
+
+    pub fn custom(&self, id: &str) -> Option<&Custom> {
+        self.custom.iter().find(|c| c.id == id)
+    }
+
+    /// A fresh id for a module made in the editor.
+    pub fn next_custom_id(&self) -> String {
+        let n = (1..).find(|n| self.custom(&format!("user-{n}")).is_none()).unwrap_or(1);
+        format!("user-{n}")
+    }
 }
 
 /// One module's options; each module reads the ones that make sense for it.
@@ -132,7 +189,8 @@ impl Bar {
 pub struct Module {
     /// "none", "tonal", "primary" or "surface".
     pub background: String,
-    /// "round", "soft" or "square"; the clock also has "bun".
+    /// "round", "soft" or "square", an M3 shape ("cookie9", "flower"…),
+    /// and for the clock also "bun".
     pub shape: String,
     /// Module-specific: the logo's glyph, the clock's "24h"/"12h", the
     /// workspaces' "dots"/"numbers", the controls' "drawer"/"open".
