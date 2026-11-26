@@ -1,48 +1,110 @@
 # configuration
 
-almost everything can be changed from the window (Mod+Comma). it writes to
-`~/.config/octopus/octopus.toml`, which you can also edit by hand.
+almost everything can be changed from the settings window (Mod+Comma, or
+`octopus settings`). it writes to `~/.config/octopus/octopus.toml`, which you
+can also edit by hand.
+
+## the settings window
+
+a tree on the left: five big categories, each with its branches.
+
+- **look**: colors (mode, palette style, contrast) and language
+- **bar**: the editor, presets and shape
+- **panels**: dash, notifications, weather and music
+- **desktop**: widgets, contributions and the dock
+- **system**: lock screen and about
+
+`octopus settings bar/editor` (or just `octopus settings bar`) opens straight
+on a page. changes wait in a draft until you press **apply**.
+
+## the bar editor
+
+the bar drawn as it will look. tap a module to change it in the inspector
+beside it; drag it to another spot, or to the catalog to take it out; drag
+new ones in from the catalog.
+
+| module | what it is | options |
+|---|---|---|
+| `logo` | opens the launcher | glyph, what a click opens, background, corners |
+| `workspaces` | niri's workspaces | dots or numbers |
+| `clock` | hours over minutes; opens the dash | 24 or 12 hours, bun/pill/rounded/square, background |
+| `tray` | background apps | |
+| `battery` | a pill that fills up | show the percentage |
+| `controls` | control center, wi-fi, bluetooth, sound, power | which buttons, in a drawer or always shown |
+| `cpu`, `memory`, `temperature` | usage and heat | show the value, background, corners |
+| `brightness`, `volume` | scroll to change | show the value, background, corners |
+| `idle` | keeps the screen awake | background, corners |
+| `media` | play and pause | background, corners |
+| `notifications`, `power` | shortcuts | background, corners |
+
+**presets** sets the whole bar at once: default, minimal, monitor, music and
+focus. the bar changes when you apply, without restarting.
+
+## octopus.toml
 
 ```toml
 language = "auto"          # auto follows LANG; "pt" or "en"
 
+[look]
+scheme = "tonal-spot"      # matugen's palette: expressive, vibrant, fidelity, content,
+                           # neutral, monochrome, rainbow, fruit-salad
+contrast = 0.0             # -1 to 1
+
 [bar]
 position = "left"          # or "right"
-width = 40
+width = 52
+spacing = 4                # between modules
 style = "floating"         # or "flush": against the edge, concave corners
 top = ["logo", "workspaces"]
 center = ["clock"]
 bottom = ["tray", "battery", "controls"]
 
-[dock]
-enabled = false
-mode = "smart"             # "fixed", "autohide" or "smart"
-pinned = ["firefox.desktop"]  # right-click an icon to pin it
-size = 44                  # icon size, in pixels
-magnify = true             # icons swell under the pointer
+[bar.modules.clock]        # one table per module you changed
+background = "primary"     # none, tonal, primary, surface
+shape = "bun"              # bun (clock only), round, soft, square
+variant = "24h"            # the module's own choice: 12h, numbers, a glyph…
+text = false               # the value under the icon
+action = ""                # the logo: launcher, spotlight or dash
+items = []                 # the controls' buttons
+
+[dash]
+page = "overview"          # or media, weather, wallpapers
 
 [weather]
 place = ""                 # a city, or "lat,lon"; empty uses your ip
-
-[desktop]
-enabled = true             # widgets under the windows
-widgets = ["weather", "contributions"]
-github = ""                # a github user, for the contributions calendar
-contributions_colors = "github"  # or "theme", the wallpaper's color
+unit = "celsius"           # or "fahrenheit"
 
 [notifications]
 timeout_ms = 5000
 max_popups = 3
+position = "top-right"     # top-left, bottom-right, bottom-left
 
 [media]
+lyrics = true              # in the dash
+lyrics_offset_ms = 0
+
+[lock]
 lyrics = true
+
+[dock]
+enabled = false
+mode = "smart"             # "fixed", "autohide" or "smart"
+pinned = ["firefox.desktop"]  # right-click an icon to pin it
+size = 44
+magnify = true
+
+[desktop]
+enabled = true
+widgets = ["weather", "contributions"]  # also clock, media, calendar
+github = ""                # a github user, for the contributions calendar
+contributions_colors = "github"  # or "theme", the wallpaper's color
 ```
 
 ## when it applies
 
-- **bar**: right away (waybar reloads on its own)
-- **language and dock**: octopus restarts on its own when you apply
-- **weather, notifications, lyrics**: after `octopus restart`
+- **bar and lyrics' timing**: right away
+- **colors (mode)**: right away; palette style and contrast repaint everything when applied
+- **everything else**: octopus restarts on its own when you apply
 
 ## your own css
 
@@ -66,8 +128,15 @@ a layer under the windows, so they show wherever no window covers them:
 - **contributions**: the calendar from `github`'s profile, the little green squares, with the
   year's total and the current streak. hover a square for its day. it shows as many weeks as it
   is wide, and refreshes every half hour (no token).
+- **clock**: analog, on a cookie.
+- **music**: what's playing, with the controls.
+- **calendar**: the whole month.
 
-drag a widget to move it, and drag the handle in its corner to resize it. where they sit is
-kept in `~/.local/state/octopus/desktop.json`; delete that file to put them back in the corner.
+they stay put until you arrange them: right-click the desktop and pick
+**arrange widgets** (or `octopus desktop arrange`). the desktop comes up over
+the windows; drag a widget to move it, its corner to resize it, and use the
+case at the bottom to add the others (drag one out, or click it) or put one
+away (drop it on the case, or its ×). **done** or <kbd>esc</kbd> ends it.
 
-changing `[desktop]` in the settings restarts octopus on its own.
+where they sit is kept in `~/.local/state/octopus/desktop.json`; delete that
+file to put them back in the corner.
