@@ -9,7 +9,7 @@ também pode ser editado à mão.
 uma árvore na esquerda: cinco categorias grandes, cada uma com seus galhos.
 
 - **aparência**: cores (modo, estilo da paleta, contraste) e idioma
-- **barra**: o editor, presets e forma
+- **barra**: o editor, presets, forma e ancoragem
 - **painéis**: dash, notificações, clima e música
 - **área de trabalho**: widgets, contribuições e a dock
 - **sistema**: tela de bloqueio e sobre
@@ -25,11 +25,11 @@ novos do catálogo.
 
 | módulo | o que é | opções |
 |---|---|---|
-| `logo` | abre o launcher | glifo, o que o clique abre, fundo, cantos |
-| `workspaces` | os workspaces do niri | pontos ou números |
-| `clock` | horas sobre minutos; abre o dash | 24 ou 12 horas, bun/pílula/arredondado/quadrado, fundo |
+| `logo` | abre o launcher | o octopus, a sua distro ou um símbolo; o que o clique abre; fundo e forma |
+| `workspaces` | os workspaces do niri | pontos, números, pílulas, quadrados ou traços |
+| `clock` | horas sobre minutos; abre o dash | 24 ou 12 horas, fundo e forma (o bun também) |
 | `tray` | apps em segundo plano | |
-| `battery` | uma pílula que enche | mostrar a porcentagem |
+| `battery` | uma pílula que enche, com um raio carregando | mostrar a porcentagem |
 | `controls` | central de controle, wi-fi, bluetooth, som, energia | quais botões, numa gaveta ou sempre à mostra |
 | `cpu`, `memory`, `temperature` | uso e calor | mostrar o valor, fundo, cantos |
 | `brightness`, `volume` | role pra mudar | mostrar o valor, fundo, cantos |
@@ -37,8 +37,19 @@ novos do catálogo.
 | `media` | tocar e pausar | fundo, cantos |
 | `notifications`, `power` | atalhos | fundo, cantos |
 
+a **forma** atrás de um módulo é ou cantos arredondados (pílula, arredondado,
+quadrado) ou qualquer shape m3: cookies, trevos, flor, sol, explosão…
+desenhados nas cores do tema, e de novo quando o wallpaper muda. os **presets
+do módulo** põem fundo e forma num toque.
+
+**criar um módulo** (no fim do catálogo) te dá um seu: um nome, um material
+symbol, um comando cuja saída aparece embaixo do ícone, de quanto em quanto
+tempo ele roda, e um comando pro clique.
+
 **presets** troca a barra inteira de uma vez: padrão, mínima, monitor, música
-e foco. a barra muda ao aplicar, sem reiniciar.
+e foco. **ancoragem** escolhe o lado, a camada (embaixo, em cima, ou por cima
+de tudo), se as janelas saem da frente dela, e a distância das bordas. a
+barra muda ao aplicar, sem reiniciar.
 
 ## octopus.toml
 
@@ -54,6 +65,11 @@ contrast = 0.0             # de -1 a 1
 position = "left"          # ou "right"
 width = 52
 spacing = 4                # entre os módulos
+layer = "top"              # "bottom", "top" ou "overlay"
+exclusive = true           # as janelas não passam por baixo
+margin_top = 8             # distância das bordas, flutuando
+margin_bottom = 8
+margin_edge = 8
 style = "floating"         # ou "flush": encostada na borda, cantos côncavos
 top = ["logo", "workspaces"]
 center = ["clock"]
@@ -61,11 +77,21 @@ bottom = ["tray", "battery", "controls"]
 
 [bar.modules.clock]        # uma tabela por módulo que você mudou
 background = "primary"     # none, tonal, primary, surface
-shape = "bun"              # bun (só o relógio), round, soft, square
-variant = "24h"            # a escolha do próprio módulo: 12h, numbers, um glifo…
+shape = "bun"              # bun (só o relógio), round, soft, square, ou um shape m3:
+                           # cookie4…12, clover4, clover8, flower, sunny, burst…
+variant = "24h"            # a escolha do módulo: 12h; pro logo "octopus", "arch", "pets"…;
+                           # pros workspaces dots, numbers, pills, squares, bars
 text = false               # o valor embaixo do ícone
 action = ""                # o logo: launcher, spotlight ou dash
 items = []                 # os botões dos controles
+
+[[bar.custom]]             # um módulo seu; ponha "user-1" em top/center/bottom
+id = "user-1"
+name = "uptime"
+icon = "timer"             # um material symbol
+exec = "uptime -p"         # a saída vira o valor (ligue o text)
+interval = 60
+click = ""
 
 [dash]
 page = "overview"          # ou media, weather, wallpapers
