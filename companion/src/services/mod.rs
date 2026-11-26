@@ -12,6 +12,7 @@ pub mod media;
 pub mod network;
 pub mod niri;
 pub mod notifications;
+pub mod reminders;
 pub mod theme;
 pub mod tray;
 pub mod weather;
@@ -32,13 +33,17 @@ pub struct Services {
     pub caffeine: Rc<caffeine::Caffeine>,
     pub cava: Rc<cava::Cava>,
     pub notifications: Rc<notifications::Notifications>,
+    pub reminders: Rc<reminders::Reminders>,
     pub theme: Rc<theme::Theme>,
     pub tray: Rc<tray::Tray>,
 }
 
 impl Services {
     pub fn new(config: &Config) -> Rc<Self> {
+        let notifications = notifications::Notifications::new();
+        let reminders = reminders::Reminders::new(&notifications, &config.reminders);
         Rc::new(Self {
+            reminders,
             audio: audio::Audio::new(),
             screen: brightness::Light::new(&config.brightness.screen, false),
             keyboard: brightness::Light::new(&config.brightness.keyboard, true),
@@ -49,7 +54,7 @@ impl Services {
             calendar: calendar::Calendar::new(&config.calendar.urls),
             caffeine: caffeine::Caffeine::new(),
             cava: cava::Cava::new(),
-            notifications: notifications::Notifications::new(),
+            notifications,
             theme: theme::Theme::new(),
             tray: tray::Tray::new(),
         })

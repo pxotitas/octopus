@@ -23,6 +23,7 @@ pub struct Config {
     pub dock: Dock,
     pub desktop: Desktop,
     pub control_center: ControlCenter,
+    pub reminders: RemindersConfig,
 }
 
 impl Default for Config {
@@ -41,6 +42,7 @@ impl Default for Config {
             dock: Dock::default(),
             desktop: Desktop::default(),
             control_center: ControlCenter::default(),
+            reminders: RemindersConfig::default(),
         }
     }
 }
@@ -56,6 +58,7 @@ impl Config {
             c.look = Look::default();
             c.media.lyrics_offset_ms = 0;
             c.dock.pinned.clear();
+            c.reminders = RemindersConfig::default();
         }
         a != b
     }
@@ -249,6 +252,21 @@ pub struct Dash {
 impl Default for Dash {
     fn default() -> Self {
         Self { page: "overview".into() }
+    }
+}
+
+/// Alarms and reminders, run by the shell; off, nothing rings.
+#[derive(Debug, Clone, Deserialize, Serialize, PartialEq)]
+#[serde(default)]
+pub struct RemindersConfig {
+    pub enabled: bool,
+    /// Minutes a snooze waits.
+    pub snooze: u32,
+}
+
+impl Default for RemindersConfig {
+    fn default() -> Self {
+        Self { enabled: true, snooze: 10 }
     }
 }
 
