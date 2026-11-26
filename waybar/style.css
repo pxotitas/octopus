@@ -118,19 +118,23 @@ tooltip label {
 
 /* clock: hours over minutes */
 
+/* the M3 "bun" shape, drawn by matugen in the theme's colors */
 #clock {
   font-size: 12px;
   font-weight: 600;
   color: @on_primary_container;
-  background: @primary_container;
-  border-radius: 12px;
+  background-color: transparent;
+  background-image: url("clock-bun.svg");
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  border-radius: 0;
   min-width: 32px;
-  padding: 6px 0;
-  transition: background 180ms ease, color 180ms ease;
+  padding: 8px 0;
+  transition: color 180ms ease;
 }
 
 #clock:hover {
-  background: @primary;
+  background-image: url("clock-bun-hover.svg");
   color: @on_primary;
 }
 

@@ -10,6 +10,14 @@ source_color_index = 0
 input_path = "templates/colors.css"
 output_path = "~/.config/octopus/colors.css"
 
+[templates.clock_bun]
+input_path = "templates/clock-bun.svg"
+output_path = "~/.config/octopus/waybar/clock-bun.svg"
+
+[templates.clock_bun_hover]
+input_path = "templates/clock-bun-hover.svg"
+output_path = "~/.config/octopus/waybar/clock-bun-hover.svg"
+
 [templates.waybar]
 input_path = "templates/colors.css"
 output_path = "~/.config/waybar/colors.css"
