@@ -57,8 +57,9 @@ pub fn card(
     }
     if !n.body.is_empty() {
         let body = gtk::Label::new(None);
-        if pango::parse_markup(&n.body, '\0').is_ok() {
-            body.set_markup(&n.body);
+        let markup = sanitize(&n.body);
+        if pango::parse_markup(&markup, '\0').is_ok() {
+            body.set_markup(&markup);
         } else {
             body.set_text(&n.body);
         }
@@ -112,6 +113,37 @@ pub fn card(
         root.add_controller(click);
     }
     root
+}
+
+/// The body's markup cut down to what the notification spec allows (bold,
+/// italic, underline, links), so no app can blow a card up with a giant
+/// `<span size>` or a font of its own. Entities pass through untouched.
+fn sanitize(body: &str) -> String {
+    let mut out = String::with_capacity(body.len());
+    let mut rest = body;
+    while let Some(start) = rest.find('<') {
+        out.push_str(&rest[..start]);
+        let Some(len) = rest[start..].find('>') else {
+            out.push_str(&gtk::glib::markup_escape_text(&rest[start..]));
+            return out;
+        };
+        let tag = &rest[start + 1..start + len];
+        let closing = tag.starts_with('/');
+        let name: String = tag
+            .trim_start_matches('/')
+            .chars()
+            .take_while(|c| c.is_ascii_alphanumeric())
+            .collect::<String>()
+            .to_ascii_lowercase();
+        if matches!(name.as_str(), "b" | "i" | "u") {
+            out.push_str(if closing { "</" } else { "<" });
+            out.push_str(&name);
+            out.push('>');
+        }
+        rest = &rest[start + len + 1..];
+    }
+    out.push_str(rest);
+    out
 }
 
 fn avatar(n: &Notification) -> gtk::Widget {

@@ -37,6 +37,7 @@ impl Toasts {
         let window = gtk::Window::builder()
             .application(app)
             .decorated(false)
+            .resizable(false)
             .build();
         window.add_css_class("octopus-popup");
         window.init_layer_shell();

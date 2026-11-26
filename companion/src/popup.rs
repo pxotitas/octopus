@@ -48,9 +48,12 @@ impl Popup {
         interactive: bool,
         child: &impl IsA<gtk::Widget>,
     ) -> Rc<Self> {
+        // Not resizable: a window then always takes its content's natural
+        // size, so it shrinks back after something big has passed through.
         let window = gtk::Window::builder()
             .application(app)
             .decorated(false)
+            .resizable(false)
             .build();
         window.add_css_class("octopus-popup");
         window.init_layer_shell();
