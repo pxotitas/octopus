@@ -113,7 +113,7 @@ all of them are in [`screenshots/`](screenshots). click a group to open it.
 <summary><b>desktop</b>: the bar, the desktop widgets, notifications and the osd</summary>
 <br>
 
-the vertical bar on the left, and the desktop widgets on the right: the weather and the latest commits.
+the vertical bar on the left, and the desktop widgets on the right: the weather and the github contributions, movable and resizable.
 
 <img src="screenshots/desktop.webp" alt="desktop with the bar and the dock" width="100%">
 

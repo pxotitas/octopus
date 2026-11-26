@@ -26,9 +26,9 @@ place = ""                 # a city, or "lat,lon"; empty uses your ip
 
 [desktop]
 enabled = true             # widgets under the windows
-widgets = ["weather", "github"]
-position = "top-right"     # or top-left, bottom-right, bottom-left
-github = ""                # a github user, for the commits widget
+widgets = ["weather", "contributions"]
+github = ""                # a github user, for the contributions calendar
+contributions_colors = "github"  # or "theme", the wallpaper's color
 
 [notifications]
 timeout_ms = 5000
@@ -63,6 +63,11 @@ window. right: a menu with the windows, pin and close.
 a layer under the windows, so they show wherever no window covers them:
 
 - **weather**: now in a big cookie, and the next four days. a click opens the weather tab.
-- **github**: the latest commits of `github`, from github's public commit search (no token). a click opens the commit.
+- **contributions**: the calendar from `github`'s profile, the little green squares, with the
+  year's total and the current streak. hover a square for its day. it shows as many weeks as it
+  is wide, and refreshes every half hour (no token).
+
+drag a widget to move it, and drag the handle in its corner to resize it. where they sit is
+kept in `~/.local/state/octopus/desktop.json`; delete that file to put them back in the corner.
 
 changing `[desktop]` in the settings restarts octopus on its own.
