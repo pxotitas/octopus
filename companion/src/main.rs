@@ -102,6 +102,7 @@ fn run_daemon() -> glib::ExitCode {
     let code = app.run_with_args::<&str>(&[]);
     if RESTART.load(std::sync::atomic::Ordering::Relaxed) {
         use std::os::unix::process::CommandExt;
+        exec::end_streams();
         if let Ok(exe) = std::env::current_exe() {
             let err = std::process::Command::new(exe).exec();
             eprintln!("octopus: cannot restart: {err}");

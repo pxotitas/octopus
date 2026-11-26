@@ -79,8 +79,41 @@ impl Drop for Stream {
     }
 }
 
+const PR_SET_PDEATHSIG: i32 = 1;
+const SIGTERM: i32 = 15;
+
+extern "C" {
+    fn prctl(option: i32, ...) -> i32;
+    fn kill(pid: i32, signal: i32) -> i32;
+    fn waitpid(pid: i32, status: *mut i32, options: i32) -> i32;
+}
+
+static STREAMS: Mutex<Vec<u32>> = Mutex::new(Vec::new());
+
+/// Ends every long-running child, for when the daemon replaces itself and no
+/// destructor gets to run.
+pub fn end_streams() {
+    if let Ok(pids) = STREAMS.lock() {
+        for &pid in pids.iter() {
+            unsafe {
+                kill(pid as i32, SIGTERM);
+                waitpid(pid as i32, std::ptr::null_mut(), 0);
+            }
+        }
+    }
+}
+
 pub fn stream(program: &str, args: &[&str], on_line: impl Fn(String) + 'static) -> Option<Stream> {
-    let mut child = Command::new(program)
+    use std::os::unix::process::CommandExt;
+    let mut command = Command::new(program);
+    unsafe {
+        // the child goes when the daemon goes, even if it crashes
+        command.pre_exec(|| {
+            prctl(PR_SET_PDEATHSIG, SIGTERM);
+            Ok(())
+        });
+    }
+    let mut child = command
         .args(args)
         .env("LC_ALL", "C.UTF-8")
         .stdin(Stdio::null())
@@ -89,6 +122,9 @@ pub fn stream(program: &str, args: &[&str], on_line: impl Fn(String) + 'static) 
         .spawn()
         .map_err(|err| eprintln!("octopus: cannot start {program}: {err}"))
         .ok()?;
+    if let Ok(mut pids) = STREAMS.lock() {
+        pids.push(child.id());
+    }
     let stdout = child.stdout.take()?;
     let (tx, rx) = async_channel::unbounded::<String>();
 
