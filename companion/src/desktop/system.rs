@@ -70,15 +70,16 @@ fn meter(icon: &str, name: &str) -> (gtk::Box, gtk::LevelBar, gtk::Label) {
     (line, bar, value)
 }
 
-pub fn build() -> gtk::Box {
+pub fn build(meters: &[String]) -> gtk::Box {
     let root = gtk::Box::new(gtk::Orientation::Vertical, 14);
     root.add_css_class("desktop-widget");
     root.add_css_class("desktop-system");
     let (cpu, cpu_bar, cpu_value) = meter("memory", t("processador"));
     let (ram, ram_bar, ram_value) = meter("memory_alt", t("memória"));
     let (hd, hd_bar, hd_value) = meter("hard_drive", t("disco"));
-    for line in [&cpu, &ram, &hd] {
+    for (key, line) in [("cpu", &cpu), ("memory", &ram), ("disk", &hd)] {
         line.set_vexpand(true);
+        line.set_visible(meters.iter().any(|m| m == key));
         root.append(line);
     }
 

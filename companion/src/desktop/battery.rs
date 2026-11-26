@@ -36,7 +36,7 @@ fn read() -> Option<Reading> {
     Some(Reading { percent, status, hours })
 }
 
-pub fn build() -> gtk::Box {
+pub fn build(show_time: bool) -> gtk::Box {
     let root = gtk::Box::new(gtk::Orientation::Horizontal, 18);
     root.add_css_class("desktop-widget");
     root.add_css_class("desktop-battery");
@@ -69,6 +69,7 @@ pub fn build() -> gtk::Box {
     time.set_xalign(0.0);
     texts.append(&percent);
     texts.append(&state);
+    time.set_visible(show_time);
     texts.append(&time);
     root.append(&texts);
 

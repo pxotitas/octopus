@@ -303,6 +303,18 @@ pub struct Desktop {
     pub github: String,
     /// "github" for the profile's greens, "theme" for the wallpaper's color.
     pub contributions_colors: String,
+    /// The cards' color: "surface", "tonal", "primary" or "none".
+    pub card: String,
+    pub corners: u32,
+    /// A grid the widgets snap to while arranging, in pixels; 0 is free.
+    pub snap: u32,
+    pub clock: DeskClock,
+    pub weather: DeskWeather,
+    pub agenda: DeskAgenda,
+    pub system: DeskSystem,
+    pub battery: DeskBattery,
+    pub note: DeskNote,
+    pub photo: DeskPhoto,
 }
 
 impl Default for Desktop {
@@ -312,7 +324,113 @@ impl Default for Desktop {
             widgets: vec!["weather".into(), "contributions".into()],
             github: String::new(),
             contributions_colors: "github".into(),
+            card: "surface".into(),
+            corners: 32,
+            snap: 0,
+            clock: DeskClock::default(),
+            weather: DeskWeather::default(),
+            agenda: DeskAgenda::default(),
+            system: DeskSystem::default(),
+            battery: DeskBattery::default(),
+            note: DeskNote::default(),
+            photo: DeskPhoto::default(),
         }
+    }
+}
+
+#[derive(Debug, Clone, Deserialize, Serialize, PartialEq)]
+#[serde(default)]
+pub struct DeskClock {
+    /// "analog" or "digital".
+    pub face: String,
+    pub seconds: bool,
+    /// 12 or 24, for the digital face.
+    pub hours: u32,
+}
+
+impl Default for DeskClock {
+    fn default() -> Self {
+        Self { face: "analog".into(), seconds: true, hours: 24 }
+    }
+}
+
+#[derive(Debug, Clone, Deserialize, Serialize, PartialEq)]
+#[serde(default)]
+pub struct DeskWeather {
+    /// The next days under now, 0 to 6.
+    pub days: u32,
+    /// Feels like and the place, beside the cookie.
+    pub details: bool,
+}
+
+impl Default for DeskWeather {
+    fn default() -> Self {
+        Self { days: 4, details: true }
+    }
+}
+
+#[derive(Debug, Clone, Deserialize, Serialize, PartialEq)]
+#[serde(default)]
+pub struct DeskAgenda {
+    pub count: u32,
+}
+
+impl Default for DeskAgenda {
+    fn default() -> Self {
+        Self { count: 6 }
+    }
+}
+
+#[derive(Debug, Clone, Deserialize, Serialize, PartialEq)]
+#[serde(default)]
+pub struct DeskSystem {
+    /// "cpu", "memory", "disk".
+    pub meters: Vec<String>,
+}
+
+impl Default for DeskSystem {
+    fn default() -> Self {
+        Self { meters: vec!["cpu".into(), "memory".into(), "disk".into()] }
+    }
+}
+
+#[derive(Debug, Clone, Deserialize, Serialize, PartialEq)]
+#[serde(default)]
+pub struct DeskBattery {
+    /// How long until full or empty.
+    pub time: bool,
+}
+
+impl Default for DeskBattery {
+    fn default() -> Self {
+        Self { time: true }
+    }
+}
+
+#[derive(Debug, Clone, Deserialize, Serialize, PartialEq)]
+#[serde(default)]
+pub struct DeskNote {
+    pub size: u32,
+}
+
+impl Default for DeskNote {
+    fn default() -> Self {
+        Self { size: 15 }
+    }
+}
+
+#[derive(Debug, Clone, Deserialize, Serialize, PartialEq)]
+#[serde(default)]
+pub struct DeskPhoto {
+    /// "cover" crops to fill the card, "contain" shows it whole.
+    pub fit: String,
+    /// Minutes between pictures from the same folder; 0 keeps one.
+    pub shuffle: u32,
+}
+
+impl Default for DeskPhoto {
+    fn default() -> Self {
+        Self { fit: "cover".into(), shuffle: 0 }
     }
 }
 

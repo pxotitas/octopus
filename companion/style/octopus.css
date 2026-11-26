@@ -2742,6 +2742,45 @@ textview.note-text, textview.note-text text {
   font-size: 15px;
 }
 
+/* the cards' color, from the settings */
+
+window.cards-tonal .desktop-widget, window.cards-tonal .desktop-clock {
+  background: @secondary_container;
+  color: @on_secondary_container;
+}
+
+window.cards-primary .desktop-widget, window.cards-primary .desktop-clock {
+  background: @primary_container;
+  color: @on_primary_container;
+}
+
+window.cards-none .desktop-widget, window.cards-none .desktop-clock {
+  background: none;
+}
+
+window.cards-none .desktop-widget label {
+  text-shadow: 0 1px 6px alpha(black, 0.35);
+}
+
+.desktop-clock.digital {
+  background: none;
+  padding: 0;
+}
+
+shape.digital-face {
+  color: @primary_container;
+}
+
+shape.digital-face label {
+  color: @on_primary_container;
+  font-weight: 800;
+  line-height: 0.9;
+}
+
+.desktop-photo.contain {
+  background: @surface_container_high;
+}
+
 .desktop-photo {
   padding: 0;
   border-radius: 32px;
@@ -2902,4 +2941,54 @@ contributions.contrib-grid {
 
 .contrib-total {
   font-weight: 700;
+}
+
+/* settings: a desktop widget and its options */
+
+.widget-item > .settings-item {
+  background: none;
+}
+
+.widget-item {
+  background: @surface_container_low;
+  border-radius: 6px;
+}
+
+.settings-group > .widget-item:first-child {
+  border-radius: 24px 24px 6px 6px;
+}
+
+.settings-group > .widget-item:last-child {
+  border-radius: 6px 6px 24px 24px;
+}
+
+togglebutton.widget-tune {
+  min-width: 36px;
+  min-height: 36px;
+  padding: 0;
+  border-radius: 999px;
+  background: none;
+  color: @on_surface_variant;
+  transition: background 200ms cubic-bezier(0.2, 0, 0, 1), border-radius 200ms cubic-bezier(0.2, 0, 0, 1);
+}
+
+togglebutton.widget-tune:hover {
+  background: alpha(@on_surface, 0.08);
+}
+
+togglebutton.widget-tune:checked {
+  background: @secondary_container;
+  color: @on_secondary_container;
+  border-radius: 12px;
+}
+
+.widget-options {
+  margin: 0 14px 14px 54px;
+  padding: 4px;
+  border-radius: 18px;
+  background: @surface_container;
+}
+
+.widget-options > .settings-item {
+  background: none;
 }

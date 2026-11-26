@@ -7,10 +7,11 @@
 mod battery;
 mod catalog;
 mod contributions;
+mod digital;
 mod layout;
 mod menu;
 mod note;
-mod photo;
+pub mod photo;
 mod system;
 mod tray;
 mod weather;
@@ -94,6 +95,8 @@ impl Desktop {
         stage.set_child(Some(&fixed));
         let window = gtk::Window::builder().application(app).child(&stage).build();
         window.add_css_class("octopus-desktop");
+        window.add_css_class(&format!("cards-{}", config.desktop.card));
+        style(&config.desktop);
         window.init_layer_shell();
         window.set_namespace(Some("octopus-desktop"));
         window.set_layer(Layer::Bottom);
@@ -143,6 +146,14 @@ impl Desktop {
         desktop.gestures();
         window.present();
         Some(desktop)
+    }
+
+    /// To the grid from the settings, while arranging.
+    fn snap(&self, v: f64) -> f64 {
+        match self.config.snap {
+            0 => v,
+            g => (v / g as f64).round() * g as f64,
+        }
     }
 
     fn names(&self) -> Vec<String> {
@@ -335,8 +346,8 @@ impl Desktop {
                 Hold::Click => {}
                 Hold::Move { x, y } => {
                     let (w, h) = (item.frame.width() as f64, item.frame.height() as f64);
-                    let x = (x + dx).clamp(d.left_edge as f64, (sw - w).max(d.left_edge as f64));
-                    let y = (y + dy).clamp(0.0, (sh - h).max(0.0));
+                    let x = (d.snap(x + dx)).clamp(d.left_edge as f64, (sw - w).max(d.left_edge as f64));
+                    let y = (d.snap(y + dy)).clamp(0.0, (sh - h).max(0.0));
                     d.fixed.move_(&item.frame, x.round(), y.round());
                     if let Some((px, py)) = gesture.start_point() {
                         d.tray.set_receiving(d.tray.contains(&d.fixed, px + dx, py + dy));
@@ -344,8 +355,8 @@ impl Desktop {
                 }
                 Hold::Resize { w, h } => {
                     let (x, y) = d.fixed.child_position(&item.frame);
-                    let w = (w as f64 + dx).clamp(item.min.0 as f64, (sw - x).max(item.min.0 as f64)) as i32;
-                    let h = (h as f64 + dy).clamp(item.min.1 as f64, (sh - y).max(item.min.1 as f64)) as i32;
+                    let w = d.snap(w as f64 + dx).clamp(item.min.0 as f64, (sw - x).max(item.min.0 as f64)) as i32;
+                    let h = d.snap(h as f64 + dy).clamp(item.min.1 as f64, (sh - y).max(item.min.1 as f64)) as i32;
                     item.content.set_size_request(w, h);
                     (item.resize)(w, h);
                 }
@@ -448,4 +459,21 @@ impl Desktop {
         }
         menu::open(&self.fixed, x, y, rows, || {});
     }
+}
+
+/// The corners and the note's text, from the settings; the cards' color is a
+/// class on the window.
+fn style(desktop: &config::Desktop) {
+    let Some(display) = gdk::Display::default() else { return };
+    let r = desktop.corners.min(48);
+    let css = format!(
+        "window.octopus-desktop .desktop-widget, window.octopus-desktop .desktop-photo picture {{ border-radius: {r}px; }}\n\
+         window.octopus-desktop .desktop-clock:not(.digital) {{ border-radius: {}px; }}\n\
+         window.octopus-desktop textview.note-text, window.octopus-desktop textview.note-text text {{ font-size: {}px; }}",
+        if r >= 40 { 999 } else { r },
+        desktop.note.size.clamp(10, 32),
+    );
+    let provider = gtk::CssProvider::new();
+    provider.load_from_string(&css);
+    gtk::style_context_add_provider_for_display(&display, &provider, gtk::STYLE_PROVIDER_PRIORITY_USER + 1);
 }

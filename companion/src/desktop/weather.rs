@@ -19,10 +19,13 @@ pub struct Weather {
     big: Shape,
     days: gtk::Box,
     day_size: Rc<Cell<i32>>,
+    count: i32,
 }
 
 impl Weather {
-    pub fn new(s: &Rc<Services>) -> Rc<Self> {
+    pub fn new(s: &Rc<Services>, options: &crate::config::DeskWeather) -> Rc<Self> {
+        let count = options.days.min(6) as usize;
+        let details = options.details;
         let root = gtk::Box::new(gtk::Orientation::Vertical, 14);
         root.add_css_class("desktop-widget");
         root.add_css_class("desktop-weather");
@@ -65,13 +68,17 @@ impl Weather {
 
         let days = gtk::Box::new(gtk::Orientation::Horizontal, 8);
         days.set_homogeneous(true);
+        days.set_visible(count > 0);
         root.append(&days);
+        place.set_visible(details);
+        feels.set_visible(details);
 
         let widget = Rc::new(Self {
             root,
             big,
             days: days.clone(),
             day_size: Rc::new(Cell::new(74)),
+            count: count.max(1) as i32,
         });
 
         let day_size = widget.day_size.clone();
@@ -88,7 +95,7 @@ impl Weather {
             place.set_label(&r.place.to_lowercase());
             range.set_label(&format!("↑{}°  ↓{}°", r.high, r.low));
             feels.set_label(&crate::i18n::tf("sensação {}°", r.feels_like));
-            for (i, d) in r.days.iter().filter(|d| d.offset >= 1).take(4).enumerate() {
+            for (i, d) in r.days.iter().filter(|d| d.offset >= 1).take(count).enumerate() {
                 let cell = gtk::Box::new(gtk::Orientation::Vertical, 0);
                 cell.set_halign(gtk::Align::Center);
                 cell.set_valign(gtk::Align::Center);
@@ -108,7 +115,7 @@ impl Weather {
     /// The cookie and the days follow the widget's size.
     pub fn resize(&self, w: i32, h: i32) {
         self.big.set_size((h as f32 * 0.5).clamp(100.0, 280.0) as i32);
-        let day = ((w - 36 - 24) / 4).clamp(56, 130);
+        let day = ((w - 36 - 6 * (self.count - 1)) / self.count).clamp(44, 130);
         self.day_size.set(day);
         let mut child = self.days.first_child();
         while let Some(widget) = child {

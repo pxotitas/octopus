@@ -13,6 +13,7 @@ mod bar_preview;
 mod bar_shape;
 mod calendar;
 mod desktop;
+mod desktop_options;
 mod look;
 mod panels;
 mod rows;
@@ -78,8 +79,7 @@ pub const MAJORS: [Major; 5] = [
         icon: "desktop_windows",
         shape: Kind::Clover4,
         categories: &[
-            category("widgets", "widgets", "o que fica embaixo das janelas"),
-            category("contributions", "contribuições", "o calendário do github"),
+            category("widgets", "widgets", "quais, como eles ficam, e as opções de cada um"),
             category("dock", "dock", "apps fixados e abertos"),
         ],
     },
@@ -148,7 +148,7 @@ fn build_page(ctx: &Rc<Ctx>, id: &str) -> gtk::Widget {
         "panels/calendar" => calendar::build(ctx),
         "panels/music" => panels::music(ctx),
         "desktop/widgets" => desktop::widgets(ctx),
-        "desktop/contributions" => desktop::contributions(ctx),
+        "desktop/contributions" => desktop::widgets(ctx),
         "desktop/dock" => desktop::dock(ctx),
         "system/lock" => system::lock(ctx),
         _ => system::about(ctx),

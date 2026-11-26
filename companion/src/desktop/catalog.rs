@@ -44,7 +44,7 @@ pub const ENTRIES: [Entry; 10] = [
         icon: "schedule",
         shape: Kind::Cookie9,
         title: "relógio",
-        about: "analógico, num cookie",
+        about: "analógico ou digital, num cookie",
         min: (140, 140),
         default: (220, 220),
     },
@@ -136,7 +136,7 @@ pub fn build(id: &str, s: &Rc<Services>, desktop: &config::Desktop) -> Option<Bu
     }
     Some(match entry.id {
         "weather" => {
-            let w = super::weather::Weather::new(s);
+            let w = super::weather::Weather::new(s, &desktop.weather);
             Built {
                 content: w.root.clone().upcast(),
                 resize: Box::new(move |width, height| w.resize(width, height)),
@@ -148,12 +148,30 @@ pub fn build(id: &str, s: &Rc<Services>, desktop: &config::Desktop) -> Option<Bu
             resize: Box::new(|_, _| {}),
             click: None,
         },
+        "clock" if desktop.clock.face == "digital" => {
+            let root = gtk::Box::new(gtk::Orientation::Vertical, 0);
+            root.add_css_class("desktop-bare");
+            root.add_css_class("desktop-clock");
+            root.add_css_class("digital");
+            let face = super::digital::Digital::new(entry.default.0 - 28, desktop.clock.hours == 12);
+            face.shape.set_hexpand(true);
+            face.shape.set_vexpand(true);
+            face.shape.set_halign(gtk::Align::Center);
+            face.shape.set_valign(gtk::Align::Center);
+            root.append(&face.shape);
+            Built {
+                content: root.upcast(),
+                resize: Box::new(move |w, h| face.resize((w.min(h) - 28).max(60))),
+                click: None,
+            }
+        }
         "clock" => {
             let root = gtk::Box::new(gtk::Orientation::Vertical, 0);
             root.add_css_class("desktop-bare");
             root.add_css_class("desktop-clock");
             // the face inside the card's padding
             let clock = Clock::new(entry.default.0 - 28);
+            clock.set_seconds(desktop.clock.seconds);
             clock.set_hexpand(true);
             clock.set_vexpand(true);
             root.append(&clock);
@@ -198,16 +216,16 @@ pub fn build(id: &str, s: &Rc<Services>, desktop: &config::Desktop) -> Option<Bu
             title.add_css_class("desktop-title");
             title.set_xalign(0.0);
             root.append(&title);
-            let list = crate::widgets::agenda::upcoming(&s.calendar, 6);
+            let list = crate::widgets::agenda::upcoming(&s.calendar, desktop.agenda.count.clamp(1, 20) as usize);
             let scroll = gtk::ScrolledWindow::builder().hscrollbar_policy(gtk::PolicyType::Never).child(&list).build();
             scroll.set_vexpand(true);
             root.append(&scroll);
             Built { content: root.upcast(), resize: Box::new(|_, _| {}), click: None }
         }
-        "system" => Built { content: super::system::build().upcast(), resize: Box::new(|_, _| {}), click: None },
-        "battery" => Built { content: super::battery::build().upcast(), resize: Box::new(|_, _| {}), click: None },
+        "system" => Built { content: super::system::build(&desktop.system.meters).upcast(), resize: Box::new(|_, _| {}), click: None },
+        "battery" => Built { content: super::battery::build(desktop.battery.time).upcast(), resize: Box::new(|_, _| {}), click: None },
         "note" => Built { content: super::note::build().upcast(), resize: Box::new(|_, _| {}), click: None },
-        "photo" => Built { content: super::photo::build().upcast(), resize: Box::new(|_, _| {}), click: None },
+        "photo" => Built { content: super::photo::build(&desktop.photo).upcast(), resize: Box::new(|_, _| {}), click: None },
         _ => return None,
     })
 }

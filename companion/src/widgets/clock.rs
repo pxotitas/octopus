@@ -15,6 +15,7 @@ mod imp {
     #[derive(Default)]
     pub struct Clock {
         pub size: Cell<i32>,
+        pub no_seconds: Cell<bool>,
         pub timer: RefCell<Option<glib::SourceId>>,
     }
 
@@ -70,7 +71,9 @@ mod imp {
             snapshot.append_fill(&dots.to_path(), gsk::FillRule::Winding, &super::with_alpha(&ink, 0.55));
 
             let second = now.second() as f32 + now.nanosecond() as f32 / 1e9;
-            snake(snapshot, c, r * 0.8, second / 60.0, side, &super::with_alpha(&ink, 0.55));
+            if !self.no_seconds.get() {
+                snake(snapshot, c, r * 0.8, second / 60.0, side, &super::with_alpha(&ink, 0.55));
+            }
 
             let minute = now.minute() as f32 + second / 60.0;
             let hour = (now.hour() % 12) as f32 + minute / 60.0;
@@ -142,6 +145,11 @@ impl Clock {
         clock.set_halign(gtk::Align::Center);
         clock.set_valign(gtk::Align::Center);
         clock
+    }
+
+    pub fn set_seconds(&self, on: bool) {
+        self.imp().no_seconds.set(!on);
+        self.queue_draw();
     }
 
     pub fn set_size(&self, size: i32) {
