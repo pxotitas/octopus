@@ -234,6 +234,9 @@ impl Desktop {
             }
         });
         frame.add_overlay(&remove);
+        // hidden outside arranging: they shouldn't catch the pointer or show tooltips
+        handle.set_can_target(self.editing.get());
+        remove.set_can_target(self.editing.get());
         (built.resize)(rect.w, rect.h);
         self.fixed.put(&frame, rect.x as f64, rect.y as f64);
         if by_hand {
@@ -277,6 +280,10 @@ impl Desktop {
         }
         self.window.set_layer(if on { Layer::Top } else { Layer::Bottom });
         self.window.set_keyboard_mode(if on { KeyboardMode::Exclusive } else { KeyboardMode::OnDemand });
+        for item in self.items.borrow().iter() {
+            item.handle.set_can_target(on);
+            item.remove.set_can_target(on);
+        }
         if on {
             self.window.add_css_class("editing");
             self.tray.refresh(&self.config, &self.names());
