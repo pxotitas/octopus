@@ -47,45 +47,77 @@
 <main>
 <div class="docs">
   <aside class="docs-nav">
-    <ul><li><a href="./">visão geral</a></li><li><a href="estrutura.html">estrutura</a></li><li><a href="atalhos.html">atalhos e comandos</a></li><li><a href="configuracao.html" aria-current="page">configuração</a><ul class="toc"><li><a href="#quando-vale">quando vale</a></li><li><a href="#css-pessoal">css pessoal</a></li><li><a href="#dock">dock</a></li><li><a href="#widgets-de-desktop">widgets de desktop</a></li></ul></li><li><a href="tema.html">tema</a></li><li><a href="problemas.html">quando algo quebra</a></li></ul>
+    <ul><li><a href="./">visão geral</a></li><li><a href="estrutura.html">estrutura</a></li><li><a href="atalhos.html">atalhos e comandos</a></li><li><a href="configuracao.html" aria-current="page">configuração</a><ul class="toc"><li><a href="#a-janela-de-configurações">a janela de configurações</a></li><li><a href="#o-editor-da-barra">o editor da barra</a></li><li><a href="#octopus-toml">octopus.toml</a></li><li><a href="#quando-vale">quando vale</a></li><li><a href="#css-pessoal">css pessoal</a></li><li><a href="#dock">dock</a></li><li><a href="#widgets-de-desktop">widgets de desktop</a></li></ul></li><li><a href="tema.html">tema</a></li><li><a href="problemas.html">quando algo quebra</a></li></ul>
   </aside>
   <article class="doc">
     <h1>configuração</h1>
-    <p>quase tudo dá pra mudar pela janela (Mod+Comma). ela escreve em <code>~/.config/octopus/octopus.toml</code>, que também pode ser editado à mão.</p>
+    <p>quase tudo dá pra mudar pela janela de configurações (Mod+Comma, ou <code>octopus settings</code>). ela escreve em <code>~/.config/octopus/octopus.toml</code>, que também pode ser editado à mão.</p>
+<h2 id="a-janela-de-configurações">a janela de configurações</h2>
+<p>uma árvore na esquerda: cinco categorias grandes, cada uma com seus galhos.</p>
+<ul><li><strong>aparência</strong>: cores (modo, estilo da paleta, contraste) e idioma</li><li><strong>barra</strong>: o editor, presets e forma</li><li><strong>painéis</strong>: dash, notificações, clima e música</li><li><strong>área de trabalho</strong>: widgets, contribuições e a dock</li><li><strong>sistema</strong>: tela de bloqueio e sobre</li></ul>
+<p><code>octopus settings bar/editor</code> (ou só <code>octopus settings bar</code>) abre direto numa página. as mudanças esperam num rascunho até você apertar <strong>aplicar</strong>.</p>
+<h2 id="o-editor-da-barra">o editor da barra</h2>
+<p>a barra desenhada como ela vai ficar. toque num módulo pra mudar ele no inspetor do lado; arraste pra outro lugar, ou pro catálogo pra tirar; arraste novos do catálogo.</p>
+<div class="table"><table><thead><tr><th>módulo</th><th>o que é</th><th>opções</th></tr></thead><tbody><tr><td><code>logo</code></td><td>abre o launcher</td><td>glifo, o que o clique abre, fundo, cantos</td></tr><tr><td><code>workspaces</code></td><td>os workspaces do niri</td><td>pontos ou números</td></tr><tr><td><code>clock</code></td><td>horas sobre minutos; abre o dash</td><td>24 ou 12 horas, bun/pílula/arredondado/quadrado, fundo</td></tr><tr><td><code>tray</code></td><td>apps em segundo plano</td><td></td></tr><tr><td><code>battery</code></td><td>uma pílula que enche</td><td>mostrar a porcentagem</td></tr><tr><td><code>controls</code></td><td>central de controle, wi-fi, bluetooth, som, energia</td><td>quais botões, numa gaveta ou sempre à mostra</td></tr><tr><td><code>cpu</code>, <code>memory</code>, <code>temperature</code></td><td>uso e calor</td><td>mostrar o valor, fundo, cantos</td></tr><tr><td><code>brightness</code>, <code>volume</code></td><td>role pra mudar</td><td>mostrar o valor, fundo, cantos</td></tr><tr><td><code>idle</code></td><td>mantém a tela acordada</td><td>fundo, cantos</td></tr><tr><td><code>media</code></td><td>tocar e pausar</td><td>fundo, cantos</td></tr><tr><td><code>notifications</code>, <code>power</code></td><td>atalhos</td><td>fundo, cantos</td></tr></tbody></table></div>
+<p><strong>presets</strong> troca a barra inteira de uma vez: padrão, mínima, monitor, música<br>e foco. a barra muda ao aplicar, sem reiniciar.</p>
+<h2 id="octopus-toml">octopus.toml</h2>
 <pre><code class="language-toml">language = &quot;auto&quot;          # auto segue o LANG; &quot;pt&quot; ou &quot;en&quot;
+
+[look]
+scheme = &quot;tonal-spot&quot;      # a paleta do matugen: expressive, vibrant, fidelity, content,
+                           # neutral, monochrome, rainbow, fruit-salad
+contrast = 0.0             # de -1 a 1
 
 [bar]
 position = &quot;left&quot;          # ou &quot;right&quot;
-width = 40
+width = 52
+spacing = 4                # entre os módulos
 style = &quot;floating&quot;         # ou &quot;flush&quot;: encostada na borda, cantos côncavos
 top = [&quot;logo&quot;, &quot;workspaces&quot;]
 center = [&quot;clock&quot;]
 bottom = [&quot;tray&quot;, &quot;battery&quot;, &quot;controls&quot;]
 
-[dock]
-enabled = false
-mode = &quot;smart&quot;             # &quot;fixed&quot;, &quot;autohide&quot; ou &quot;smart&quot;
-pinned = [&quot;firefox.desktop&quot;]  # clique direito num ícone pra fixar
-size = 44                  # tamanho dos ícones, em pixels
-magnify = true             # os ícones crescem embaixo do ponteiro
+[bar.modules.clock]        # uma tabela por módulo que você mudou
+background = &quot;primary&quot;     # none, tonal, primary, surface
+shape = &quot;bun&quot;              # bun (só o relógio), round, soft, square
+variant = &quot;24h&quot;            # a escolha do próprio módulo: 12h, numbers, um glifo…
+text = false               # o valor embaixo do ícone
+action = &quot;&quot;                # o logo: launcher, spotlight ou dash
+items = []                 # os botões dos controles
+
+[dash]
+page = &quot;overview&quot;          # ou media, weather, wallpapers
 
 [weather]
 place = &quot;&quot;                 # uma cidade, ou &quot;lat,lon&quot;; vazio usa o ip
-
-[desktop]
-enabled = true             # widgets embaixo das janelas
-widgets = [&quot;weather&quot;, &quot;contributions&quot;]
-github = &quot;&quot;                # um usuário do github, pro calendário de contribuições
-contributions_colors = &quot;github&quot;  # ou &quot;theme&quot;, a cor do wallpaper
+unit = &quot;celsius&quot;           # ou &quot;fahrenheit&quot;
 
 [notifications]
 timeout_ms = 5000
 max_popups = 3
+position = &quot;top-right&quot;     # top-left, bottom-right, bottom-left
 
 [media]
-lyrics = true</code></pre>
+lyrics = true              # no dash
+lyrics_offset_ms = 0
+
+[lock]
+lyrics = true
+
+[dock]
+enabled = false
+mode = &quot;smart&quot;             # &quot;fixed&quot;, &quot;autohide&quot; ou &quot;smart&quot;
+pinned = [&quot;firefox.desktop&quot;]  # clique direito num ícone pra fixar
+size = 44
+magnify = true
+
+[desktop]
+enabled = true
+widgets = [&quot;weather&quot;, &quot;contributions&quot;]  # também clock, media, calendar
+github = &quot;&quot;                # um usuário do github, pro calendário de contribuições
+contributions_colors = &quot;github&quot;  # ou &quot;theme&quot;, a cor do wallpaper</code></pre>
 <h2 id="quando-vale">quando vale</h2>
-<ul><li><strong>barra</strong>: na hora (a waybar recarrega sozinha)</li><li><strong>idioma e dock</strong>: o octopus reinicia sozinho ao aplicar</li><li><strong>clima, notificações, letras</strong>: depois de <code>octopus restart</code></li></ul>
+<ul><li><strong>barra e tempo das letras</strong>: na hora</li><li><strong>cores (modo)</strong>: na hora; estilo da paleta e contraste repintam tudo ao aplicar</li><li><strong>todo o resto</strong>: o octopus reinicia sozinho ao aplicar</li></ul>
 <h2 id="css-pessoal">css pessoal</h2>
 <p>um <code>~/.config/octopus/style.css</code> é somado por cima do css embutido e recarrega sozinho. bom pra ajustes sem recompilar.</p>
 <h2 id="dock">dock</h2>
@@ -93,9 +125,9 @@ lyrics = true</code></pre>
 <p>clique: abre, foca ou alterna entre as janelas do app. meio: janela nova. direito: menu com as janelas, fixar e fechar.</p>
 <h2 id="widgets-de-desktop">widgets de desktop</h2>
 <p>uma camada embaixo das janelas, então eles aparecem onde nenhuma janela cobre:</p>
-<ul><li><strong>weather</strong>: o clima agora num cookie grande, e os próximos quatro dias. um clique abre a aba de clima.</li><li><strong>contributions</strong>: o calendário do perfil de <code>github</code>, os quadradinhos verdes, com o total do ano e a sequência atual. passe o mouse num quadrado pra ver o dia. mostra quantas semanas couberem na largura e atualiza a cada meia hora (sem token).</li></ul>
-<p>arraste um widget pra mover, e arraste o puxador no canto pra mudar o tamanho. onde eles ficam é guardado em <code>~/.local/state/octopus/desktop.json</code>; apague esse arquivo pra voltar pro canto.</p>
-<p>mudar o <code>[desktop]</code> nas configurações reinicia o octopus sozinho.</p>
+<ul><li><strong>weather</strong>: o clima agora num cookie grande, e os próximos quatro dias. um clique abre a aba de clima.</li><li><strong>contributions</strong>: o calendário do perfil de <code>github</code>, os quadradinhos verdes, com o total do ano e a sequência atual. passe o mouse num quadrado pra ver o dia. mostra quantas semanas couberem na largura e atualiza a cada meia hora (sem token).</li><li><strong>clock</strong>: analógico, num cookie.</li><li><strong>media</strong>: o que está tocando, com os controles.</li><li><strong>calendar</strong>: o mês inteiro.</li></ul>
+<p>eles ficam parados até você organizar: clique direito na área de trabalho e escolha <strong>organizar widgets</strong> (ou <code>octopus desktop arrange</code>). a área de trabalho sobe por cima das janelas; arraste um widget pra mover, o canto pra mudar o tamanho, e use a maleta embaixo pra pôr os outros (arraste um pra fora, ou clique) ou guardar um (solte na maleta, ou no ×). <strong>pronto</strong> ou &lt;kbd&gt;esc&lt;/kbd&gt; termina.</p>
+<p>onde eles ficam é guardado em <code>~/.local/state/octopus/desktop.json</code>; apague esse arquivo pra voltar pro canto.</p>
     <p class="edit"><a href="https://github.com/pxotitas/octopus/blob/pt-br/docs/configuracao.md">editar essa página no github</a></p>
   </article>
 </div>
@@ -103,6 +135,6 @@ lyrics = true</code></pre>
 <footer>
   <p>gpl-3.0-or-later · feito por <a href="https://github.com/pxotitas">pxotitas</a>, com partes do <a href="https://github.com/andreumassanet/impasto">impasto</a> e do <a href="https://github.com/pxdritz1/velatura">velatura</a>.</p>
 </footer>
-<script src="../../m3.js?v=ed8545c4" defer></script>
+<script src="../../m3.js?v=63651a75" defer></script>
 </body>
 </html>

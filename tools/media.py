@@ -7,7 +7,7 @@ CLIPS = [
     ("lock", {"en": ("lock screen", "shapes that change at every key"), "pt": ("tela de bloqueio", "shapes que mudam a cada tecla")}),
     ("launchers", {"en": ("launchers", "rofi and the spotlight"), "pt": ("launchers", "o rofi e o spotlight")}),
     ("emoji", {"en": ("emoji", "the picker, with search"), "pt": ("emoji", "o seletor, com busca")}),
-    ("settings", {"en": ("settings", "colors, language, bar, widgets and dock"), "pt": ("configurações", "cores, idioma, barra, widgets e dock")}),
+    ("settings", {"en": ("settings", "the old settings, before the tree and the bar editor"), "pt": ("configurações", "as configurações antigas, antes da árvore e do editor da barra")}),
     ("calculator", {"en": ("spotlight math", "a sum typed after <code>=</code>"), "pt": ("conta no spotlight", "uma soma depois do <code>=</code>")}),
     ("palette", {"en": ("palette from the wallpaper", "a new wallpaper repaints the shell"), "pt": ("paleta do wallpaper", "um wallpaper novo repinta o shell")}),
 ]
@@ -15,6 +15,8 @@ CLIPS = [
 GROUPS = [
     ("shots-shell", "cookie9", {"en": "the shell", "pt": "o shell"}, [
         ("desktop", {"en": "the bar and the desktop widgets", "pt": "a barra e os widgets de desktop"}),
+        ("desktop-menu", {"en": "right-click on the desktop", "pt": "clique direito na área de trabalho"}),
+        ("desktop-arrange", {"en": "arranging widgets, with the case", "pt": "organizando os widgets, com a maleta"}),
         ("dash", {"en": "dash", "pt": "dash"}),
         ("control-center", {"en": "control center", "pt": "central de controle"}),
         ("notification", {"en": "a notification", "pt": "uma notificação"}),
@@ -40,7 +42,9 @@ GROUPS = [
         ("rofi", {"en": "rofi", "pt": "rofi"}),
         ("clipboard", {"en": "clipboard", "pt": "clipboard"}),
         ("emoji", {"en": "emoji", "pt": "emoji"}),
-        ("settings", {"en": "settings", "pt": "configurações"}),
+        ("settings-editor", {"en": "settings: the bar editor", "pt": "configurações: o editor da barra"}),
+        ("settings-presets", {"en": "settings: bar presets", "pt": "configurações: presets da barra"}),
+        ("settings-colors", {"en": "settings: colors", "pt": "configurações: cores"}),
     ]),
 ]
 

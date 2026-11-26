@@ -107,7 +107,7 @@ def main():
         path = f"{root}features/index.html"
         title = LANGS[lang]["nav"]["features"]
         write(path, page(lang, path, title, fragment(lang, "features", path), f"{twin_root}features/index.html",
-                         section="features", scripts=("theatre.js", "weather-demo.js", "motion.js"), styles=("features.css",)))
+                         section="features", scripts=("reveal.js", "media.js", "weather-demo.js", "motion.js"), styles=("features.css",)))
 
         path = f"{root}media/index.html"
         title = LANGS[lang]["nav"]["media"]

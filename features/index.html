@@ -23,7 +23,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,400..600,0..1,0&display=block" rel="stylesheet">
   <link rel="stylesheet" href="../style.css?v=ed06ee64">
-  <link rel="stylesheet" href="../features.css?v=f0eadbe2">
+  <link rel="stylesheet" href="../features.css?v=facfaf02">
 </head>
 <body>
 <header class="top">
@@ -46,163 +46,129 @@
   </nav>
 </header>
 <main>
-<div class="theatre" data-mode="theatre">
-<div class="curtain" aria-hidden="true"><span class="drape left"></span><span class="drape right"></span></div>
-<div class="spot" aria-hidden="true"></div>
-
-<section class="proscenium">
-  <p class="overline" data-reveal="rise">a show in six acts</p>
-  <h1 data-reveal="rise" style="--i:1">some features</h1>
-  <p class="lead" data-reveal="rise" style="--i:2">the parts of octopus that are nicer to try than to read about.
-  scroll for the play, or pick how you want to see it.</p>
-  <div class="modes" role="radiogroup" aria-label="how to see this page" data-reveal="rise" style="--i:3">
-    <button type="button" role="radio" data-mode="theatre"><span class="symbol">theater_comedy</span>theatre</button>
-    <button type="button" role="radio" data-mode="gallery"><span class="symbol">gallery_thumbnail</span>gallery</button>
-    <button type="button" role="radio" data-mode="script"><span class="symbol">article</span>script</button>
-  </div>
-  <a class="cue" href="#act-1" data-reveal="rise" style="--i:4"><span class="symbol">keyboard_double_arrow_down</span></a>
+<section class="page-head">
+  <h1>some features</h1>
+  <p class="lead">the parts of octopus that are nicer to see than to read about. every picture here is a real screenshot; click one to see it full size.</p>
+  <nav class="jump" aria-label="on this page">
+    <a class="chip" href="#bar-editor"><span class="symbol">side_navigation</span>bar editor</a>
+    <a class="chip" href="#presets"><span class="symbol">view_column</span>bar presets</a>
+    <a class="chip" href="#widgets"><span class="symbol">widgets</span>desktop widgets</a>
+    <a class="chip" href="#colors"><span class="symbol">palette</span>colors</a>
+    <a class="chip" href="#lock"><span class="symbol">lock</span>lock screen</a>
+    <a class="chip" href="#weather"><span class="symbol">partly_cloudy_day</span>ask the weather</a>
+  </nav>
 </section>
 
-<article class="act" id="act-1">
-  <header class="act-head" data-reveal="curtain">
-    <span class="numeral">i</span>
-    <h2>ask the weather</h2>
-  </header>
-  <section class="ask" data-reveal="rise">
-    <div class="ask-text">
-      <span class="shape-badge big tone-c" data-shape="sunny" data-hover="burst"><span class="symbol">partly_cloudy_day</span></span>
-      <p class="lead">the weather tab takes questions after a <code>&gt;</code>: tomorrow,
-      yesterday, next thursday, last friday, <code>+3</code>, <code>11/28</code>, the week or the
-      weekend. a week back and two ahead, from open-meteo. try it:</p>
-      <label class="field">
-        <span class="symbol">chevron_right</span>
-        <input type="text" placeholder="tomorrow, yesterday, week…" aria-label="ask the weather">
-      </label>
-      <div class="chips">
-        <button class="chip" type="button" data-ask="now">now</button>
-        <button class="chip" type="button" data-ask="tomorrow">tomorrow</button>
-        <button class="chip" type="button" data-ask="yesterday">yesterday</button>
-        <button class="chip" type="button" data-ask="weekend">weekend</button>
-        <button class="chip" type="button" data-ask="week">week</button>
-      </div>
-    </div>
-    <figure class="ask-shot framed" data-depth="0.06">
-      <img src="../assets/screenshots/weather.webp" data-base="../assets/screenshots/" alt="the weather tab" width="1440" height="900">
-      <figcaption data-now="now">&gt; now</figcaption>
-    </figure>
-  </section>
-</article>
-
-<article class="act" id="act-2">
-  <header class="act-head" data-reveal="curtain">
-    <span class="numeral">ii</span>
-    <h2>the shapes</h2>
-  </header>
-  <p class="lead" data-reveal="rise">every badge, card and button corner in the shell is one of the m3 expressive
-  shapes, drawn as a polar wave so any of them can turn into any other. hover one.</p>
-  <div class="shape-cast" data-stagger></div>
-</article>
-
-<article class="act" id="act-3">
-  <header class="act-head" data-reveal="curtain">
-    <span class="numeral">iii</span>
-    <h2>widgets you can move</h2>
-  </header>
-  <div class="split-act">
-    <div data-reveal="rise">
-      <p class="lead">under the windows live the weather and your github contributions, the little
-      squares from your profile. drag a widget to move it, drag its corner to resize it, and it stays
-      there after a restart. the calendar shows as many weeks as it is wide.</p>
-      <pre><code>[desktop]
-widgets = ["weather", "contributions"]
-github = "your-user"
-contributions_colors = "github"  # or "theme"</code></pre>
-    </div>
-    <div class="desk" data-reveal="tilt" aria-label="a desktop you can play with">
-      <div class="desk-widget" style="--x:6%;--y:8%;--w:62%;--h:46%">
-        <div class="desk-head"><span class="shape-badge small tone-c" data-shape="softburst"><span class="symbol">commit</span></span>contributions<b class="desk-total"></b></div>
-        <div class="contrib" aria-hidden="true"></div>
-        <span class="grip symbol" title="drag to resize">open_in_full</span>
-      </div>
-      <div class="desk-widget" style="--x:52%;--y:52%;--w:42%;--h:40%">
-        <div class="desk-weather">
-          <span class="shape-badge big" data-shape="cookie9"><span class="symbol">cloud</span></span>
-          <div><b>24°</b><span>cloudy</span></div>
-        </div>
-        <span class="grip symbol" title="drag to resize">open_in_full</span>
-      </div>
-      <p class="desk-hint"><span class="symbol">pan_tool</span>drag them around</p>
-    </div>
+<section class="showcase" id="bar-editor" data-reveal>
+  <div class="showcase-text">
+    <span class="shape-badge big" data-shape="cookie9" data-hover="flower"><span class="symbol">side_navigation</span></span>
+    <h2>a real editor for the bar</h2>
+    <p class="lead">the settings draw the bar as it will look. drag a module to another spot, tap one to change it, and drag new ones in from the catalog.</p>
+    <ul class="points">
+      <li><span class="symbol">drag_pan</span><span>fifteen modules: cpu, memory, temperature, brightness, music, volume, keep awake and more</span></li>
+      <li><span class="symbol">format_paint</span><span>each module with its own background, corners and options, like the clock's bun or 12 hours</span></li>
+      <li><span class="symbol">bolt</span><span>the bar changes when you apply, without restarting</span></li>
+    </ul>
   </div>
-</article>
+  <button class="shot showcase-shot" type="button" data-full="../assets/screenshots/settings-editor.webp" data-label="the bar editor">
+    <img src="../assets/screenshots/thumbs/settings-editor.webp" alt="the bar editor: the preview on the left, the clock's options beside it" width="720" height="450" loading="lazy">
+  </button>
+</section>
 
-<article class="act" id="act-4">
-  <header class="act-head" data-reveal="curtain">
-    <span class="numeral">iv</span>
-    <h2>a bar that keeps to itself</h2>
-  </header>
-  <div class="split-act">
-    <div class="bar-mock" data-reveal="rise" aria-hidden="true">
-      <span class="logo symbol">change_history</span>
-      <span class="dots"><i></i><i class="on"></i><i></i></span>
-      <span class="bun"><b class="hh">00</b><b class="mm">00</b></span>
-      <span class="battery"><i></i></span>
-    </div>
-    <div data-reveal="rise" style="--i:1">
-      <p class="lead">a vertical waybar a few pixels wide: the workspaces, the clock in the m3 bun shape,
-      the tray, and a battery drawn from its real charge. everything bigger opens from it as a panel.</p>
-      <p class="lead">that's the clock above, running on your time.</p>
-    </div>
+<section class="showcase flip" id="presets" data-reveal>
+  <div class="showcase-text">
+    <span class="shape-badge big tone-b" data-shape="clover4" data-hover="clover8"><span class="symbol">view_column</span></span>
+    <h2>whole bars to start from</h2>
+    <p class="lead">default, minimal, monitor, music and focus: each shown as it would look. pick one, then adjust it in the editor.</p>
   </div>
-</article>
+  <button class="shot showcase-shot" type="button" data-full="../assets/screenshots/settings-presets.webp" data-label="bar presets">
+    <img src="../assets/screenshots/thumbs/settings-presets.webp" alt="five bar presets side by side" width="720" height="450" loading="lazy">
+  </button>
+</section>
 
-<article class="act" id="act-5">
-  <header class="act-head" data-reveal="curtain">
-    <span class="numeral">v</span>
+<section class="showcase" id="widgets" data-reveal>
+  <div class="showcase-text">
+    <span class="shape-badge big tone-c" data-shape="puffy" data-hover="softburst"><span class="symbol">widgets</span></span>
+    <h2>widgets you arrange</h2>
+    <p class="lead">the weather, your github contributions, a clock, the music and a calendar, under the windows. they stay put until you ask: right-click the desktop and pick <em>arrange widgets</em>.</p>
+    <ul class="points">
+      <li><span class="symbol">open_with</span><span>drag a widget to move it, its corner to resize it</span></li>
+      <li><span class="symbol">business_center</span><span>the case at the bottom holds the rest: drag one out, or drop one back</span></li>
+      <li><span class="symbol">keyboard</span><span><kbd>esc</kbd> or <em>done</em> puts them back under the windows</span></li>
+    </ul>
+    <button class="shot showcase-inset" type="button" data-full="../assets/screenshots/desktop-menu.webp" data-label="right-click on the desktop">
+      <img src="../assets/screenshots/thumbs/desktop-menu.webp" alt="the desktop's right-click menu" width="720" height="450" loading="lazy">
+      <span>the right-click menu</span>
+    </button>
+  </div>
+  <button class="shot showcase-shot" type="button" data-full="../assets/screenshots/desktop-arrange.webp" data-label="arranging widgets, with the case">
+    <img src="../assets/screenshots/thumbs/desktop-arrange.webp" alt="arranging the widgets: outlines, handles and the case at the bottom" width="720" height="450" loading="lazy">
+  </button>
+</section>
+
+<section class="showcase flip" id="colors" data-reveal>
+  <div class="showcase-text">
+    <span class="shape-badge big" data-shape="flower" data-hover="sunny"><span class="symbol">palette</span></span>
+    <h2>your wallpaper, your way</h2>
+    <p class="lead">matugen takes the colors from the wallpaper; the settings choose how. nine palette styles, from tonal to fruit salad, a contrast slider, and light, dark or automatic.</p>
+    <p class="lead">the settings themselves are a tree: five big categories, each with its own branches.</p>
+  </div>
+  <button class="shot showcase-shot" type="button" data-full="../assets/screenshots/settings-colors.webp" data-label="settings: colors">
+    <img src="../assets/screenshots/thumbs/settings-colors.webp" alt="the colors page: mode, palette style and contrast" width="720" height="450" loading="lazy">
+  </button>
+</section>
+
+<section class="showcase" id="lock" data-reveal>
+  <div class="showcase-text">
+    <span class="shape-badge big tone-b" data-shape="cookie12" data-hover="pentagon"><span class="symbol">lock</span></span>
     <h2>a lock that reacts</h2>
-  </header>
-  <p class="lead" data-reveal="rise">on the lock screen, every key you press turns the shapes into new ones.
-  type something here, nothing leaves this page:</p>
-  <div class="lock-demo" data-reveal="rise">
-    <div class="lock-shapes" aria-hidden="true"></div>
-    <label class="field"><span class="symbol">lock</span><input type="password" placeholder="type anything" aria-label="type to change the shapes" autocomplete="off"></label>
+    <p class="lead">m3 shapes that turn and change at every key you press, the time, the weather and the line being sung.</p>
   </div>
-</article>
-
-<article class="act" id="act-6">
-  <header class="act-head" data-reveal="curtain">
-    <span class="numeral">vi</span>
-    <h2>the dash, and your wallpaper on everything</h2>
-  </header>
-  <figure class="stage framed" data-reveal="gild" data-depth="0.04">
-    <img src="../assets/screenshots/dash.webp" alt="the dash" width="1440" height="900" loading="lazy">
-    <figcaption>a navigation rail on the left, an analog clock on a cookie, notifications and the weather side by side.</figcaption>
-  </figure>
-  <div class="split-act">
-    <p class="lead" data-reveal="rise">pick a wallpaper and matugen repaints the bar, the panels, rofi,
-    fuzzel and the rest of your system.</p>
-    <video data-reveal="tilt" src="../assets/clips/hq/palette.mp4" poster="../assets/clips/hq/palette.webp" autoplay muted loop playsinline></video>
-  </div>
-</article>
-
-<section class="finale" data-reveal="curtain">
-  <p class="overline">curtain</p>
-  <h2>that's the show</h2>
-  <div class="actions">
-    <a class="button filled" href="../#install"><span class="symbol">download</span>install it</a>
-    <a class="button tonal" href="../docs/"><span class="symbol">menu_book</span>read the docs</a>
-    <a class="button text" href="../media/">more screenshots</a>
-  </div>
+  <video class="showcase-video" src="../assets/clips/hq/lock.mp4" poster="../assets/clips/lock.webp" autoplay muted loop playsinline></video>
 </section>
-</div>
+
+<section class="ask" id="weather" data-reveal>
+  <div class="ask-text">
+    <span class="shape-badge big tone-c" data-shape="sunny" data-hover="burst"><span class="symbol">partly_cloudy_day</span></span>
+    <h2>ask the weather</h2>
+    <p class="lead">the weather tab takes questions after a <code>&gt;</code>: tomorrow,
+    yesterday, next thursday, last friday, <code>+3</code>, <code>11/28</code>, the week or the
+    weekend. a week back and two ahead, from open-meteo. try it:</p>
+    <label class="field">
+      <span class="symbol">chevron_right</span>
+      <input type="text" placeholder="tomorrow, yesterday, week…" aria-label="ask the weather">
+    </label>
+    <div class="chips">
+      <button class="chip" type="button" data-ask="now">now</button>
+      <button class="chip" type="button" data-ask="tomorrow">tomorrow</button>
+      <button class="chip" type="button" data-ask="yesterday">yesterday</button>
+      <button class="chip" type="button" data-ask="weekend">weekend</button>
+      <button class="chip" type="button" data-ask="week">week</button>
+    </div>
+  </div>
+  <figure class="ask-shot">
+    <img src="../assets/screenshots/weather.webp" data-base="../assets/screenshots/" alt="the weather tab" width="1440" height="900">
+    <figcaption data-now="now">&gt; now</figcaption>
+  </figure>
+</section>
+
+<p class="lead next">more: <a href="../media/">every screenshot and clip</a>, <a href="../docs/configuration.html">what you can change</a>, or <a href="../#install">install it</a>.</p>
+
+<dialog class="viewer">
+  <form method="dialog"><button class="close" aria-label="close"><svg viewBox="0 0 24 24" width="24" height="24"><path d="M6.4 19 5 17.6 10.6 12 5 6.4 6.4 5 12 10.6 17.6 5 19 6.4 13.4 12 19 17.6 17.6 19 12 13.4Z"/></svg></button></form>
+  <img alt="">
+  <video muted loop playsinline controls></video>
+  <p></p>
+</dialog>
 
 </main>
 <footer>
   <p>gpl-3.0-or-later · made by <a href="https://github.com/pxotitas">pxotitas</a>, with parts from <a href="https://github.com/andreumassanet/impasto">impasto</a> and <a href="https://github.com/pxdritz1/velatura">velatura</a>.</p>
 </footer>
-<script src="../theatre.js?v=538dfcb0" defer></script>
-<script src="../weather-demo.js?v=52a4f1d6" defer></script>
-<script src="../motion.js?v=af87fff4" defer></script>
-<script src="../m3.js?v=ed8545c4" defer></script>
+<script src="../reveal.js?v=803f244c" defer></script>
+<script src="../media.js?v=e0d8a952" defer></script>
+<script src="../weather-demo.js?v=cfa96bf6" defer></script>
+<script src="../motion.js?v=3a80b21e" defer></script>
+<script src="../m3.js?v=63651a75" defer></script>
 </body>
 </html>
