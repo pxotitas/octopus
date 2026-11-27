@@ -1,5 +1,5 @@
 use gtk::prelude::*;
-use gtk::{gdk, gio, glib};
+use gtk::{gdk, glib};
 
 use crate::services::notifications::Image;
 
@@ -21,11 +21,10 @@ pub fn frame(class: &str, size: i32, fallback: &str) -> (gtk::Overlay, gtk::Pict
     (overlay, picture, placeholder)
 }
 
+/// Covers come as big as 3000px; shown at most at 240.
 pub fn set_file(picture: &gtk::Picture, path: Option<&str>) {
-    match path {
-        Some(path) => picture.set_file(Some(&gio::File::for_path(path))),
-        None => picture.set_paintable(None::<&gdk::Paintable>),
-    }
+    let path = path.map(|p| std::path::PathBuf::from(p.strip_prefix("file://").unwrap_or(p)));
+    crate::widgets::thumb::set(picture, path.as_deref(), 240, false);
 }
 
 pub fn texture(image: &Image) -> Option<gdk::Texture> {

@@ -163,6 +163,8 @@ mod imp {
         pub spin: RefCell<Option<gtk::TickCallbackId>>,
         pub tween: RefCell<Option<Rc<Tween>>>,
         pub turn: RefCell<Option<Rc<Tween>>>,
+        /// The outline from the last frame; most shapes never change.
+        pub path: RefCell<Option<((Kind, f32, f32, u64, u64), gsk::Path)>>,
     }
 
     #[glib::object_subclass]
@@ -207,17 +209,26 @@ mod imp {
             if w <= 0.0 || h <= 0.0 {
                 return;
             }
-            let path = if self.kind.get() == Kind::Rounded {
-                let builder = gsk::PathBuilder::new();
-                let radius = w.min(h) * 0.22;
-                builder.add_rounded_rect(&gsk::RoundedRect::from_rect(
-                    graphene::Rect::new(0.0, 0.0, w, h),
-                    radius,
-                ));
-                builder.to_path()
-            } else {
-                let (lobes, depth, profile) = self.kind.get().params();
-                outline(w, h, lobes, depth * self.depth.get(), self.angle.get(), profile)
+            let key = (self.kind.get(), w, h, self.depth.get().to_bits(), self.angle.get().to_bits());
+            let hit = self.path.borrow().as_ref().filter(|(k, _)| *k == key).map(|(_, p)| p.clone());
+            let path = match hit {
+                Some(path) => path,
+                None => {
+                    let path = if self.kind.get() == Kind::Rounded {
+                        let builder = gsk::PathBuilder::new();
+                        let radius = w.min(h) * 0.22;
+                        builder.add_rounded_rect(&gsk::RoundedRect::from_rect(
+                            graphene::Rect::new(0.0, 0.0, w, h),
+                            radius,
+                        ));
+                        builder.to_path()
+                    } else {
+                        let (lobes, depth, profile) = self.kind.get().params();
+                        outline(w, h, lobes, depth * self.depth.get(), self.angle.get(), profile)
+                    };
+                    *self.path.borrow_mut() = Some((key, path.clone()));
+                    path
+                }
             };
             if self.fill.get() {
                 snapshot.append_fill(&path, gsk::FillRule::Winding, &widget.color());

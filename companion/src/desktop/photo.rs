@@ -64,13 +64,14 @@ pub fn chosen() -> Option<std::path::PathBuf> {
 
 /// Loads off the main thread: gtk's own loader leaves a placeholder for some
 /// files (lossless webp with alpha, for one), a texture made directly doesn't.
+/// Scaled to the screen's shorter side at most, and kept as a small png.
 fn show(picture: &gtk::Picture, file: std::path::PathBuf) {
-    let picture = picture.clone();
-    glib::spawn_future_local(async move {
-        if let Ok(Ok(texture)) = gio::spawn_blocking(move || gtk::gdk::Texture::from_filename(&file)).await {
-            picture.set_paintable(Some(&texture));
-        }
-    });
+    let side = gtk::gdk::Display::default()
+        .and_then(|d| d.monitors().item(0))
+        .and_downcast::<gtk::gdk::Monitor>()
+        .map(|m| m.geometry().height().min(m.geometry().width()))
+        .unwrap_or(900);
+    crate::widgets::thumb::set(picture, Some(&file), side, true);
 }
 
 pub fn build(options: &DeskPhoto) -> gtk::Overlay {

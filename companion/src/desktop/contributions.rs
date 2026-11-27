@@ -35,6 +35,8 @@ mod imp {
         pub weeks: RefCell<Vec<[Option<Day>; 7]>>,
         /// github's greens, or the theme's primary in steps.
         pub green: Cell<bool>,
+        pub version: Cell<u64>,
+        pub baked: crate::widgets::baked::Baked,
     }
 
     #[glib::object_subclass]
@@ -66,10 +68,25 @@ mod imp {
             if w <= 0.0 || h <= 0.0 || weeks.is_empty() {
                 return;
             }
+            let ink = widget.color();
+            let today = chrono::Local::now().date_naive();
+            let key = {
+                use std::hash::{Hash, Hasher};
+                let mut k = std::collections::hash_map::DefaultHasher::new();
+                (widget.width(), widget.height(), widget.scale_factor(), self.version.get(), today).hash(&mut k);
+                [ink.red(), ink.green(), ink.blue()].map(f32::to_bits).hash(&mut k);
+                self.green.get().hash(&mut k);
+                k.finish()
+            };
+            self.baked.snapshot(&*widget, snapshot, key, |snapshot| self.draw(snapshot, w, h, &weeks, ink, today));
+        }
+    }
+
+    impl Grid {
+        fn draw(&self, snapshot: &gtk::Snapshot, w: f32, h: f32, weeks: &[[Option<Day>; 7]], ink: gdk::RGBA, today: chrono::NaiveDate) {
             let (pitch, count) = super::fit(w, h, weeks.len());
             let cell = pitch * 0.82;
             let radius = cell * 0.3;
-            let ink = widget.color();
             let dark = ink.red() + ink.green() + ink.blue() > 1.5;
             let palette: Vec<gdk::RGBA> = if self.green.get() {
                 (if dark { GREEN_DARK } else { GREEN_LIGHT }).iter().map(|&c| rgb(c)).collect()
@@ -79,7 +96,6 @@ mod imp {
                     .map(|&a| gdk::RGBA::new(ink.red(), ink.green(), ink.blue(), a))
                     .collect()
             };
-            let today = chrono::Local::now().date_naive();
             let left = w - count as f32 * pitch;
             for (col, week) in weeks[weeks.len() - count..].iter().enumerate() {
                 for (row, day) in week.iter().enumerate() {
@@ -96,9 +112,9 @@ mod imp {
                         continue;
                     }
                     let rect = gsk::RoundedRect::from_rect(graphene::Rect::new(x, y, cell, cell), radius);
-                    let builder = gsk::PathBuilder::new();
-                    builder.add_rounded_rect(&rect);
-                    snapshot.append_fill(&builder.to_path(), gsk::FillRule::Winding, color);
+                    snapshot.push_rounded_clip(&rect);
+                    snapshot.append_color(color, rect.bounds());
+                    snapshot.pop();
                 }
             }
         }
@@ -152,6 +168,7 @@ impl Grid {
             }
         }
         *self.imp().weeks.borrow_mut() = weeks;
+        self.imp().version.set(self.imp().version.get() + 1);
         self.queue_draw();
     }
 

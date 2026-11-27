@@ -1,6 +1,7 @@
 pub mod agenda;
 pub mod anim;
 pub mod art;
+pub mod baked;
 pub mod cava;
 pub mod clock;
 pub mod media;
@@ -9,6 +10,7 @@ pub mod notification;
 pub mod shape;
 pub mod shapebox;
 pub mod slider;
+pub mod thumb;
 pub mod tile;
 pub mod wave;
 

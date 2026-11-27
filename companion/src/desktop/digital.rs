@@ -16,6 +16,22 @@ pub struct Digital {
     pub shape: Shape,
     hour: gtk::Label,
     minute: gtk::Label,
+    twelve: Cell<bool>,
+}
+
+fn arm(face: &Rc<Digital>, timer: &Rc<Cell<Option<glib::SourceId>>>) {
+    if let Some(id) = timer.take() {
+        id.remove();
+    }
+    let wait = 60 - chrono::Local::now().second() as u64;
+    let (weak, t) = (Rc::downgrade(face), timer.clone());
+    timer.set(Some(glib::timeout_add_local_once(Duration::from_millis(wait * 1000 + 50), move || {
+        t.set(None);
+        if let Some(face) = weak.upgrade() {
+            face.show_time();
+            arm(&face, &t);
+        }
+    })));
 }
 
 fn sized(label: &gtk::Label, px: i32) {
@@ -37,33 +53,40 @@ impl Digital {
         column.append(&minute);
         let shape = Shape::new(Kind::Cookie12, size, true, Some(&column));
         shape.add_css_class("digital-face");
-        let face = Rc::new(Self { shape, hour, minute });
+        let face = Rc::new(Self { shape, hour, minute, twelve: Cell::new(twelve) });
         face.resize(size);
 
-        let last = Rc::new(Cell::new(u32::MAX));
+        face.show_time();
+        // wakes once a minute, on the minute, and only while on screen
+        let timer: Rc<Cell<Option<glib::SourceId>>> = Rc::default();
         let weak = Rc::downgrade(&face);
-        let tick = move || {
-            let Some(face) = weak.upgrade() else { return false };
-            let now = chrono::Local::now();
-            if last.replace(now.minute()) != now.minute() {
-                let h = if twelve {
-                    match now.hour() % 12 {
-                        0 => 12,
-                        h => h,
-                    }
-                } else {
-                    now.hour()
-                };
-                face.hour.set_label(&format!("{h:02}"));
-                face.minute.set_label(&format!("{:02}", now.minute()));
+        let t = timer.clone();
+        face.shape.connect_map(move |_| {
+            if let Some(face) = weak.upgrade() {
+                face.show_time();
+                arm(&face, &t);
             }
-            true
-        };
-        tick();
-        glib::timeout_add_local(Duration::from_secs(1), move || {
-            if tick() { glib::ControlFlow::Continue } else { glib::ControlFlow::Break }
+        });
+        face.shape.connect_unmap(move |_| {
+            if let Some(id) = timer.take() {
+                id.remove();
+            }
         });
         face
+    }
+
+    fn show_time(&self) {
+        let now = chrono::Local::now();
+        let h = if self.twelve.get() {
+            match now.hour() % 12 {
+                0 => 12,
+                h => h,
+            }
+        } else {
+            now.hour()
+        };
+        self.hour.set_label(&format!("{h:02}"));
+        self.minute.set_label(&format!("{:02}", now.minute()));
     }
 
     pub fn resize(&self, size: i32) {
