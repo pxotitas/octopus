@@ -3005,7 +3005,7 @@ contributions.contrib-grid {
   border-radius: 6px 6px 24px 24px;
 }
 
-togglebutton.widget-tune {
+button.widget-tune {
   min-width: 36px;
   min-height: 36px;
   padding: 0;
@@ -3015,11 +3015,11 @@ togglebutton.widget-tune {
   transition: background 200ms cubic-bezier(0.2, 0, 0, 1), border-radius 200ms cubic-bezier(0.2, 0, 0, 1);
 }
 
-togglebutton.widget-tune:hover {
+button.widget-tune:hover {
   background: alpha(@on_surface, 0.08);
 }
 
-togglebutton.widget-tune:checked {
+button.widget-tune:checked {
   background: @secondary_container;
   color: @on_secondary_container;
   border-radius: 12px;
@@ -3101,7 +3101,7 @@ shape.reminders-badge .icon {
   box-shadow: inset 0 0 0 2px @error;
 }
 
-togglebutton.reminders-alarm-toggle, button.reminders-add {
+button.reminders-alarm-toggle, button.reminders-add {
   min-width: 48px;
   min-height: 48px;
   padding: 0;
@@ -3110,7 +3110,7 @@ togglebutton.reminders-alarm-toggle, button.reminders-add {
   transition: border-radius 200ms cubic-bezier(0.2, 0, 0, 1), background 200ms ease;
 }
 
-togglebutton.reminders-alarm-toggle:checked {
+button.reminders-alarm-toggle:checked {
   background: @tertiary_container;
   color: @on_tertiary_container;
   border-radius: 16px;
@@ -3244,4 +3244,357 @@ shape.reminders-empty-shape {
 
 .reminders-foot {
   padding-top: 4px;
+}
+
+/* arquivos */
+
+window.files-window {
+  background: @surface;
+}
+
+headerbar.files-header {
+  background: @surface;
+  box-shadow: none;
+  border: none;
+  padding: 6px 10px;
+  min-height: 52px;
+}
+
+headerbar.files-header button, headerbar.files-header menubutton > button {
+  border-radius: 999px;
+  min-width: 38px;
+  min-height: 38px;
+  padding: 0;
+  background: none;
+}
+
+headerbar.files-header button:hover, headerbar.files-header menubutton > button:hover {
+  background: alpha(@on_surface, 0.08);
+}
+
+.files-crumbs {
+  padding: 2px;
+}
+
+button.files-crumb {
+  border-radius: 999px;
+  padding: 4px 12px;
+  min-width: 0;
+  color: @on_surface_variant;
+}
+
+button.files-crumb.current {
+  background: @secondary_container;
+  color: @on_secondary_container;
+  font-weight: 600;
+}
+
+.files-crumb-sep {
+  color: @outline;
+  font-size: 16px;
+}
+
+.files-crumb-title {
+  font-weight: 600;
+  padding: 0 12px;
+}
+
+entry.files-path-entry, entry.files-search, .files-search {
+  border-radius: 999px;
+  background: @surface_container_high;
+  border: none;
+  box-shadow: none;
+  min-height: 38px;
+  padding: 0 14px;
+}
+
+.files-search {
+  min-width: 200px;
+}
+
+.files-views {
+  background: @surface_container_high;
+  border-radius: 999px;
+  padding: 3px;
+}
+
+.files-views button {
+  border-radius: 999px;
+  min-width: 36px;
+  min-height: 32px;
+  padding: 0;
+  background: none;
+}
+
+.files-views button:checked {
+  background: @secondary_container;
+  color: @on_secondary_container;
+}
+
+.files-sidebar-scroll {
+  background: @surface_container_low;
+}
+
+.files-sidebar {
+  padding: 10px 10px 16px;
+}
+
+.files-sidebar-heading {
+  margin: 14px 12px 4px;
+  font-size: 12px;
+  font-weight: 700;
+  color: @on_surface_variant;
+}
+
+button.files-sidebar-row {
+  border-radius: 999px;
+  padding: 7px 14px;
+  background: none;
+  font-weight: 500;
+}
+
+button.files-sidebar-row:hover {
+  background: alpha(@on_surface, 0.06);
+}
+
+button.files-sidebar-row.current {
+  background: @secondary_container;
+  color: @on_secondary_container;
+}
+
+button.files-sidebar-row.drop-hover, .file-tile.drop-hover, .file-row.drop-hover {
+  background: @primary_container;
+  color: @on_primary_container;
+}
+
+.files-sidebar-icon {
+  font-size: 20px;
+  color: @on_surface_variant;
+}
+
+button.files-sidebar-row.current .files-sidebar-icon {
+  color: @on_secondary_container;
+}
+
+button.files-eject {
+  min-width: 26px;
+  min-height: 26px;
+  padding: 0;
+  border-radius: 999px;
+  background: none;
+}
+
+.files-content {
+  background: @surface;
+}
+
+notebook.files-tabs > header {
+  background: @surface;
+  border: none;
+  box-shadow: none;
+  padding: 0 10px;
+}
+
+notebook.files-tabs > header tab {
+  border-radius: 999px;
+  padding: 4px 6px 4px 14px;
+  margin: 4px 2px;
+  min-height: 0;
+  border: none;
+  box-shadow: none;
+}
+
+notebook.files-tabs > header tab:checked {
+  background: @secondary_container;
+  color: @on_secondary_container;
+}
+
+button.files-tab-close {
+  min-width: 22px;
+  min-height: 22px;
+  padding: 0;
+  border-radius: 999px;
+}
+
+notebook.files-tabs > stack {
+  background: none;
+}
+
+gridview.file-grid {
+  background: none;
+  padding: 12px;
+}
+
+gridview.file-grid > child {
+  border-radius: 20px;
+  padding: 10px 6px;
+  margin: 2px;
+}
+
+gridview.file-grid > child:hover {
+  background: alpha(@on_surface, 0.05);
+}
+
+gridview.file-grid > child:selected {
+  background: @secondary_container;
+  color: @on_secondary_container;
+}
+
+.file-icon.thumb {
+  border-radius: 12px;
+}
+
+.file-name {
+  font-size: 13px;
+}
+
+columnview.file-list {
+  background: none;
+}
+
+columnview.file-list > listview {
+  background: none;
+  padding: 4px 10px;
+}
+
+columnview.file-list > listview > row {
+  border-radius: 12px;
+  padding: 2px 0;
+}
+
+columnview.file-list > listview > row:selected {
+  background: @secondary_container;
+  color: @on_secondary_container;
+}
+
+columnview.file-list > header > button {
+  background: none;
+  border: none;
+  box-shadow: none;
+  color: @on_surface_variant;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.file-meta {
+  color: @on_surface_variant;
+  font-size: 13px;
+}
+
+.files-empty-shape {
+  color: @surface_container_high;
+}
+
+.files-empty-label {
+  color: @on_surface_variant;
+  font-weight: 600;
+}
+
+.files-foot {
+  padding: 6px 16px 8px;
+  border-top: 1px solid alpha(@outline_variant, 0.5);
+}
+
+.files-status {
+  font-size: 12px;
+  color: @on_surface_variant;
+}
+
+scale.files-zoom trough {
+  min-height: 4px;
+}
+
+.files-progress-box {
+  margin: 6px 16px;
+  padding: 10px 14px;
+  border-radius: 18px;
+  background: @surface_container_high;
+}
+
+.files-progress-label {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+progressbar.files-progress trough, progressbar.files-progress progress {
+  min-height: 6px;
+  border-radius: 999px;
+}
+
+progressbar.files-progress progress {
+  background: @primary;
+}
+
+.files-error {
+  margin: 6px 16px;
+  padding: 10px 16px;
+  border-radius: 16px;
+  background: @error_container;
+  color: @on_error_container;
+}
+
+window.quicklook {
+  background: @surface_container;
+  border-radius: 28px;
+}
+
+.quicklook-root {
+  padding: 16px;
+}
+
+.quicklook-title {
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.quicklook-detail {
+  color: @on_surface_variant;
+  font-size: 12px;
+}
+
+.quicklook-body {
+  border-radius: 20px;
+  background: @surface_container_lowest;
+}
+
+textview.quicklook-text, textview.quicklook-text text {
+  background: none;
+  padding: 12px;
+}
+
+window.files-info, window.files-dialog {
+  background: @surface_container;
+}
+
+.files-info-root, .files-dialog-root {
+  padding: 20px;
+}
+
+entry.files-dialog-root {
+  margin: 16px;
+  padding: 0 14px;
+  min-height: 42px;
+  border-radius: 14px;
+}
+
+.info-key {
+  color: @on_surface_variant;
+  font-size: 13px;
+}
+
+entry.info-name {
+  font-weight: 700;
+  border-radius: 12px;
+}
+
+button.info-tag {
+  min-width: 22px;
+  min-height: 22px;
+  padding: 0;
+  border-radius: 999px;
+  border: 2px solid transparent;
+}
+
+button.info-tag:checked {
+  border-color: @on_surface;
 }
