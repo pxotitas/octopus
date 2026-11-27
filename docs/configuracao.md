@@ -10,7 +10,7 @@ uma árvore na esquerda: cinco categorias grandes, cada uma com seus galhos.
 
 - **aparência**: cores (modo, estilo da paleta, contraste) e idioma
 - **barra**: o editor, presets, forma e ancoragem
-- **painéis**: dash, notificações, clima, música e calendário
+- **painéis**: dash, notificações, clima, música, calendário, central de controle e lembretes
 - **área de trabalho**: widgets (com as opções de cada um) e a dock
 - **sistema**: tela de bloqueio e sobre
 
@@ -126,6 +126,20 @@ lyrics_offset_ms = 0
 [lock]
 lyrics = true
 
+[control_center]
+sections = ["header", "tiles", "sliders", "media", "notifications"]  # ordem e quais
+tiles = ["wifi", "bluetooth", "mic", "theme"]   # também caffeine, dnd
+sliders = ["volume", "mic", "brightness", "keyboard"]
+date = true                # no cabeçalho
+weather = true
+settings = true            # a engrenagem do lado do power
+power = true
+visualizer = true          # as barrinhas atrás do player
+
+[reminders]
+enabled = true             # o daemon; desligado, nada toca
+snooze = 10                # minutos
+
 [dock]
 enabled = false
 mode = "smart"             # "fixed", "autohide" ou "smart"
@@ -142,6 +156,7 @@ contributions_colors = "github"  # ou "theme", a cor do wallpaper
 card = "surface"           # a cor dos cards: surface, tonal, primary, none
 corners = 32               # de 0 a 48
 snap = 0                   # uma grade pra encaixar ao organizar, em px; 0 é solto
+hide_under_windows = true  # o widget sai da frente (e para de atualizar) embaixo de uma janela
 
 [desktop.clock]
 face = "analog"            # ou "digital", horas sobre minutos
@@ -193,6 +208,64 @@ feriados). atualiza a cada 15 minutos e guarda uma cópia em
 deixa qualquer um ler a agenda: não compartilhe. eventos que se repetem
 precisam do `python-dateutil`.
 
+## central de controle
+
+Mod+C. as seções (cabeçalho, botões, sliders, música, notificações) podem ser
+desligadas e postas em qualquer ordem em **painéis → central de controle**, e
+os botões e os sliders também. a engrenagem do lado do power abre as
+configurações.
+
+o botão de **cafeína** (ou `octopus caffeine`, `octopus caffeine on|off`)
+mantém a tela acordada: sem escurecer, bloquear nem suspender até você
+desligar. o **não perturbe** deixa os avisos quietos; eles ainda vão pra lista.
+
+## lembretes
+
+um daemon dentro do octopus (dá pra desligar em **painéis → lembretes**). ele
+toca na hora com um aviso que adia ou dispensa; um **alarme** repete um som
+até você responder.
+
+- pelo spotlight: `!` e depois quando e o quê. `!10 min chá`, `!18h pão`,
+  `!amanhã às 9 dentista`, `!sexta 18h ligar pra mãe`, `!alarme 6:45`
+- pelo terminal: `octopus remind 10 min chá`
+- o appzinho (`octopus reminders`, ou lembretes no menu de apps) lista,
+  liga e desliga, edita e faz repetir
+
+eles ficam em `~/.local/state/octopus/reminders.json`.
+
+## arquivos
+
+`octopus files [pasta]` abre o **octopus files**, um gerenciador de arquivos
+no mesmo visual m3, inspirado no finder do macos:
+
+- **visualizações**: ícones (com zoom), lista e colunas (<kbd>ctrl</kbd>
+  <kbd>1</kbd>/<kbd>2</kbd>/<kbd>3</kbd>). nas colunas, um clique numa pasta
+  abre ela do lado, <kbd>→</kbd>/<kbd>←</kbd> entram e saem, e um arquivo
+  ganha uma prévia no fim
+- **barra lateral**: favoritos, marcadores (<kbd>ctrl</kbd><kbd>shift</kbd><kbd>d</kbd>,
+  remove no × ou no clique direito), discos com o quanto estão cheios, a
+  lixeira, a rede e etiquetas coloridas
+- **olhada rápida** com <kbd>espaço</kbd>, **informações** com
+  <kbd>ctrl</kbd><kbd>i</kbd>, abas, desfazer, compactar e extrair, abrir com,
+  um terminal aqui
+- **busca**: digitar filtra a pasta; <kbd>enter</kbd> procura em todas as
+  pastas dentro dela com o `fd`, pulando `.git`, `node_modules` e `target`
+- **git**: dentro de um repositório aparece uma barra com a branch (clique pra
+  trocar ou criar), o que mudou, o que só está local, e puxar, enviar e
+  **commit** (marque os arquivos, escreva a mensagem, e envie junto se
+  quiser). **clonar repositório…** (o botão +, o menu ⋮ ou o clique direito)
+  aceita um endereço ou a lista dos seus repositórios do github; **conectar
+  ao github** loga o `gh` pelo navegador
+- **localsend**: clique direito → **enviar por localsend…** acha celulares e
+  computadores com o localsend aberto na mesma rede
+- **na rede**: computadores que anunciam sftp ou smb, e aparelhos com
+  localsend. **conectar a servidor** aceita `sftp://`, `smb://`, `ftp://`…
+- **google drive**: pelo `rclone`, logando no navegador; monta em
+  `~/Google Drive`
+
+o instalador pergunta se você quer ele e se quer como gerenciador padrão, o
+que também atende o "mostrar na pasta" dos apps.
+
 ## css pessoal
 
 um `~/.config/octopus/style.css` é somado por cima do css embutido e
@@ -237,3 +310,7 @@ termina.
 
 onde eles ficam é guardado em `~/.local/state/octopus/desktop.json`; apague
 esse arquivo pra voltar pro canto.
+
+com **sair da frente das janelas** ligado (`hide_under_windows`), um widget
+embaixo de uma janela some e para de atualizar até ela sair; com todos
+cobertos a camada inteira vai embora, então um workspace cheio não custa nada.

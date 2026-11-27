@@ -21,6 +21,7 @@
 - digitar: apps e as ações deles (ex. "nova janela privativa")
 - uma conta (`2*(3+4)`, `sqrt 16`, `1,5 x 2`): calculadora, enter copia
 - `/nome`: arquivos na pasta pessoal (usa o `fd`)
+- `!quando o quê`: um lembrete (`!10 min chá`, `!alarme 6:45`)
 - `>`: bloquear, suspender, sair, reiniciar, desligar
 
 ## clima
@@ -36,6 +37,25 @@ português ou inglês:
 
 vai de uma semana atrás até duas pra frente. esc volta pro agora.
 
+## octopus files
+
+| teclas | faz |
+|---|---|
+| ctrl 1 / 2 / 3 | ícones, lista, colunas |
+| espaço | olhada rápida |
+| ctrl i | informações |
+| f2 | renomear |
+| ctrl shift n | nova pasta |
+| ctrl t, ctrl w, ctrl n | nova aba, fechar aba, nova janela |
+| ctrl l | digitar um caminho |
+| ctrl f | buscar (enter procura em todas as pastas dentro dessa) |
+| ctrl shift d | marcar essa pasta |
+| ctrl h | mostrar ocultos |
+| ctrl z | desfazer |
+| delete, shift delete | pra lixeira, apagar de vez |
+| alt ← → ↑, backspace | voltar, avançar, subir |
+| ctrl alt t | um terminal aqui |
+
 ## comandos
 
 ```
@@ -45,6 +65,12 @@ octopus toggle <painel>    control-center, dash, wifi, bluetooth, audio,
 octopus open wallpapers    dash na aba de wallpapers
 octopus open weather [p]   a aba de clima, perguntando p (amanhã, semana…)
 octopus settings           janela de configurações
+octopus files [pasta]      octopus files
+octopus remind <quando o quê>  um lembrete: 10 min chá, 18h pão, alarme 6:45
+octopus reminders          o app de lembretes
+octopus caffeine [on|off]  mantém a tela acordada (sem on/off, alterna)
+octopus dnd                não perturbe
+octopus desktop arrange    organizar os widgets da área de trabalho
 octopus lock               bloquear
 octopus close              fecha qualquer painel
 octopus reload             regera o config da Waybar
