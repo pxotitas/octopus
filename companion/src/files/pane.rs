@@ -450,9 +450,6 @@ impl Pane {
         focus.grab_focus();
     }
 
-    pub fn hidden(&self) -> bool {
-        self.hidden.get()
-    }
 
     pub fn set_hidden(&self, on: bool) {
         self.hidden.set(on);
@@ -475,9 +472,6 @@ impl Pane {
         self.grid.set_model(Some(&self.selection));
     }
 
-    pub fn zoom(&self) -> i32 {
-        self.zoom.get()
-    }
 
     pub fn focus(&self) {
         self.set_view(&self.view());

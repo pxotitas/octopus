@@ -30,6 +30,7 @@ pub struct Window {
     free: gtk::Label,
     zoom: gtk::Scale,
     search_gen: std::cell::Cell<u64>,
+    git: RefCell<Option<Rc<super::git::Bar>>>,
 }
 
 thread_local! {
@@ -37,14 +38,7 @@ thread_local! {
     static OPEN: RefCell<Vec<Rc<Window>>> = RefCell::default();
 }
 
-fn terminal() -> Option<String> {
-    std::env::var("TERMINAL").ok().filter(|t| !t.is_empty()).or_else(|| {
-        ["kitty", "alacritty", "foot", "ghostty", "wezterm", "gnome-terminal", "konsole", "xterm"]
-            .into_iter()
-            .find(|t| glib::find_program_in_path(t).is_some())
-            .map(str::to_owned)
-    })
-}
+use super::terminal;
 
 impl Window {
     pub fn open(app: &gtk::Application, start: Option<gio::File>) -> Rc<Self> {
@@ -87,6 +81,8 @@ impl Window {
         menu_button.add_css_class("files-tool");
         let app_menu = gio::Menu::new();
         app_menu.append(Some(t("nova janela")), Some("win.new-window"));
+        app_menu.append(Some(t("clonar repositório…")), Some("win.clone"));
+        app_menu.append(Some(t("conectar ao github")), Some("win.github"));
         app_menu.append(Some(t("nova aba")), Some("win.new-tab"));
         app_menu.append(Some(t("mostrar ocultos")), Some("win.hidden"));
         app_menu.append(Some(t("usar como gerenciador padrão")), Some("win.make-default"));
@@ -151,10 +147,28 @@ impl Window {
         foot.append(&free);
         foot.append(&zoom);
 
+        let fab = gtk::MenuButton::new();
+        fab.add_css_class("files-fab");
+        fab.set_child(Some(&icons::icon("add")));
+        fab.set_tooltip_text(Some(t("novo")));
+        fab.set_halign(gtk::Align::End);
+        fab.set_valign(gtk::Align::End);
+        fab.set_direction(gtk::ArrowType::Up);
+        let fab_menu = gio::Menu::new();
+        fab_menu.append(Some(t("nova pasta")), Some("win.new-folder"));
+        fab_menu.append(Some(t("colar")), Some("win.paste"));
+        fab_menu.append(Some(t("clonar repositório…")), Some("win.clone"));
+        fab_menu.append(Some(t("conectar a servidor")), Some("win.connect"));
+        fab.set_menu_model(Some(&fab_menu));
+        let stage = gtk::Overlay::new();
+        stage.set_child(Some(&notebook));
+        stage.add_overlay(&fab);
+        stage.set_vexpand(true);
+
         let content = gtk::Box::new(gtk::Orientation::Vertical, 0);
         content.add_css_class("files-content");
         content.append(&progress_reveal);
-        content.append(&notebook);
+        content.append(&stage);
         content.append(&error_reveal);
         content.append(&foot);
 
@@ -182,7 +196,11 @@ impl Window {
             free,
             zoom,
             search_gen: std::cell::Cell::new(0),
+            git: RefCell::default(),
         });
+        let git = super::git::Bar::new(this.complain(), this.opener());
+        content.insert_child_after(&git.root, Some(&progress_reveal));
+        *this.git.borrow_mut() = Some(git);
 
         let weak = Rc::downgrade(&this);
         let picked: Rc<dyn Fn(Place)> = Rc::new(move |place| {
@@ -230,6 +248,32 @@ impl Window {
         window.present();
         this.current().focus();
         this
+    }
+
+    fn complain(self: &Rc<Self>) -> Rc<dyn Fn(String)> {
+        Rc::new(|e: String| ops::get().error.set(Some(e)))
+    }
+
+    /// Opens a folder here, or a file in its app.
+    fn opener(self: &Rc<Self>) -> Rc<dyn Fn(gio::File)> {
+        let weak = Rc::downgrade(self);
+        Rc::new(move |file: gio::File| {
+            let Some(w) = weak.upgrade() else { return };
+            let is_dir = file.query_file_type(gio::FileQueryInfoFlags::NONE, gio::Cancellable::NONE) == gio::FileType::Directory;
+            if is_dir {
+                w.current().go(&file);
+                w.window.present();
+            } else if let Some(parent) = file.parent() {
+                let _ = gio::AppInfo::launch_default_for_uri(&file.uri(), gdk::Display::default().map(|d| d.app_launch_context()).as_ref());
+                let _ = parent;
+            }
+        })
+    }
+
+    /// Selects a file once its folder has loaded.
+    pub fn select_soon(self: &Rc<Self>, file: gio::File) {
+        let pane = self.current();
+        glib::timeout_add_local_once(std::time::Duration::from_millis(400), move || pane.select_file(&file));
     }
 
     fn dropper(self: &Rc<Self>) -> super::cells::OnDrop {
@@ -339,6 +383,13 @@ impl Window {
         if let Some(s) = self.sidebar.borrow().as_ref() {
             s.highlight(&location);
         }
+        if let Some(git) = self.git.borrow().as_ref() {
+            if pane.showing_results() {
+                git.root.set_reveal_child(false);
+            } else {
+                git.update(&location);
+            }
+        }
         self.view_icons.set_active(pane.view() == "icons");
         self.view_list.set_active(pane.view() == "list");
         self.zoom.set_visible(pane.view() == "icons");
@@ -433,9 +484,8 @@ impl Window {
                 let name = super::tags::COLORS.iter().find(|c| c.0 == tag).map(|c| t(c.1)).unwrap_or(tag);
                 self.current().show_results(&format!("{} {name}", t("tag")), tags::tagged(tag));
             }
-            Place::Network | Place::Drive => {
-                ops::get().error.set(Some(t("isso chega na próxima etapa").to_owned()));
-            }
+            Place::Network => super::network::dialog(self.window.upcast_ref(), self.opener(), self.complain()),
+            Place::Drive => super::drive::open(self.window.upcast_ref(), self.opener(), self.complain()),
             Place::Connect => self.connect_server(),
         }
     }
@@ -544,7 +594,32 @@ impl Window {
         self.search_gen.set(generation);
         pane.show_results(&tf("“{}”", text), Vec::new());
         let (tx, rx) = async_channel::unbounded::<Vec<std::path::PathBuf>>();
+        let fd = glib::find_program_in_path("fd");
         std::thread::spawn(move || {
+            if let Some(fd) = fd {
+                use std::io::BufRead;
+                let child = std::process::Command::new(fd)
+                    .args(["-i", "--absolute-path", "--max-results", "3000", "--exclude", ".git", "--exclude", "node_modules", "--exclude", "target", "--fixed-strings", "--", &needle])
+                    .arg(&root)
+                    .stdout(std::process::Stdio::piped())
+                    .stderr(std::process::Stdio::null())
+                    .spawn();
+                if let Ok(mut child) = child {
+                    let mut batch = Vec::new();
+                    if let Some(out) = child.stdout.take() {
+                        for line in std::io::BufReader::new(out).lines().map_while(Result::ok) {
+                            batch.push(std::path::PathBuf::from(line));
+                            if batch.len() >= 60 && tx.send_blocking(std::mem::take(&mut batch)).is_err() {
+                                let _ = child.kill();
+                                return;
+                            }
+                        }
+                    }
+                    let _ = tx.send_blocking(batch);
+                    let _ = child.wait();
+                    return;
+                }
+            }
             let mut found = 0;
             let mut batch = Vec::new();
             let mut stack = vec![root];
@@ -956,9 +1031,14 @@ impl Window {
                 let _ = std::process::Command::new(term).current_dir(path).spawn();
             }
         }));
-        simple("share", Box::new(|_| {
-            ops::get().error.set(Some(t("o localsend chega na próxima etapa").to_owned()));
+        simple("share", Box::new(|w| super::share::dialog(w.window.upcast_ref(), w.current().selected())));
+        simple("clone", Box::new(|w| {
+            let p = w.current();
+            let into = if p.showing_results() { gio::File::for_path(glib::home_dir()) } else { p.location() };
+            super::git::clone_dialog(w.window.upcast_ref(), into, w.complain(), w.opener());
         }));
+        simple("github", Box::new(|_| super::git::connect_github()));
+        simple("connect", Box::new(|w| w.connect_server()));
         simple("make-default", Box::new(|_| {
             let ok = std::process::Command::new("xdg-mime").args(["default", "octopus-files.desktop", "inode/directory"]).status().is_ok_and(|s| s.success());
             if !ok {

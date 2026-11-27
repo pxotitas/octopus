@@ -3,11 +3,16 @@
 //! symbols and shapes. Finder's ideas, Material's looks.
 
 mod cells;
+mod dbus;
+mod drive;
+mod git;
 mod info;
 mod menu;
+mod network;
 mod ops;
 mod pane;
 mod quicklook;
+mod share;
 mod sidebar;
 mod state;
 mod tags;
@@ -34,13 +39,44 @@ pub fn run(args: &[String]) -> glib::ExitCode {
         .application_id(APP_ID)
         .flags(gio::ApplicationFlags::HANDLES_OPEN)
         .build();
-    app.connect_startup(|app| {
+    // started by d-bus to answer "show in folder": no window of its own
+    let service = args.iter().any(|a| a == "--service");
+    let args: Vec<String> = args.iter().filter(|a| *a != "--service").cloned().collect();
+    app.connect_startup(move |app| {
         crate::theme::install();
         crate::i18n::init(&crate::config::load().language);
         menu::accels(app);
+        let app2 = app.clone();
+        dbus::serve(move |ask| match ask {
+            dbus::Ask::Folders(uris) => {
+                for f in dbus::files(&uris) {
+                    window::Window::open(&app2, Some(f));
+                }
+            }
+            dbus::Ask::Items(uris) => {
+                for f in dbus::files(&uris) {
+                    if let Some(parent) = f.parent() {
+                        let w = window::Window::open(&app2, Some(parent));
+                        w.select_soon(f);
+                    }
+                }
+            }
+            dbus::Ask::Properties(uris) => {
+                for f in dbus::files(&uris) {
+                    let w = window::Window::open(&app2, f.parent());
+                    info::show(w.window.upcast_ref(), &f);
+                }
+            }
+        });
+        if service {
+            let guard = app.hold();
+            glib::timeout_add_local_once(std::time::Duration::from_secs(20), move || drop(guard));
+        }
     });
-    app.connect_activate(|app| {
-        window::Window::open(app, None);
+    app.connect_activate(move |app| {
+        if !service || app.windows().is_empty() && !service {
+            window::Window::open(app, None);
+        }
     });
     app.connect_open(|app, files, _| {
         for file in files {
@@ -49,6 +85,30 @@ pub fn run(args: &[String]) -> glib::ExitCode {
     });
     let argv: Vec<String> = std::iter::once("octopus-files".to_owned()).chain(args.iter().cloned()).collect();
     app.run_with_args(&argv)
+}
+
+/// The terminal to open folders and logins in.
+pub fn terminal() -> Option<String> {
+    std::env::var("TERMINAL").ok().filter(|t| !t.is_empty()).or_else(|| {
+        ["kitty", "alacritty", "foot", "ghostty", "wezterm", "gnome-terminal", "konsole", "xterm"]
+            .into_iter()
+            .find(|t| glib::find_program_in_path(t).is_some())
+            .map(str::to_owned)
+    })
+}
+
+/// Runs a shell line in a terminal window, each terminal its own way.
+pub fn run_in_terminal(script: &str) {
+    let Some(term) = terminal() else { return };
+    let name = std::path::Path::new(&term).file_name().map(|n| n.to_string_lossy().into_owned()).unwrap_or_default();
+    let mut command = std::process::Command::new(&term);
+    match name.as_str() {
+        "kitty" | "foot" | "ghostty" => command.args(["sh", "-c", script]),
+        "wezterm" => command.args(["start", "--", "sh", "-c", script]),
+        "gnome-terminal" | "konsole" => command.args(["--", "sh", "-c", script]),
+        _ => command.args(["-e", "sh", "-c", script]),
+    };
+    let _ = command.spawn();
 }
 
 /// The file a listing item stands for.

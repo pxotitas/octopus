@@ -122,6 +122,7 @@ pub fn for_folder(in_trash: bool) -> gio::Menu {
     let make = gio::Menu::new();
     item(&make, t("nova pasta"), "win.new-folder");
     item(&make, t("colar"), "win.paste");
+    item(&make, t("clonar repositório aqui…"), "win.clone");
     menu.append_section(None, &make);
     let view = gio::Menu::new();
     let by = gio::Menu::new();
