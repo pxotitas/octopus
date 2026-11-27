@@ -4,25 +4,35 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>shortcuts and commands · octopus</title>
-  <meta name="description" content="a cozy material 3 shell for niri: a vertical waybar and a rust + gtk4 companion.">
+  <meta name="description" content="octopus is a cozy material 3 desktop shell for the niri wayland compositor: a vertical waybar and a rust + gtk4 companion with a dash, control center, desktop widgets, a file manager and reminders, in your wallpaper&#x27;s colors.">
+  <link rel="canonical" href="https://pxotitas.github.io/octopus/docs/shortcuts.html">
+  <meta name="author" content="pxotitas">
   <meta name="theme-color" content="#fdfbef" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#14140c" media="(prefers-color-scheme: dark)">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="octopus">
   <meta property="og:title" content="shortcuts and commands · octopus">
-  <meta property="og:description" content="a cozy material 3 shell for niri: a vertical waybar and a rust + gtk4 companion.">
+  <meta property="og:description" content="octopus is a cozy material 3 desktop shell for the niri wayland compositor: a vertical waybar and a rust + gtk4 companion with a dash, control center, desktop widgets, a file manager and reminders, in your wallpaper&#x27;s colors.">
   <meta property="og:url" content="https://pxotitas.github.io/octopus/docs/shortcuts.html">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="pt_BR">
   <meta property="og:image" content="https://pxotitas.github.io/octopus/assets/banner.png">
   <meta property="og:image:width" content="1280">
   <meta property="og:image:height" content="640">
+  <meta property="og:image:alt" content="octopus: a vertical bar, the dash and desktop widgets in the wallpaper's colors">
   <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="shortcuts and commands · octopus">
+  <meta name="twitter:description" content="octopus is a cozy material 3 desktop shell for the niri wayland compositor: a vertical waybar and a rust + gtk4 companion with a dash, control center, desktop widgets, a file manager and reminders, in your wallpaper&#x27;s colors.">
+  <meta name="twitter:image" content="https://pxotitas.github.io/octopus/assets/banner.png">
   <link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+  <link rel="alternate" hreflang="en" href="https://pxotitas.github.io/octopus/docs/shortcuts.html">
   <link rel="alternate" hreflang="pt-BR" href="https://pxotitas.github.io/octopus/pt/docs/atalhos.html">
+  <link rel="alternate" hreflang="x-default" href="https://pxotitas.github.io/octopus/docs/shortcuts.html">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,400..600,0..1,0&display=block" rel="stylesheet">
-  <link rel="stylesheet" href="../style.css?v=ed06ee64">
+  <link rel="stylesheet" href="../style.css?v=74fde18b">
 </head>
 <body>
 <header class="top">
@@ -47,18 +57,20 @@
 <main>
 <div class="docs">
   <aside class="docs-nav">
-    <ul><li><a href="./">overview</a></li><li><a href="structure.html">structure</a></li><li><a href="shortcuts.html" aria-current="page">shortcuts and commands</a><ul class="toc"><li><a href="#niri-niri-kdl">niri (niri.kdl)</a></li><li><a href="#spotlight">spotlight</a></li><li><a href="#weather">weather</a></li><li><a href="#commands">commands</a></li></ul></li><li><a href="configuration.html">configuration</a></li><li><a href="theme.html">theme</a></li><li><a href="troubleshooting.html">when something breaks</a></li></ul>
+    <ul><li><a href="./">overview</a></li><li><a href="structure.html">structure</a></li><li><a href="shortcuts.html" aria-current="page">shortcuts and commands</a><ul class="toc"><li><a href="#niri-niri-kdl">niri (niri.kdl)</a></li><li><a href="#spotlight">spotlight</a></li><li><a href="#weather">weather</a></li><li><a href="#octopus-files">octopus files</a></li><li><a href="#commands">commands</a></li></ul></li><li><a href="configuration.html">configuration</a></li><li><a href="theme.html">theme</a></li><li><a href="troubleshooting.html">when something breaks</a></li></ul>
   </aside>
   <article class="doc">
     <h1>shortcuts and commands</h1>
     <h2 id="niri-niri-kdl">niri (<code>niri.kdl</code>)</h2>
 <div class="table"><table><thead><tr><th>shortcut</th><th>does</th></tr></thead><tbody><tr><td>Mod+Space, XF86LaunchB</td><td>spotlight</td></tr><tr><td>Mod+D</td><td>rofi (apps)</td></tr><tr><td>Mod+Shift+D</td><td>fuzzel (comes from your config.kdl, not from octopus)</td></tr><tr><td>Mod+C</td><td>control center</td></tr><tr><td>Mod+A</td><td>dash</td></tr><tr><td>Mod+Shift+V</td><td>clipboard</td></tr><tr><td>Mod+Period</td><td>emoji</td></tr><tr><td>Mod+Shift+E</td><td>power</td></tr><tr><td>Mod+Comma</td><td>settings</td></tr><tr><td>Mod+L</td><td>lock</td></tr><tr><td>Mod+Shift+W</td><td>matuwall</td></tr></tbody></table></div>
 <h2 id="spotlight">spotlight</h2>
-<ul><li>type: apps and their actions (e.g. "new private window")</li><li>a sum (<code>2*(3+4)</code>, <code>sqrt 16</code>, <code>1,5 x 2</code>): calculator, enter copies it</li><li><code>/name</code>: files in your home folder (uses <code>fd</code>)</li><li><code>&gt;</code>: lock, suspend, log out, restart, shut down</li></ul>
+<ul><li>type: apps and their actions (e.g. "new private window")</li><li>a sum (<code>2*(3+4)</code>, <code>sqrt 16</code>, <code>1,5 x 2</code>): calculator, enter copies it</li><li><code>/name</code>: files in your home folder (uses <code>fd</code>)</li><li><code>!when what</code>: a reminder (<code>!10 min tea</code>, <code>!alarm 6:45</code>)</li><li><code>&gt;</code>: lock, suspend, log out, restart, shut down</li></ul>
 <h2 id="weather">weather</h2>
 <p>the line at the top of the weather tab (after the chevron) takes questions, in portuguese or english:</p>
 <ul><li><code>tomorrow</code>, <code>yesterday</code>, <code>today</code>, <code>now</code>, <code>day after tomorrow</code></li><li>a weekday: <code>thursday</code>, <code>next thursday</code>, <code>last friday</code></li><li>days from today: <code>+3</code>, <code>-2</code>, <code>in 4 days</code>, <code>2 days ago</code></li><li>a date: <code>11/28</code> (day first: <code>28/11</code>), <code>2026-12-01</code>, <code>nov 30</code></li><li><code>week</code>, <code>next week</code>, <code>last week</code>, <code>weekend</code></li></ul>
 <p>it reaches a week back and two weeks ahead. escape goes back to now.</p>
+<h2 id="octopus-files">octopus files</h2>
+<div class="table"><table><thead><tr><th>keys</th><th>does</th></tr></thead><tbody><tr><td>ctrl 1 / 2 / 3</td><td>icons, list, columns</td></tr><tr><td>space</td><td>quick look</td></tr><tr><td>ctrl i</td><td>get info</td></tr><tr><td>f2</td><td>rename</td></tr><tr><td>ctrl shift n</td><td>new folder</td></tr><tr><td>ctrl t, ctrl w, ctrl n</td><td>new tab, close tab, new window</td></tr><tr><td>ctrl l</td><td>type a path</td></tr><tr><td>ctrl f</td><td>search (enter searches every folder under this one)</td></tr><tr><td>ctrl shift d</td><td>bookmark this folder</td></tr><tr><td>ctrl h</td><td>show hidden files</td></tr><tr><td>ctrl z</td><td>undo</td></tr><tr><td>delete, shift delete</td><td>to the trash, delete for good</td></tr><tr><td>alt ← → ↑, backspace</td><td>back, forward, up</td></tr><tr><td>ctrl alt t</td><td>a terminal here</td></tr></tbody></table></div>
 <h2 id="commands">commands</h2>
 <pre><code>octopus                    the daemon (niri starts it)
 octopus toggle &lt;panel&gt;     control-center, dash, wifi, bluetooth, audio,
@@ -66,6 +78,12 @@ octopus toggle &lt;panel&gt;     control-center, dash, wifi, bluetooth, audio,
 octopus open wallpapers    the dash on its wallpapers tab
 octopus open weather [q]   the weather tab, asking it q (tomorrow, week…)
 octopus settings           the settings window
+octopus files [folder]     octopus files
+octopus remind &lt;when what&gt; a reminder: 10 min tea, 18h bread, alarm 6:45
+octopus reminders          the reminders app
+octopus caffeine [on|off]  keeps the screen awake (toggles without on/off)
+octopus dnd                do not disturb
+octopus desktop arrange    arrange the desktop widgets
 octopus lock               lock
 octopus close              closes any panel
 octopus reload             writes waybar&#x27;s config again

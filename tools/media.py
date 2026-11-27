@@ -16,6 +16,12 @@ CLIPS = [
 ]
 
 GROUPS = [
+    ("shots-apps", "cookie9", {"en": "apps", "pt": "apps"}, [
+        ("files", {"en": "octopus files, as icons", "pt": "octopus files, em ícones"}),
+        ("files-columns", {"en": "octopus files in columns, in a git repository", "pt": "octopus files em colunas, num repositório git"}),
+        ("reminders", {"en": "the reminders app", "pt": "o app de lembretes"}),
+        ("launcher-remind", {"en": "a reminder from the spotlight", "pt": "um lembrete pelo spotlight"}),
+    ]),
     ("shots-shell", "cookie9", {"en": "the shell", "pt": "o shell"}, [
         ("desktop", {"en": "the bar and the desktop widgets", "pt": "a barra e os widgets de desktop"}),
         ("desktop-menu", {"en": "right-click on the desktop", "pt": "clique direito na área de trabalho"}),

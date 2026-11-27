@@ -4,25 +4,35 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>configuração · octopus</title>
-  <meta name="description" content="um shell material 3 cozy pro niri: uma waybar vertical e um companion em rust + gtk4.">
+  <meta name="description" content="quase tudo dá pra mudar pela janela de configurações (Mod+Comma, ou octopus settings). ela escreve em ~/.config/octopus/octopus.toml, que também pode ser…">
+  <link rel="canonical" href="https://pxotitas.github.io/octopus/pt/docs/configuracao.html">
+  <meta name="author" content="pxotitas">
   <meta name="theme-color" content="#fdfbef" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#14140c" media="(prefers-color-scheme: dark)">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="octopus">
   <meta property="og:title" content="configuração · octopus">
-  <meta property="og:description" content="um shell material 3 cozy pro niri: uma waybar vertical e um companion em rust + gtk4.">
+  <meta property="og:description" content="quase tudo dá pra mudar pela janela de configurações (Mod+Comma, ou octopus settings). ela escreve em ~/.config/octopus/octopus.toml, que também pode ser…">
   <meta property="og:url" content="https://pxotitas.github.io/octopus/pt/docs/configuracao.html">
+  <meta property="og:locale" content="pt_BR">
+  <meta property="og:locale:alternate" content="en_US">
   <meta property="og:image" content="https://pxotitas.github.io/octopus/assets/banner.png">
   <meta property="og:image:width" content="1280">
   <meta property="og:image:height" content="640">
+  <meta property="og:image:alt" content="octopus: uma barra vertical, o dash e widgets na área de trabalho nas cores do wallpaper">
   <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="configuração · octopus">
+  <meta name="twitter:description" content="quase tudo dá pra mudar pela janela de configurações (Mod+Comma, ou octopus settings). ela escreve em ~/.config/octopus/octopus.toml, que também pode ser…">
+  <meta name="twitter:image" content="https://pxotitas.github.io/octopus/assets/banner.png">
   <link rel="icon" href="../../assets/logo.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png">
   <link rel="alternate" hreflang="en" href="https://pxotitas.github.io/octopus/docs/configuration.html">
+  <link rel="alternate" hreflang="pt-BR" href="https://pxotitas.github.io/octopus/pt/docs/configuracao.html">
+  <link rel="alternate" hreflang="x-default" href="https://pxotitas.github.io/octopus/docs/configuration.html">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,400..600,0..1,0&display=block" rel="stylesheet">
-  <link rel="stylesheet" href="../../style.css?v=ed06ee64">
+  <link rel="stylesheet" href="../../style.css?v=74fde18b">
 </head>
 <body>
 <header class="top">
@@ -47,14 +57,14 @@
 <main>
 <div class="docs">
   <aside class="docs-nav">
-    <ul><li><a href="./">visão geral</a></li><li><a href="estrutura.html">estrutura</a></li><li><a href="atalhos.html">atalhos e comandos</a></li><li><a href="configuracao.html" aria-current="page">configuração</a><ul class="toc"><li><a href="#a-janela-de-configurações">a janela de configurações</a></li><li><a href="#o-editor-da-barra">o editor da barra</a></li><li><a href="#octopus-toml">octopus.toml</a></li><li><a href="#quando-vale">quando vale</a></li><li><a href="#calendário">calendário</a></li><li><a href="#css-pessoal">css pessoal</a></li><li><a href="#dock">dock</a></li><li><a href="#widgets-de-desktop">widgets de desktop</a></li></ul></li><li><a href="tema.html">tema</a></li><li><a href="problemas.html">quando algo quebra</a></li></ul>
+    <ul><li><a href="./">visão geral</a></li><li><a href="estrutura.html">estrutura</a></li><li><a href="atalhos.html">atalhos e comandos</a></li><li><a href="configuracao.html" aria-current="page">configuração</a><ul class="toc"><li><a href="#a-janela-de-configurações">a janela de configurações</a></li><li><a href="#o-editor-da-barra">o editor da barra</a></li><li><a href="#octopus-toml">octopus.toml</a></li><li><a href="#quando-vale">quando vale</a></li><li><a href="#calendário">calendário</a></li><li><a href="#central-de-controle">central de controle</a></li><li><a href="#lembretes">lembretes</a></li><li><a href="#arquivos">arquivos</a></li><li><a href="#css-pessoal">css pessoal</a></li><li><a href="#dock">dock</a></li><li><a href="#widgets-de-desktop">widgets de desktop</a></li></ul></li><li><a href="tema.html">tema</a></li><li><a href="problemas.html">quando algo quebra</a></li></ul>
   </aside>
   <article class="doc">
     <h1>configuração</h1>
     <p>quase tudo dá pra mudar pela janela de configurações (Mod+Comma, ou <code>octopus settings</code>). ela escreve em <code>~/.config/octopus/octopus.toml</code>, que também pode ser editado à mão.</p>
 <h2 id="a-janela-de-configurações">a janela de configurações</h2>
 <p>uma árvore na esquerda: cinco categorias grandes, cada uma com seus galhos.</p>
-<ul><li><strong>aparência</strong>: cores (modo, estilo da paleta, contraste) e idioma</li><li><strong>barra</strong>: o editor, presets, forma e ancoragem</li><li><strong>painéis</strong>: dash, notificações, clima, música e calendário</li><li><strong>área de trabalho</strong>: widgets (com as opções de cada um) e a dock</li><li><strong>sistema</strong>: tela de bloqueio e sobre</li></ul>
+<ul><li><strong>aparência</strong>: cores (modo, estilo da paleta, contraste) e idioma</li><li><strong>barra</strong>: o editor, presets, forma e ancoragem</li><li><strong>painéis</strong>: dash, notificações, clima, música, calendário, central de controle e lembretes</li><li><strong>área de trabalho</strong>: widgets (com as opções de cada um) e a dock</li><li><strong>sistema</strong>: tela de bloqueio e sobre</li></ul>
 <p><code>octopus settings bar/editor</code> (ou só <code>octopus settings bar</code>) abre direto numa página. as mudanças esperam num rascunho até você apertar <strong>aplicar</strong>. a engrenagem no pé do trilho do dash também abre ela.</p>
 <h2 id="o-editor-da-barra">o editor da barra</h2>
 <p>a barra desenhada como ela vai ficar. toque num módulo pra mudar ele no inspetor do lado (lugar, visual, comportamento); arraste pra outro lugar, ou pra <strong>solte aqui pra tirar</strong> pra tirar ele.</p>
@@ -126,6 +136,20 @@ lyrics_offset_ms = 0
 [lock]
 lyrics = true
 
+[control_center]
+sections = [&quot;header&quot;, &quot;tiles&quot;, &quot;sliders&quot;, &quot;media&quot;, &quot;notifications&quot;]  # ordem e quais
+tiles = [&quot;wifi&quot;, &quot;bluetooth&quot;, &quot;mic&quot;, &quot;theme&quot;]   # também caffeine, dnd
+sliders = [&quot;volume&quot;, &quot;mic&quot;, &quot;brightness&quot;, &quot;keyboard&quot;]
+date = true                # no cabeçalho
+weather = true
+settings = true            # a engrenagem do lado do power
+power = true
+visualizer = true          # as barrinhas atrás do player
+
+[reminders]
+enabled = true             # o daemon; desligado, nada toca
+snooze = 10                # minutos
+
 [dock]
 enabled = false
 mode = &quot;smart&quot;             # &quot;fixed&quot;, &quot;autohide&quot; ou &quot;smart&quot;
@@ -142,6 +166,7 @@ contributions_colors = &quot;github&quot;  # ou &quot;theme&quot;, a cor do wall
 card = &quot;surface&quot;           # a cor dos cards: surface, tonal, primary, none
 corners = 32               # de 0 a 48
 snap = 0                   # uma grade pra encaixar ao organizar, em px; 0 é solto
+hide_under_windows = true  # o widget sai da frente (e para de atualizar) embaixo de uma janela
 
 [desktop.clock]
 face = &quot;analog&quot;            # ou &quot;digital&quot;, horas sobre minutos
@@ -173,6 +198,17 @@ shuffle = 0                # minutos entre fotos da mesma pasta; 0 fica numa só
 <p>o calendário do dash e o da área de trabalho mostram os seus eventos: dias com algo ganham uma cor, e um clique no dia lista eles. ele lê endereços ical, então um google agenda não precisa de login nem de nada no cloud console:</p>
 <ol><li>abra o google agenda na web, <strong>configurações</strong></li><li>na esquerda, em <strong>configurações das minhas agendas</strong>, escolha a agenda</li><li><strong>integrar agenda</strong>, copie o <strong>endereço secreto no formato ical</strong></li><li>cole em <strong>painéis → calendário</strong> (ou em <code>[calendar] urls</code>)</li></ol>
 <p>qualquer outro ical funciona igual (outlook, nextcloud, fastmail, um feed de feriados). atualiza a cada 15 minutos e guarda uma cópia em <code>~/.cache/octopus/calendar</code>, então aparece offline também. o endereço secreto deixa qualquer um ler a agenda: não compartilhe. eventos que se repetem precisam do <code>python-dateutil</code>.</p>
+<h2 id="central-de-controle">central de controle</h2>
+<p>Mod+C. as seções (cabeçalho, botões, sliders, música, notificações) podem ser desligadas e postas em qualquer ordem em <strong>painéis → central de controle</strong>, e os botões e os sliders também. a engrenagem do lado do power abre as configurações.</p>
+<p>o botão de <strong>cafeína</strong> (ou <code>octopus caffeine</code>, <code>octopus caffeine on|off</code>) mantém a tela acordada: sem escurecer, bloquear nem suspender até você desligar. o <strong>não perturbe</strong> deixa os avisos quietos; eles ainda vão pra lista.</p>
+<h2 id="lembretes">lembretes</h2>
+<p>um daemon dentro do octopus (dá pra desligar em <strong>painéis → lembretes</strong>). ele toca na hora com um aviso que adia ou dispensa; um <strong>alarme</strong> repete um som até você responder.</p>
+<ul><li>pelo spotlight: <code>!</code> e depois quando e o quê. <code>!10 min chá</code>, <code>!18h pão</code>, <code>!amanhã às 9 dentista</code>, <code>!sexta 18h ligar pra mãe</code>, <code>!alarme 6:45</code></li><li>pelo terminal: <code>octopus remind 10 min chá</code></li><li>o appzinho (<code>octopus reminders</code>, ou lembretes no menu de apps) lista, liga e desliga, edita e faz repetir</li></ul>
+<p>eles ficam em <code>~/.local/state/octopus/reminders.json</code>.</p>
+<h2 id="arquivos">arquivos</h2>
+<p><code>octopus files [pasta]</code> abre o <strong>octopus files</strong>, um gerenciador de arquivos no mesmo visual m3, inspirado no finder do macos:</p>
+<ul><li><strong>visualizações</strong>: ícones (com zoom), lista e colunas (&lt;kbd&gt;ctrl&lt;/kbd&gt; &lt;kbd&gt;1&lt;/kbd&gt;/&lt;kbd&gt;2&lt;/kbd&gt;/&lt;kbd&gt;3&lt;/kbd&gt;). nas colunas, um clique numa pasta abre ela do lado, &lt;kbd&gt;→&lt;/kbd&gt;/&lt;kbd&gt;←&lt;/kbd&gt; entram e saem, e um arquivo ganha uma prévia no fim</li><li><strong>barra lateral</strong>: favoritos, marcadores (&lt;kbd&gt;ctrl&lt;/kbd&gt;&lt;kbd&gt;shift&lt;/kbd&gt;&lt;kbd&gt;d&lt;/kbd&gt;, remove no × ou no clique direito), discos com o quanto estão cheios, a lixeira, a rede e etiquetas coloridas</li><li><strong>olhada rápida</strong> com &lt;kbd&gt;espaço&lt;/kbd&gt;, <strong>informações</strong> com &lt;kbd&gt;ctrl&lt;/kbd&gt;&lt;kbd&gt;i&lt;/kbd&gt;, abas, desfazer, compactar e extrair, abrir com, um terminal aqui</li><li><strong>busca</strong>: digitar filtra a pasta; &lt;kbd&gt;enter&lt;/kbd&gt; procura em todas as pastas dentro dela com o <code>fd</code>, pulando <code>.git</code>, <code>node_modules</code> e <code>target</code></li><li><strong>git</strong>: dentro de um repositório aparece uma barra com a branch (clique pra trocar ou criar), o que mudou, o que só está local, e puxar, enviar e <strong>commit</strong> (marque os arquivos, escreva a mensagem, e envie junto se quiser). <strong>clonar repositório…</strong> (o botão +, o menu ⋮ ou o clique direito) aceita um endereço ou a lista dos seus repositórios do github; <strong>conectar ao github</strong> loga o <code>gh</code> pelo navegador</li><li><strong>localsend</strong>: clique direito → <strong>enviar por localsend…</strong> acha celulares e computadores com o localsend aberto na mesma rede</li><li><strong>na rede</strong>: computadores que anunciam sftp ou smb, e aparelhos com localsend. <strong>conectar a servidor</strong> aceita <code>sftp://</code>, <code>smb://</code>, <code>ftp://</code>…</li><li><strong>google drive</strong>: pelo <code>rclone</code>, logando no navegador; monta em <code>~/Google Drive</code></li></ul>
+<p>o instalador pergunta se você quer ele e se quer como gerenciador padrão, o que também atende o "mostrar na pasta" dos apps.</p>
 <h2 id="css-pessoal">css pessoal</h2>
 <p>um <code>~/.config/octopus/style.css</code> é somado por cima do css embutido e recarrega sozinho. bom pra ajustes sem recompilar.</p>
 <h2 id="dock">dock</h2>
@@ -184,6 +220,7 @@ shuffle = 0                # minutos entre fotos da mesma pasta; 0 fica numa só
 <p>em <strong>área de trabalho → widgets</strong>, a cor, os cantos e a grade dos cards ficam no topo; o ⚙ de cada widget abre as opções dele embaixo.</p>
 <p>eles ficam parados até você organizar: clique direito na área de trabalho e escolha <strong>organizar widgets</strong> (ou <code>octopus desktop arrange</code>). a área de trabalho sobe por cima das janelas; arraste um widget pra mover, o canto pra mudar o tamanho, e use a maleta embaixo pra pôr os outros (arraste um pra fora, ou clique) ou guardar um (solte na maleta, ou no ×). <strong>pronto</strong> ou &lt;kbd&gt;esc&lt;/kbd&gt; termina.</p>
 <p>onde eles ficam é guardado em <code>~/.local/state/octopus/desktop.json</code>; apague esse arquivo pra voltar pro canto.</p>
+<p>com <strong>sair da frente das janelas</strong> ligado (<code>hide_under_windows</code>), um widget embaixo de uma janela some e para de atualizar até ela sair; com todos cobertos a camada inteira vai embora, então um workspace cheio não custa nada.</p>
     <p class="edit"><a href="https://github.com/pxotitas/octopus/blob/pt-br/docs/configuracao.md">editar essa página no github</a></p>
   </article>
 </div>

@@ -1,36 +1,92 @@
+
 <section class="hero">
-  <div>
-    <h1>octopus</h1>
-    <p>um shell m3 cozy pro niri. uma barra vertical minimalista na waybar,
-    e tudo que é maior num companion em rust + gtk4.</p>
-    <div class="actions">
+  <span class="drift one shape-badge tone-c" data-shape="flower" aria-hidden="true"></span>
+  <span class="drift two shape-badge tone-b" data-shape="cookie9" aria-hidden="true"></span>
+  <span class="drift three shape-badge" data-shape="clover4" aria-hidden="true"></span>
+  <div class="hero-text">
+    <h1 class="intro" style="--d: 0">octopus</h1>
+    <p class="intro" style="--d: 1">um shell <strong>material 3</strong> cozy pro <strong>niri</strong>. uma barra vertical minimalista na waybar,
+    e tudo que é maior num companion em rust + gtk4: dash, central de controle, widgets na área de trabalho, um gerenciador de arquivos e lembretes, tudo nas cores do seu wallpaper.</p>
+    <div class="actions intro" style="--d: 2">
       <a class="button filled" href="#instalar"><span class="symbol">download</span>instalar</a>
       <a class="button tonal" href="docs/"><span class="symbol">menu_book</span>ler as docs</a>
       <a class="button text" href="media/">ver em movimento</a>
     </div>
-    <div class="tags">
+    <div class="tags intro" style="--d: 3">
       <span class="chip"><span class="symbol">memory</span>rust + gtk4</span>
       <span class="chip"><span class="symbol">view_sidebar</span>waybar</span>
       <span class="chip"><span class="symbol">palette</span>matugen</span>
       <span class="chip"><span class="symbol">grid_view</span>niri</span>
     </div>
   </div>
-  <div class="shapes" title="aperta qualquer tecla">
+  <div class="shapes intro" style="--d: 2" title="aperta qualquer tecla">
     <div class="shape hours"><span>00</span></div>
     <div class="shape minutes"><span>00</span></div>
   </div>
 </section>
 
+<section class="highlights" data-reveal data-stagger aria-label="num relance">
+  <div class="highlight">
+    <strong><span data-count="45">45</span> mb</strong>
+    <span>o shell inteiro, parado</span>
+  </div>
+  <div class="highlight">
+    <strong><span data-count="20">20</span> shapes</strong>
+    <span>m3 expressive, virando uma na outra</span>
+  </div>
+  <div class="highlight">
+    <strong><span data-count="0">0</span> frames</strong>
+    <span>desenhados pra widgets embaixo das janelas</span>
+  </div>
+  <div class="highlight">
+    <strong><span data-count="2">2</span> idiomas</strong>
+    <span>português e inglês, em tudo</span>
+  </div>
+</section>
+
 <figure class="stage">
-  <img src="{{rel}}assets/screenshots/dash.webp" alt="o dash: rail de navegação, o relógio, um relógio analógico num cookie, o calendário, as notificações e o clima" width="1440" height="900">
+  <img src="{{rel}}assets/screenshots/dash.webp" alt="o dash: rail de navegação, o relógio, um relógio analógico num cookie, o calendário, as notificações e o clima" width="1440" height="900" fetchpriority="high">
   <figcaption>o dash: rail de navegação, um relógio analógico num cookie, as notificações e o clima lado a lado. as screenshots estão em inglês.</figcaption>
 </figure>
 
-<section class="teaser">
+<section class="news" data-reveal>
+  <div class="news-head">
+    <span class="new-chip"><span class="symbol">fiber_new</span>novo</span>
+    <h2>novidades no octopus</h2>
+    <p class="lead">um gerenciador de arquivos próprio, lembretes que você digita no spotlight, e um shell que sai da frente.</p>
+  </div>
+  <div class="bento" data-stagger>
+    <a class="tile big" href="features/#files">
+      <img src="{{rel}}assets/screenshots/thumbs/files-columns.webp" alt="o octopus files em colunas, dentro de um repositório git, com uma imagem na prévia" width="720" height="450" loading="lazy">
+      <div>
+        <span class="shape-badge tone-a" data-shape="cookie9" data-hover="flower"><span class="symbol">folder_open</span></span>
+        <h3>octopus files</h3>
+        <p>um gerenciador de arquivos inspirado no finder: ícones, lista e colunas, olhada rápida, etiquetas, abas. ele clona um repositório, faz commit e push, e manda arquivos pro celular pelo localsend.</p>
+      </div>
+    </a>
+    <a class="tile" href="features/#reminders">
+      <span class="shape-badge tone-c" data-shape="sunny" data-hover="burst"><span class="symbol">alarm</span></span>
+      <h3>lembretes</h3>
+      <p>digite <code>!10 min chá</code> ou <code>!alarme 6:45</code> no spotlight. um aviso toca na hora; um alarme toca até você responder.</p>
+    </a>
+    <a class="tile" href="docs/configuracao.html#central-de-controle">
+      <span class="shape-badge tone-b" data-shape="clover4" data-hover="clover8"><span class="symbol">tune</span></span>
+      <h3>central de controle do seu jeito</h3>
+      <p>cada seção, botão e slider pode sair ou mudar de lugar. um botão de cafeína mantém a tela acordada.</p>
+    </a>
+    <a class="tile" href="features/#widgets">
+      <span class="shape-badge" data-shape="puffy" data-hover="softburst"><span class="symbol">visibility_off</span></span>
+      <h3>widgets que saem da frente</h3>
+      <p>um widget embaixo de uma janela some e para de atualizar; com todos cobertos, a camada vai embora.</p>
+    </a>
+  </div>
+</section>
+
+<section class="teaser" data-reveal>
   <span class="shape-badge big tone-c" data-shape="sunny" data-hover="burst"><span class="symbol">auto_awesome</span></span>
   <div>
     <h2>algumas features</h2>
-    <p class="lead">o editor da barra, widgets que você organiza na área de trabalho, estilos de
+    <p class="lead">o gerenciador de arquivos, o editor da barra, widgets que você organiza na área de trabalho, estilos de
     paleta e o clima que responde perguntas, em screenshots de verdade.</p>
   </div>
   <a class="button tonal" href="features/"><span class="symbol">arrow_forward</span>ver</a>
@@ -38,46 +94,46 @@
 
 <h2>o que tem dentro</h2>
 <p class="lead">superfícies opacas e tonais em shapes m3. cores do wallpaper. leve o bastante pra ficar em uns 45 mb parado.</p>
-<div class="features">
+<div class="features" data-reveal data-stagger>
   <a class="feature" href="media/#shots-shell">
-    <img src="{{rel}}assets/features/dash.webp" alt="" loading="lazy">
+    <img src="{{rel}}assets/features/dash.webp" alt="" width="640" height="400" loading="lazy">
     <span class="shape-badge tone-a" data-shape="cookie9" data-hover="flower"><span class="symbol">dashboard</span></span>
     <h3>dash</h3>
     <p>rail de navegação, relógio analógico, calendário, a música com a letra, as notificações, o clima e um seletor de wallpaper.</p>
   </a>
   <a class="feature" href="media/#shots-weather">
-    <img src="{{rel}}assets/features/weather.webp" alt="" loading="lazy">
+    <img src="{{rel}}assets/features/weather.webp" alt="" width="640" height="400" loading="lazy">
     <span class="shape-badge tone-c" data-shape="sunny" data-hover="verysunny"><span class="symbol">partly_cloudy_day</span></span>
     <h3>clima</h3>
     <p>métricas em shapes m3, o arco do sol e a lua, hora a hora, e qualquer dia de uma semana atrás até duas pra frente.</p>
   </a>
   <a class="feature" href="media/#shots-shell">
-    <img src="{{rel}}assets/features/desktop.webp" alt="" loading="lazy">
+    <img src="{{rel}}assets/features/desktop.webp" alt="" width="640" height="400" loading="lazy">
     <span class="shape-badge tone-b" data-shape="puffy" data-hover="softburst"><span class="symbol">widgets</span></span>
     <h3>widgets de desktop</h3>
     <p>embaixo das janelas: o clima, suas contribuições no github, um relógio, a música, um calendário. clique direito na área de trabalho pra organizar.</p>
   </a>
   <a class="feature" href="media/#shots-shell">
-    <img src="{{rel}}assets/features/control-center.webp" alt="" loading="lazy">
+    <img src="{{rel}}assets/features/control-center.webp" alt="" width="640" height="400" loading="lazy">
     <span class="shape-badge tone-a" data-shape="clover4" data-hover="clover8"><span class="symbol">tune</span></span>
     <h3>central de controle</h3>
-    <p>wi-fi, bluetooth, som, brilho, mídia e notificações, num lugar só.</p>
+    <p>wi-fi, bluetooth, som, brilho, mídia e notificações, num lugar só, na ordem que você escolher.</p>
   </a>
   <a class="feature" href="media/#shots-launchers">
-    <img src="{{rel}}assets/features/spotlight.webp" alt="" loading="lazy">
+    <img src="{{rel}}assets/features/spotlight.webp" alt="" width="640" height="400" loading="lazy">
     <span class="shape-badge tone-b" data-shape="cookie6" data-hover="burst"><span class="symbol">search</span></span>
     <h3>spotlight</h3>
-    <p>apps e as ações deles, calculadora, arquivos com <code>/</code>, energia com <code>&gt;</code>.</p>
+    <p>apps e as ações deles, calculadora, arquivos com <code>/</code>, lembretes com <code>!</code>, energia com <code>&gt;</code>.</p>
   </a>
   <a class="feature" href="media/#lock">
-    <img src="{{rel}}assets/features/lock.webp" alt="" loading="lazy">
+    <img src="{{rel}}assets/features/lock.webp" alt="" width="640" height="400" loading="lazy">
     <span class="shape-badge tone-c" data-shape="cookie12" data-hover="pentagon"><span class="symbol">lock</span></span>
     <h3>tela de bloqueio</h3>
     <p>shapes m3 que giram e mudam a cada tecla, a letra sendo cantada, o clima.</p>
   </a>
 </div>
 
-<section class="split">
+<section class="split" data-reveal>
   <div>
     <span class="shape-badge big tone-a" data-shape="flower" data-hover="cookie9"><span class="symbol">palette</span></span>
     <h2>ele veste o seu wallpaper</h2>
@@ -90,13 +146,14 @@
 </section>
 
 <h2 id="instalar">instalar</h2>
-<p class="lead">no arch (ou o que tiver esses pacotes), o repo mora no próprio <code>~/.config/octopus</code>.</p>
-<pre><code>git clone https://github.com/pxotitas/octopus ~/.config/octopus
+<p class="lead">no arch (ou o que tiver esses pacotes), o repo mora no próprio <code>~/.config/octopus</code>. o instalador pergunta antes das partes opcionais, como o octopus files.</p>
+<pre class="copyable"><code>git clone https://github.com/pxotitas/octopus ~/.config/octopus
 ~/.config/octopus/install.sh</code></pre>
 <p class="lead">depois, no fim do <code>~/.config/niri/config.kdl</code>:</p>
-<pre><code>include "~/.config/octopus/niri.kdl"</code></pre>
+<pre class="copyable"><code>include "~/.config/octopus/niri.kdl"</code></pre>
 <details class="deps">
   <summary>dependências</summary>
   <p><code>pam waybar matugen matuwall awww cliphist wl-clipboard wtype playerctl cava brightnessctl networkmanager bluez-utils libpulse python python-dateutil unicode-emoji unicode-cldr fd gcc rofi gtk3 gtk4 gtk4-layer-shell ttf-material-symbols-variable rust</code></p>
+  <p>opcionais, pro octopus files: <code>git github-cli avahi gvfs ffmpegthumbnailer unzip zip rclone</code></p>
 </details>
 <p class="lead next">depois: <a href="docs/atalhos.html">os atalhos</a> e <a href="docs/configuracao.html">o que dá pra mudar</a>.</p>

@@ -2,6 +2,8 @@
   <h1>algumas features</h1>
   <p class="lead">as partes do octopus que são mais legais de ver do que de ler. toda imagem aqui é uma screenshot de verdade; clica numa pra ver em tamanho real.</p>
   <nav class="jump" aria-label="nessa página">
+    <a class="chip new" href="#files"><span class="symbol">folder_open</span>octopus files</a>
+    <a class="chip new" href="#reminders"><span class="symbol">alarm</span>lembretes</a>
     <a class="chip" href="#bar-editor"><span class="symbol">side_navigation</span>editor da barra</a>
     <a class="chip" href="#modules"><span class="symbol">construction</span>módulos seus</a>
     <a class="chip" href="#presets"><span class="symbol">view_column</span>presets da barra</a>
@@ -11,6 +13,47 @@
     <a class="chip" href="#lock"><span class="symbol">lock</span>tela de bloqueio</a>
     <a class="chip" href="#weather"><span class="symbol">partly_cloudy_day</span>pergunte o clima</a>
   </nav>
+</section>
+
+<section class="showcase" id="files" data-reveal>
+  <div class="showcase-text">
+    <span class="shape-badge big" data-shape="cookie9" data-hover="flower"><span class="symbol">folder_open</span></span>
+    <h2>octopus files</h2>
+    <p class="lead">um gerenciador de arquivos no mesmo visual m3, inspirado no finder do macos: ícones, lista, ou colunas que abrem cada pasta do lado da anterior, com uma prévia do arquivo escolhido.</p>
+    <ul class="points">
+      <li><span class="symbol">commit</span><span>dentro de um repositório: a branch, o que mudou, o que só está local, puxar, enviar e um commit simples. clone por endereço ou do seu github</span></li>
+      <li><span class="symbol">send_to_mobile</span><span>mande arquivos pro celular pelo localsend, navegue nos computadores da rede, monte o google drive com o rclone</span></li>
+      <li><span class="symbol">visibility</span><span>olhada rápida no <kbd>espaço</kbd>, etiquetas coloridas, marcadores, abas, desfazer, compactar e extrair</span></li>
+      <li><span class="symbol">bolt</span><span>a busca em todas as pastas de baixo usa o <code>fd</code>, pulando <code>.git</code>, <code>node_modules</code> e <code>target</code></span></li>
+    </ul>
+    <button class="shot showcase-inset" type="button" data-full="{{rel}}assets/screenshots/files.webp" data-label="octopus files em ícones">
+      <img src="{{rel}}assets/screenshots/thumbs/files.webp" alt="o octopus files em ícones, com miniaturas das imagens" width="720" height="450" loading="lazy">
+        <span>em ícones</span>
+    </button>
+  </div>
+  <button class="shot showcase-shot" type="button" data-full="{{rel}}assets/screenshots/files-columns.webp" data-label="o octopus files em colunas, dentro de um repositório git">
+    <img src="{{rel}}assets/screenshots/thumbs/files-columns.webp" alt="o octopus files em colunas: as pastas desde a raiz, a barra do git com a branch e o commit, e uma imagem na prévia" width="720" height="450" loading="lazy">
+  </button>
+</section>
+
+<section class="showcase flip" id="reminders" data-reveal>
+  <div class="showcase-text">
+    <span class="shape-badge big tone-c" data-shape="sunny" data-hover="burst"><span class="symbol">alarm</span></span>
+    <h2>lembretes, digitados</h2>
+    <p class="lead">um <code>!</code> no spotlight cria um: <code>!10 min chá</code>, <code>!18h pão</code>, <code>!amanhã às 9 dentista</code>, <code>!alarme 6:45</code>. em português ou inglês.</p>
+    <ul class="points">
+      <li><span class="symbol">notifications_active</span><span>um aviso na hora, pra adiar ou dispensar; um alarme toca até você responder</span></li>
+      <li><span class="symbol">repeat</span><span>um appzinho lista, edita e faz eles repetirem</span></li>
+      <li><span class="symbol">power_settings_new</span><span>um daemon dentro do shell, que dá pra desligar</span></li>
+    </ul>
+    <button class="shot showcase-inset" type="button" data-full="{{rel}}assets/screenshots/launcher-remind.webp" data-label="um lembrete pelo spotlight">
+      <img src="{{rel}}assets/screenshots/thumbs/launcher-remind.webp" alt="o spotlight com !10 min tea digitado, mostrando quando vai tocar" width="720" height="450" loading="lazy">
+        <span>pelo spotlight</span>
+    </button>
+  </div>
+  <button class="shot showcase-shot" type="button" data-full="{{rel}}assets/screenshots/reminders.webp" data-label="o app de lembretes">
+    <img src="{{rel}}assets/screenshots/thumbs/reminders.webp" alt="o app de lembretes: uma lista de lembretes e alarmes com switches" width="720" height="450" loading="lazy">
+  </button>
 </section>
 
 <section class="showcase" id="bar-editor" data-reveal>
@@ -63,6 +106,7 @@
     <ul class="points">
       <li><span class="symbol">open_with</span><span>arraste um widget pra mover, o canto pra mudar o tamanho</span></li>
       <li><span class="symbol">business_center</span><span>a maleta embaixo guarda o resto: arraste um pra fora, ou solte um de volta</span></li>
+      <li><span class="symbol">visibility_off</span><span>embaixo de uma janela, o widget some e para de atualizar até ela sair</span></li>
       <li><span class="symbol">keyboard</span><span><kbd>esc</kbd> ou <em>pronto</em> devolve eles pra baixo das janelas</span></li>
     </ul>
     <button class="shot showcase-inset" type="button" data-full="{{rel}}assets/screenshots/desktop-arrange.webp" data-label="organizando os widgets, com a maleta">

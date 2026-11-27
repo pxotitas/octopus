@@ -4,26 +4,36 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>some features · octopus</title>
-  <meta name="description" content="a cozy material 3 shell for niri: a vertical waybar and a rust + gtk4 companion.">
+  <meta name="description" content="the octopus shell&#x27;s features in real screenshots: octopus files, reminders, the bar editor, your own modules, desktop widgets, the calendar, colors from the wallpaper, the lock screen and the weather.">
+  <link rel="canonical" href="https://pxotitas.github.io/octopus/features/">
+  <meta name="author" content="pxotitas">
   <meta name="theme-color" content="#fdfbef" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#14140c" media="(prefers-color-scheme: dark)">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="octopus">
   <meta property="og:title" content="some features · octopus">
-  <meta property="og:description" content="a cozy material 3 shell for niri: a vertical waybar and a rust + gtk4 companion.">
+  <meta property="og:description" content="the octopus shell&#x27;s features in real screenshots: octopus files, reminders, the bar editor, your own modules, desktop widgets, the calendar, colors from the wallpaper, the lock screen and the weather.">
   <meta property="og:url" content="https://pxotitas.github.io/octopus/features/">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="pt_BR">
   <meta property="og:image" content="https://pxotitas.github.io/octopus/assets/banner.png">
   <meta property="og:image:width" content="1280">
   <meta property="og:image:height" content="640">
+  <meta property="og:image:alt" content="octopus: a vertical bar, the dash and desktop widgets in the wallpaper's colors">
   <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="some features · octopus">
+  <meta name="twitter:description" content="the octopus shell&#x27;s features in real screenshots: octopus files, reminders, the bar editor, your own modules, desktop widgets, the calendar, colors from the wallpaper, the lock screen and the weather.">
+  <meta name="twitter:image" content="https://pxotitas.github.io/octopus/assets/banner.png">
   <link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+  <link rel="alternate" hreflang="en" href="https://pxotitas.github.io/octopus/features/">
   <link rel="alternate" hreflang="pt-BR" href="https://pxotitas.github.io/octopus/pt/features/">
+  <link rel="alternate" hreflang="x-default" href="https://pxotitas.github.io/octopus/features/">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,400..600,0..1,0&display=block" rel="stylesheet">
-  <link rel="stylesheet" href="../style.css?v=ed06ee64">
-  <link rel="stylesheet" href="../features.css?v=facfaf02">
+  <link rel="stylesheet" href="../style.css?v=74fde18b">
+  <link rel="stylesheet" href="../features.css?v=69eef30c">
 </head>
 <body>
 <header class="top">
@@ -50,6 +60,8 @@
   <h1>some features</h1>
   <p class="lead">the parts of octopus that are nicer to see than to read about. every picture here is a real screenshot; click one to see it full size.</p>
   <nav class="jump" aria-label="on this page">
+    <a class="chip new" href="#files"><span class="symbol">folder_open</span>octopus files</a>
+    <a class="chip new" href="#reminders"><span class="symbol">alarm</span>reminders</a>
     <a class="chip" href="#bar-editor"><span class="symbol">side_navigation</span>bar editor</a>
     <a class="chip" href="#modules"><span class="symbol">construction</span>your own modules</a>
     <a class="chip" href="#presets"><span class="symbol">view_column</span>bar presets</a>
@@ -59,6 +71,47 @@
     <a class="chip" href="#lock"><span class="symbol">lock</span>lock screen</a>
     <a class="chip" href="#weather"><span class="symbol">partly_cloudy_day</span>ask the weather</a>
   </nav>
+</section>
+
+<section class="showcase" id="files" data-reveal>
+  <div class="showcase-text">
+    <span class="shape-badge big" data-shape="cookie9" data-hover="flower"><span class="symbol">folder_open</span></span>
+    <h2>octopus files</h2>
+    <p class="lead">a file manager in the same m3 look, after the macos finder: icons, a list, or columns that open each folder beside the last, with a preview of the file you pick.</p>
+    <ul class="points">
+      <li><span class="symbol">commit</span><span>inside a repository: the branch, what changed, what's only local, pull, push and a simple commit. clone from an address or from your github</span></li>
+      <li><span class="symbol">send_to_mobile</span><span>send files to a phone with localsend, browse computers on the network, mount google drive with rclone</span></li>
+      <li><span class="symbol">visibility</span><span>quick look on <kbd>space</kbd>, colored tags, bookmarks, tabs, undo, compress and extract</span></li>
+      <li><span class="symbol">bolt</span><span>searching every folder below goes through <code>fd</code>, skipping <code>.git</code>, <code>node_modules</code> and <code>target</code></span></li>
+    </ul>
+    <button class="shot showcase-inset" type="button" data-full="../assets/screenshots/files.webp" data-label="octopus files, as icons">
+      <img src="../assets/screenshots/thumbs/files.webp" alt="octopus files as icons, with picture thumbnails" width="720" height="450" loading="lazy">
+        <span>as icons</span>
+    </button>
+  </div>
+  <button class="shot showcase-shot" type="button" data-full="../assets/screenshots/files-columns.webp" data-label="octopus files in columns, inside a git repository">
+    <img src="../assets/screenshots/thumbs/files-columns.webp" alt="octopus files in columns: the folders from the root down, the git bar with the branch and commit, and a picture previewed" width="720" height="450" loading="lazy">
+  </button>
+</section>
+
+<section class="showcase flip" id="reminders" data-reveal>
+  <div class="showcase-text">
+    <span class="shape-badge big tone-c" data-shape="sunny" data-hover="burst"><span class="symbol">alarm</span></span>
+    <h2>reminders, typed</h2>
+    <p class="lead">a <code>!</code> in the spotlight makes one: <code>!10 min tea</code>, <code>!18h bread</code>, <code>!tomorrow at 9 dentist</code>, <code>!alarm 6:45</code>. in english or portuguese.</p>
+    <ul class="points">
+      <li><span class="symbol">notifications_active</span><span>a toast on time, to snooze or dismiss; an alarm keeps ringing until you answer</span></li>
+      <li><span class="symbol">repeat</span><span>a small app lists them, edits them and makes them repeat</span></li>
+      <li><span class="symbol">power_settings_new</span><span>a daemon inside the shell that you can turn off</span></li>
+    </ul>
+    <button class="shot showcase-inset" type="button" data-full="../assets/screenshots/launcher-remind.webp" data-label="a reminder from the spotlight">
+      <img src="../assets/screenshots/thumbs/launcher-remind.webp" alt="the spotlight with !10 min tea typed, showing when it will ring" width="720" height="450" loading="lazy">
+        <span>from the spotlight</span>
+    </button>
+  </div>
+  <button class="shot showcase-shot" type="button" data-full="../assets/screenshots/reminders.webp" data-label="the reminders app">
+    <img src="../assets/screenshots/thumbs/reminders.webp" alt="the reminders app: a list of reminders and alarms with switches" width="720" height="450" loading="lazy">
+  </button>
 </section>
 
 <section class="showcase" id="bar-editor" data-reveal>
@@ -112,6 +165,7 @@
       <li><span class="symbol">open_with</span><span>drag a widget to move it, its corner to resize it</span></li>
       <li><span class="symbol">business_center</span><span>the case at the bottom holds the rest: drag one out, or drop one back</span></li>
       <li><span class="symbol">keyboard</span><span><kbd>esc</kbd> or <em>done</em> puts them back under the windows</span></li>
+      <li><span class="symbol">visibility_off</span><span>under a window, a widget fades out and stops updating until the window goes</span></li>
     </ul>
     <button class="shot showcase-inset" type="button" data-full="../assets/screenshots/desktop-arrange.webp" data-label="arranging widgets, with the case">
       <img src="../assets/screenshots/thumbs/desktop-arrange.webp" alt="arranging the widgets: outlines, handles and the case at the bottom" width="720" height="450" loading="lazy">
@@ -212,7 +266,7 @@
 <footer>
   <p>gpl-3.0-or-later · made by <a href="https://github.com/pxotitas">pxotitas</a>, with parts from <a href="https://github.com/andreumassanet/impasto">impasto</a> and <a href="https://github.com/pxdritz1/velatura">velatura</a>.</p>
 </footer>
-<script src="../reveal.js?v=803f244c" defer></script>
+<script src="../reveal.js?v=d61e4d67" defer></script>
 <script src="../media.js?v=e0d8a952" defer></script>
 <script src="../weather-demo.js?v=cfa96bf6" defer></script>
 <script src="../motion.js?v=3a80b21e" defer></script>

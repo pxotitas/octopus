@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>https://pxotitas.github.io/octopus/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pxotitas.github.io/octopus/"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://pxotitas.github.io/octopus/pt/"/>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://pxotitas.github.io/octopus/features/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pxotitas.github.io/octopus/features/"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://pxotitas.github.io/octopus/pt/features/"/>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://pxotitas.github.io/octopus/media/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pxotitas.github.io/octopus/media/"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://pxotitas.github.io/octopus/pt/media/"/>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://pxotitas.github.io/octopus/changelog/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pxotitas.github.io/octopus/changelog/"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://pxotitas.github.io/octopus/pt/changelog/"/>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://pxotitas.github.io/octopus/docs/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pxotitas.github.io/octopus/docs/"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://pxotitas.github.io/octopus/pt/docs/"/>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://pxotitas.github.io/octopus/docs/structure.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pxotitas.github.io/octopus/docs/structure.html"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://pxotitas.github.io/octopus/pt/docs/estrutura.html"/>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://pxotitas.github.io/octopus/docs/shortcuts.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pxotitas.github.io/octopus/docs/shortcuts.html"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://pxotitas.github.io/octopus/pt/docs/atalhos.html"/>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://pxotitas.github.io/octopus/docs/configuration.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pxotitas.github.io/octopus/docs/configuration.html"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://pxotitas.github.io/octopus/pt/docs/configuracao.html"/>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://pxotitas.github.io/octopus/docs/theme.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pxotitas.github.io/octopus/docs/theme.html"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://pxotitas.github.io/octopus/pt/docs/tema.html"/>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://pxotitas.github.io/octopus/docs/troubleshooting.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pxotitas.github.io/octopus/docs/troubleshooting.html"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://pxotitas.github.io/octopus/pt/docs/problemas.html"/>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://pxotitas.github.io/octopus/pt/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pxotitas.github.io/octopus/"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://pxotitas.github.io/octopus/pt/"/>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://pxotitas.github.io/octopus/pt/features/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pxotitas.github.io/octopus/features/"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://pxotitas.github.io/octopus/pt/features/"/>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://pxotitas.github.io/octopus/pt/media/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pxotitas.github.io/octopus/media/"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://pxotitas.github.io/octopus/pt/media/"/>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://pxotitas.github.io/octopus/pt/changelog/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pxotitas.github.io/octopus/changelog/"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://pxotitas.github.io/octopus/pt/changelog/"/>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://pxotitas.github.io/octopus/pt/docs/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pxotitas.github.io/octopus/docs/"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://pxotitas.github.io/octopus/pt/docs/"/>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://pxotitas.github.io/octopus/pt/docs/estrutura.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pxotitas.github.io/octopus/docs/structure.html"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://pxotitas.github.io/octopus/pt/docs/estrutura.html"/>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://pxotitas.github.io/octopus/pt/docs/atalhos.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pxotitas.github.io/octopus/docs/shortcuts.html"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://pxotitas.github.io/octopus/pt/docs/atalhos.html"/>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://pxotitas.github.io/octopus/pt/docs/configuracao.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pxotitas.github.io/octopus/docs/configuration.html"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://pxotitas.github.io/octopus/pt/docs/configuracao.html"/>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://pxotitas.github.io/octopus/pt/docs/tema.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pxotitas.github.io/octopus/docs/theme.html"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://pxotitas.github.io/octopus/pt/docs/tema.html"/>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://pxotitas.github.io/octopus/pt/docs/problemas.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pxotitas.github.io/octopus/docs/troubleshooting.html"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://pxotitas.github.io/octopus/pt/docs/problemas.html"/>
+    <priority>0.7</priority>
+  </url>
+</urlset>

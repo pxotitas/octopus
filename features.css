@@ -9,6 +9,14 @@
 
 .jump .chip { text-decoration: none; }
 
+.jump .chip.new {
+  background: var(--tertiary-container);
+  color: var(--on-tertiary-container);
+  border-color: transparent;
+}
+
+.jump .chip.new .symbol { color: inherit; }
+
 .showcase {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr);

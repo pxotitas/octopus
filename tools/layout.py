@@ -1,6 +1,8 @@
 """The shell every page shares: head, navbar and footer, in both languages."""
 
 import hashlib
+import html
+import json
 import pathlib
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
@@ -13,7 +15,9 @@ LANGS = {
         "root": "",
         "html": "en",
         "tagline": "a cozy m3 shell for niri",
-        "description": "a cozy material 3 shell for niri: a vertical waybar and a rust + gtk4 companion.",
+        "description": "octopus is a cozy material 3 desktop shell for the niri wayland compositor: a vertical waybar and a rust + gtk4 companion with a dash, control center, desktop widgets, a file manager and reminders, in your wallpaper's colors.",
+        "locale": "en_US",
+        "image_alt": "octopus: a vertical bar, the dash and desktop widgets in the wallpaper's colors",
         "nav": {"features": "some features", "docs": "docs", "media": "media", "changelog": "changelog"},
         "switch": "português",
         "footer": "gpl-3.0-or-later · made by {me}, with parts from {impasto} and {velatura}.",
@@ -22,7 +26,9 @@ LANGS = {
         "root": "pt/",
         "html": "pt-BR",
         "tagline": "um shell m3 cozy pro niri",
-        "description": "um shell material 3 cozy pro niri: uma waybar vertical e um companion em rust + gtk4.",
+        "description": "octopus é um shell material 3 cozy pro compositor wayland niri: uma waybar vertical e um companion em rust + gtk4 com dash, central de controle, widgets, gerenciador de arquivos e lembretes, nas cores do seu wallpaper.",
+        "locale": "pt_BR",
+        "image_alt": "octopus: uma barra vertical, o dash e widgets na área de trabalho nas cores do wallpaper",
         "nav": {"features": "algumas features", "docs": "docs", "media": "mídia", "changelog": "changelog"},
         "switch": "english",
         "footer": "gpl-3.0-or-later · feito por {me}, com partes do {impasto} e do {velatura}.",
@@ -38,15 +44,53 @@ def versioned(name):
     return f"{name}?v={digest}"
 
 
-def page(lang, path, title, body, other, section=None, scripts=(), base=None, styles=()):
+def structured(lang):
+    """What search engines read about the project, on the home pages."""
+    t = LANGS[lang]
+    data = [
+        {
+            "@context": "https://schema.org",
+            "@type": "SoftwareApplication",
+            "name": "octopus",
+            "description": t["description"],
+            "applicationCategory": "UtilitiesApplication",
+            "applicationSubCategory": "Desktop shell",
+            "operatingSystem": "Linux (niri, Wayland)",
+            "inLanguage": ["en", "pt-BR"],
+            "license": "https://www.gnu.org/licenses/gpl-3.0.html",
+            "url": SITE + t["root"],
+            "downloadUrl": REPO,
+            "codeRepository": REPO,
+            "screenshot": SITE + "assets/screenshots/dash.webp",
+            "image": SITE + "assets/banner.png",
+            "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"},
+            "author": {"@type": "Person", "name": "pxotitas", "url": "https://github.com/pxotitas"},
+        },
+        {
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            "name": "octopus",
+            "url": SITE,
+            "inLanguage": t["html"],
+        },
+    ]
+    return "".join(f'\n  <script type="application/ld+json">{json.dumps(d, ensure_ascii=False)}</script>' for d in data)
+
+
+def page(lang, path, title, body, other, section=None, scripts=(), base=None, styles=(), description=None, landing=False, index=True):
     """path: where the page is written, from the site root (e.g. "pt/docs/tema.html").
     other: the same page in the other language, from the site root.
-    base: an absolute prefix for pages served from any path, like the 404."""
+    base: an absolute prefix for pages served from any path, like the 404.
+    description: this page's own, for search results; the project's otherwise."""
     t = LANGS[lang]
+    about = html.escape(description or t["description"], quote=True)
     rel = base or "../" * path.count("/")
     home = rel + t["root"]
     full_title = f"{title} · octopus" if title else f"octopus · {t['tagline']}"
     url = SITE + path.removesuffix("index.html")
+    twin_url = SITE + other.removesuffix("index.html")
+    en_url, pt_url = (url, twin_url) if lang == "en" else (twin_url, url)
+    other_t = LANGS["pt" if lang == "en" else "en"]
 
     links = []
     for key, sub in SECTIONS.items():
@@ -69,25 +113,35 @@ def page(lang, path, title, body, other, section=None, scripts=(), base=None, st
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{full_title}</title>
-  <meta name="description" content="{t['description']}">
+  <meta name="description" content="{about}">{"" if index else chr(10) + '  <meta name="robots" content="noindex">'}
+  <link rel="canonical" href="{url}">
+  <meta name="author" content="pxotitas">
   <meta name="theme-color" content="#fdfbef" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#14140c" media="(prefers-color-scheme: dark)">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="octopus">
   <meta property="og:title" content="{full_title}">
-  <meta property="og:description" content="{t['description']}">
+  <meta property="og:description" content="{about}">
   <meta property="og:url" content="{url}">
+  <meta property="og:locale" content="{t['locale']}">
+  <meta property="og:locale:alternate" content="{other_t['locale']}">
   <meta property="og:image" content="{SITE}assets/banner.png">
   <meta property="og:image:width" content="1280">
   <meta property="og:image:height" content="640">
+  <meta property="og:image:alt" content="{t['image_alt']}">
   <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{full_title}">
+  <meta name="twitter:description" content="{about}">
+  <meta name="twitter:image" content="{SITE}assets/banner.png">
   <link rel="icon" href="{rel}assets/logo.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="{rel}assets/apple-touch-icon.png">
-  <link rel="alternate" hreflang="{'pt-BR' if lang == 'en' else 'en'}" href="{SITE}{other.removesuffix('index.html')}">
+  <link rel="alternate" hreflang="en" href="{en_url}">
+  <link rel="alternate" hreflang="pt-BR" href="{pt_url}">
+  <link rel="alternate" hreflang="x-default" href="{en_url}">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,400..600,0..1,0&display=block" rel="stylesheet">
-  <link rel="stylesheet" href="{rel}{versioned('style.css')}">{sheets}
+  <link rel="stylesheet" href="{rel}{versioned('style.css')}">{sheets}{structured(lang) if landing else ""}
 </head>
 <body>
 <header class="top">

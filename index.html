@@ -4,25 +4,37 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>octopus · a cozy m3 shell for niri</title>
-  <meta name="description" content="a cozy material 3 shell for niri: a vertical waybar and a rust + gtk4 companion.">
+  <meta name="description" content="octopus is a cozy material 3 desktop shell for the niri wayland compositor: a vertical waybar and a rust + gtk4 companion with a dash, control center, desktop widgets, a file manager and reminders, in your wallpaper&#x27;s colors.">
+  <link rel="canonical" href="https://pxotitas.github.io/octopus/">
+  <meta name="author" content="pxotitas">
   <meta name="theme-color" content="#fdfbef" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#14140c" media="(prefers-color-scheme: dark)">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="octopus">
   <meta property="og:title" content="octopus · a cozy m3 shell for niri">
-  <meta property="og:description" content="a cozy material 3 shell for niri: a vertical waybar and a rust + gtk4 companion.">
+  <meta property="og:description" content="octopus is a cozy material 3 desktop shell for the niri wayland compositor: a vertical waybar and a rust + gtk4 companion with a dash, control center, desktop widgets, a file manager and reminders, in your wallpaper&#x27;s colors.">
   <meta property="og:url" content="https://pxotitas.github.io/octopus/">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="pt_BR">
   <meta property="og:image" content="https://pxotitas.github.io/octopus/assets/banner.png">
   <meta property="og:image:width" content="1280">
   <meta property="og:image:height" content="640">
+  <meta property="og:image:alt" content="octopus: a vertical bar, the dash and desktop widgets in the wallpaper's colors">
   <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="octopus · a cozy m3 shell for niri">
+  <meta name="twitter:description" content="octopus is a cozy material 3 desktop shell for the niri wayland compositor: a vertical waybar and a rust + gtk4 companion with a dash, control center, desktop widgets, a file manager and reminders, in your wallpaper&#x27;s colors.">
+  <meta name="twitter:image" content="https://pxotitas.github.io/octopus/assets/banner.png">
   <link rel="icon" href="assets/logo.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+  <link rel="alternate" hreflang="en" href="https://pxotitas.github.io/octopus/">
   <link rel="alternate" hreflang="pt-BR" href="https://pxotitas.github.io/octopus/pt/">
+  <link rel="alternate" hreflang="x-default" href="https://pxotitas.github.io/octopus/">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,400..600,0..1,0&display=block" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=ed06ee64">
+  <link rel="stylesheet" href="style.css?v=74fde18b">
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "SoftwareApplication", "name": "octopus", "description": "octopus is a cozy material 3 desktop shell for the niri wayland compositor: a vertical waybar and a rust + gtk4 companion with a dash, control center, desktop widgets, a file manager and reminders, in your wallpaper's colors.", "applicationCategory": "UtilitiesApplication", "applicationSubCategory": "Desktop shell", "operatingSystem": "Linux (niri, Wayland)", "inLanguage": ["en", "pt-BR"], "license": "https://www.gnu.org/licenses/gpl-3.0.html", "url": "https://pxotitas.github.io/octopus/", "downloadUrl": "https://github.com/pxotitas/octopus", "codeRepository": "https://github.com/pxotitas/octopus", "screenshot": "https://pxotitas.github.io/octopus/assets/screenshots/dash.webp", "image": "https://pxotitas.github.io/octopus/assets/banner.png", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "author": {"@type": "Person", "name": "pxotitas", "url": "https://github.com/pxotitas"}}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebSite", "name": "octopus", "url": "https://pxotitas.github.io/octopus/", "inLanguage": "en"}</script>
 </head>
 <body>
 <header class="top">
@@ -45,39 +57,95 @@
   </nav>
 </header>
 <main>
+
 <section class="hero">
-  <div>
-    <h1>octopus</h1>
-    <p>a cozy m3 shell for niri. a minimal vertical bar on waybar, and
-    everything bigger in a companion written in rust + gtk4.</p>
-    <div class="actions">
+  <span class="drift one shape-badge tone-c" data-shape="flower" aria-hidden="true"></span>
+  <span class="drift two shape-badge tone-b" data-shape="cookie9" aria-hidden="true"></span>
+  <span class="drift three shape-badge" data-shape="clover4" aria-hidden="true"></span>
+  <div class="hero-text">
+    <h1 class="intro" style="--d: 0">octopus</h1>
+    <p class="intro" style="--d: 1">a cozy <strong>material 3</strong> shell for <strong>niri</strong>. a minimal vertical bar on waybar, and
+    everything bigger in a companion written in rust + gtk4: a dash, a control center, desktop widgets, a file manager and reminders, all in your wallpaper's colors.</p>
+    <div class="actions intro" style="--d: 2">
       <a class="button filled" href="#install"><span class="symbol">download</span>install</a>
       <a class="button tonal" href="docs/"><span class="symbol">menu_book</span>read the docs</a>
       <a class="button text" href="media/">see it move</a>
     </div>
-    <div class="tags">
+    <div class="tags intro" style="--d: 3">
       <span class="chip"><span class="symbol">memory</span>rust + gtk4</span>
       <span class="chip"><span class="symbol">view_sidebar</span>waybar</span>
       <span class="chip"><span class="symbol">palette</span>matugen</span>
       <span class="chip"><span class="symbol">grid_view</span>niri</span>
     </div>
   </div>
-  <div class="shapes" title="press any key">
+  <div class="shapes intro" style="--d: 2" title="press any key">
     <div class="shape hours"><span>00</span></div>
     <div class="shape minutes"><span>00</span></div>
   </div>
 </section>
 
+<section class="highlights" data-reveal data-stagger aria-label="at a glance">
+  <div class="highlight">
+    <strong><span data-count="45">45</span> mb</strong>
+    <span>the whole shell, idle</span>
+  </div>
+  <div class="highlight">
+    <strong><span data-count="20">20</span> shapes</strong>
+    <span>m3 expressive, morphing into each other</span>
+  </div>
+  <div class="highlight">
+    <strong><span data-count="0">0</span> frames</strong>
+    <span>drawn for widgets under your windows</span>
+  </div>
+  <div class="highlight">
+    <strong><span data-count="2">2</span> languages</strong>
+    <span>english and portuguese, everywhere</span>
+  </div>
+</section>
+
 <figure class="stage">
-  <img src="assets/screenshots/dash.webp" alt="the dash: a navigation rail, the clock, an analog clock on a cookie, the calendar, the notifications and the weather" width="1440" height="900">
+  <img src="assets/screenshots/dash.webp" alt="the dash: a navigation rail, the clock, an analog clock on a cookie, the calendar, the notifications and the weather" width="1440" height="900" fetchpriority="high">
   <figcaption>the dash: a navigation rail, an analog clock on a cookie, the notifications and the weather side by side.</figcaption>
 </figure>
 
-<section class="teaser">
+<section class="news" data-reveal>
+  <div class="news-head">
+    <span class="new-chip"><span class="symbol">fiber_new</span>new</span>
+    <h2>new in octopus</h2>
+    <p class="lead">a file manager of its own, reminders you type in the spotlight, and a shell that gets out of the way.</p>
+  </div>
+  <div class="bento" data-stagger>
+    <a class="tile big" href="features/#files">
+      <img src="assets/screenshots/thumbs/files-columns.webp" alt="octopus files in columns, inside a git repository, with a picture previewed" width="720" height="450" loading="lazy">
+      <div>
+        <span class="shape-badge tone-a" data-shape="cookie9" data-hover="flower"><span class="symbol">folder_open</span></span>
+        <h3>octopus files</h3>
+        <p>a file manager after the finder: icons, list and columns, quick look, tags, tabs. it clones a repository, commits and pushes, and sends files to your phone with localsend.</p>
+      </div>
+    </a>
+    <a class="tile" href="features/#reminders">
+      <span class="shape-badge tone-c" data-shape="sunny" data-hover="burst"><span class="symbol">alarm</span></span>
+      <h3>reminders</h3>
+      <p>type <code>!10 min tea</code> or <code>!alarm 6:45</code> in the spotlight. a toast rings on time; an alarm keeps ringing until you answer.</p>
+    </a>
+    <a class="tile" href="docs/configuration.html#control-center">
+      <span class="shape-badge tone-b" data-shape="clover4" data-hover="clover8"><span class="symbol">tune</span></span>
+      <h3>control center, your way</h3>
+      <p>every section, tile and slider can go or move. a caffeine tile keeps the screen awake.</p>
+    </a>
+    <a class="tile" href="features/#widgets">
+      <span class="shape-badge" data-shape="puffy" data-hover="softburst"><span class="symbol">visibility_off</span></span>
+      <h3>widgets that step aside</h3>
+      <p>a widget under a window fades out and stops updating; with all of them covered, the layer goes away.</p>
+    </a>
+  </div>
+</section>
+
+<section class="teaser" data-reveal>
   <span class="shape-badge big tone-c" data-shape="sunny" data-hover="burst"><span class="symbol">auto_awesome</span></span>
   <div>
     <h2>some features</h2>
-    <p class="lead">the bar editor, widgets you arrange on the desktop, palette styles and the
+    <p class="lead">the file manager, the bar editor, widgets you arrange on the desktop, palette styles and the
     weather that answers questions, in real screenshots.</p>
   </div>
   <a class="button tonal" href="features/"><span class="symbol">arrow_forward</span>see them</a>
@@ -85,46 +153,46 @@
 
 <h2>what's inside</h2>
 <p class="lead">opaque, tonal surfaces in m3 shapes. colors from the wallpaper. light enough to idle around 45 mb.</p>
-<div class="features">
+<div class="features" data-reveal data-stagger>
   <a class="feature" href="media/#shots-shell">
-    <img src="assets/features/dash.webp" alt="" loading="lazy">
+    <img src="assets/features/dash.webp" alt="" width="640" height="400" loading="lazy">
     <span class="shape-badge tone-a" data-shape="cookie9" data-hover="flower"><span class="symbol">dashboard</span></span>
     <h3>dash</h3>
     <p>a navigation rail, an analog clock, the calendar, the music with its lyrics, the notifications, the weather and a wallpaper picker.</p>
   </a>
   <a class="feature" href="media/#shots-weather">
-    <img src="assets/features/weather.webp" alt="" loading="lazy">
+    <img src="assets/features/weather.webp" alt="" width="640" height="400" loading="lazy">
     <span class="shape-badge tone-c" data-shape="sunny" data-hover="verysunny"><span class="symbol">partly_cloudy_day</span></span>
     <h3>weather</h3>
     <p>metrics in m3 shapes, the sun's arc and the moon, hour by hour, and any day from a week back to two ahead.</p>
   </a>
   <a class="feature" href="media/#shots-shell">
-    <img src="assets/features/desktop.webp" alt="" loading="lazy">
+    <img src="assets/features/desktop.webp" alt="" width="640" height="400" loading="lazy">
     <span class="shape-badge tone-b" data-shape="puffy" data-hover="softburst"><span class="symbol">widgets</span></span>
     <h3>desktop widgets</h3>
     <p>under the windows: the weather, your github contributions, a clock, the music, a calendar. right-click the desktop to arrange them.</p>
   </a>
   <a class="feature" href="media/#shots-shell">
-    <img src="assets/features/control-center.webp" alt="" loading="lazy">
+    <img src="assets/features/control-center.webp" alt="" width="640" height="400" loading="lazy">
     <span class="shape-badge tone-a" data-shape="clover4" data-hover="clover8"><span class="symbol">tune</span></span>
     <h3>control center</h3>
-    <p>wi-fi, bluetooth, sound, brightness, media and notifications, in one place.</p>
+    <p>wi-fi, bluetooth, sound, brightness, media and notifications, in one place, in the order you choose.</p>
   </a>
   <a class="feature" href="media/#shots-launchers">
-    <img src="assets/features/spotlight.webp" alt="" loading="lazy">
+    <img src="assets/features/spotlight.webp" alt="" width="640" height="400" loading="lazy">
     <span class="shape-badge tone-b" data-shape="cookie6" data-hover="burst"><span class="symbol">search</span></span>
     <h3>spotlight</h3>
-    <p>apps and their actions, a calculator, files behind <code>/</code>, power behind <code>&gt;</code>.</p>
+    <p>apps and their actions, a calculator, files behind <code>/</code>, reminders behind <code>!</code>, power behind <code>&gt;</code>.</p>
   </a>
   <a class="feature" href="media/#lock">
-    <img src="assets/features/lock.webp" alt="" loading="lazy">
+    <img src="assets/features/lock.webp" alt="" width="640" height="400" loading="lazy">
     <span class="shape-badge tone-c" data-shape="cookie12" data-hover="pentagon"><span class="symbol">lock</span></span>
     <h3>lock screen</h3>
     <p>m3 shapes that turn and change at every key, the lyric being sung, the weather.</p>
   </a>
 </div>
 
-<section class="split">
+<section class="split" data-reveal>
   <div>
     <span class="shape-badge big tone-a" data-shape="flower" data-hover="cookie9"><span class="symbol">palette</span></span>
     <h2>it wears your wallpaper</h2>
@@ -137,14 +205,15 @@
 </section>
 
 <h2 id="install">install</h2>
-<p class="lead">on arch (or anything with these packages), the repo lives in <code>~/.config/octopus</code> itself.</p>
-<pre><code>git clone https://github.com/pxotitas/octopus ~/.config/octopus
+<p class="lead">on arch (or anything with these packages), the repo lives in <code>~/.config/octopus</code> itself. the installer asks before the optional parts, like octopus files.</p>
+<pre class="copyable"><code>git clone https://github.com/pxotitas/octopus ~/.config/octopus
 ~/.config/octopus/install.sh</code></pre>
 <p class="lead">then, at the end of <code>~/.config/niri/config.kdl</code>:</p>
-<pre><code>include "~/.config/octopus/niri.kdl"</code></pre>
+<pre class="copyable"><code>include "~/.config/octopus/niri.kdl"</code></pre>
 <details class="deps">
   <summary>dependencies</summary>
   <p><code>pam waybar matugen matuwall awww cliphist wl-clipboard wtype playerctl cava brightnessctl networkmanager bluez-utils libpulse python python-dateutil unicode-emoji unicode-cldr fd gcc rofi gtk3 gtk4 gtk4-layer-shell ttf-material-symbols-variable rust</code></p>
+  <p>optional, for octopus files: <code>git github-cli avahi gvfs ffmpegthumbnailer unzip zip rclone</code></p>
 </details>
 <p class="lead next">next: <a href="docs/shortcuts.html">the shortcuts</a> and <a href="docs/configuration.html">what you can change</a>.</p>
 
@@ -153,6 +222,8 @@
   <p>gpl-3.0-or-later · made by <a href="https://github.com/pxotitas">pxotitas</a>, with parts from <a href="https://github.com/andreumassanet/impasto">impasto</a> and <a href="https://github.com/pxdritz1/velatura">velatura</a>.</p>
 </footer>
 <script src="shapes.js?v=c5729380" defer></script>
+<script src="reveal.js?v=d61e4d67" defer></script>
+<script src="home.js?v=0028ee2d" defer></script>
 <script src="motion.js?v=3a80b21e" defer></script>
 <script src="m3.js?v=63651a75" defer></script>
 </body>

@@ -4,26 +4,36 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>algumas features · octopus</title>
-  <meta name="description" content="um shell material 3 cozy pro niri: uma waybar vertical e um companion em rust + gtk4.">
+  <meta name="description" content="as features do shell octopus em screenshots de verdade: octopus files, lembretes, o editor da barra, módulos próprios, widgets, a agenda, cores do wallpaper, a tela de bloqueio e o clima.">
+  <link rel="canonical" href="https://pxotitas.github.io/octopus/pt/features/">
+  <meta name="author" content="pxotitas">
   <meta name="theme-color" content="#fdfbef" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#14140c" media="(prefers-color-scheme: dark)">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="octopus">
   <meta property="og:title" content="algumas features · octopus">
-  <meta property="og:description" content="um shell material 3 cozy pro niri: uma waybar vertical e um companion em rust + gtk4.">
+  <meta property="og:description" content="as features do shell octopus em screenshots de verdade: octopus files, lembretes, o editor da barra, módulos próprios, widgets, a agenda, cores do wallpaper, a tela de bloqueio e o clima.">
   <meta property="og:url" content="https://pxotitas.github.io/octopus/pt/features/">
+  <meta property="og:locale" content="pt_BR">
+  <meta property="og:locale:alternate" content="en_US">
   <meta property="og:image" content="https://pxotitas.github.io/octopus/assets/banner.png">
   <meta property="og:image:width" content="1280">
   <meta property="og:image:height" content="640">
+  <meta property="og:image:alt" content="octopus: uma barra vertical, o dash e widgets na área de trabalho nas cores do wallpaper">
   <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="algumas features · octopus">
+  <meta name="twitter:description" content="as features do shell octopus em screenshots de verdade: octopus files, lembretes, o editor da barra, módulos próprios, widgets, a agenda, cores do wallpaper, a tela de bloqueio e o clima.">
+  <meta name="twitter:image" content="https://pxotitas.github.io/octopus/assets/banner.png">
   <link rel="icon" href="../../assets/logo.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png">
   <link rel="alternate" hreflang="en" href="https://pxotitas.github.io/octopus/features/">
+  <link rel="alternate" hreflang="pt-BR" href="https://pxotitas.github.io/octopus/pt/features/">
+  <link rel="alternate" hreflang="x-default" href="https://pxotitas.github.io/octopus/features/">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,400..600,0..1,0&display=block" rel="stylesheet">
-  <link rel="stylesheet" href="../../style.css?v=ed06ee64">
-  <link rel="stylesheet" href="../../features.css?v=facfaf02">
+  <link rel="stylesheet" href="../../style.css?v=74fde18b">
+  <link rel="stylesheet" href="../../features.css?v=69eef30c">
 </head>
 <body>
 <header class="top">
@@ -50,6 +60,8 @@
   <h1>algumas features</h1>
   <p class="lead">as partes do octopus que são mais legais de ver do que de ler. toda imagem aqui é uma screenshot de verdade; clica numa pra ver em tamanho real.</p>
   <nav class="jump" aria-label="nessa página">
+    <a class="chip new" href="#files"><span class="symbol">folder_open</span>octopus files</a>
+    <a class="chip new" href="#reminders"><span class="symbol">alarm</span>lembretes</a>
     <a class="chip" href="#bar-editor"><span class="symbol">side_navigation</span>editor da barra</a>
     <a class="chip" href="#modules"><span class="symbol">construction</span>módulos seus</a>
     <a class="chip" href="#presets"><span class="symbol">view_column</span>presets da barra</a>
@@ -59,6 +71,47 @@
     <a class="chip" href="#lock"><span class="symbol">lock</span>tela de bloqueio</a>
     <a class="chip" href="#weather"><span class="symbol">partly_cloudy_day</span>pergunte o clima</a>
   </nav>
+</section>
+
+<section class="showcase" id="files" data-reveal>
+  <div class="showcase-text">
+    <span class="shape-badge big" data-shape="cookie9" data-hover="flower"><span class="symbol">folder_open</span></span>
+    <h2>octopus files</h2>
+    <p class="lead">um gerenciador de arquivos no mesmo visual m3, inspirado no finder do macos: ícones, lista, ou colunas que abrem cada pasta do lado da anterior, com uma prévia do arquivo escolhido.</p>
+    <ul class="points">
+      <li><span class="symbol">commit</span><span>dentro de um repositório: a branch, o que mudou, o que só está local, puxar, enviar e um commit simples. clone por endereço ou do seu github</span></li>
+      <li><span class="symbol">send_to_mobile</span><span>mande arquivos pro celular pelo localsend, navegue nos computadores da rede, monte o google drive com o rclone</span></li>
+      <li><span class="symbol">visibility</span><span>olhada rápida no <kbd>espaço</kbd>, etiquetas coloridas, marcadores, abas, desfazer, compactar e extrair</span></li>
+      <li><span class="symbol">bolt</span><span>a busca em todas as pastas de baixo usa o <code>fd</code>, pulando <code>.git</code>, <code>node_modules</code> e <code>target</code></span></li>
+    </ul>
+    <button class="shot showcase-inset" type="button" data-full="../../assets/screenshots/files.webp" data-label="octopus files em ícones">
+      <img src="../../assets/screenshots/thumbs/files.webp" alt="o octopus files em ícones, com miniaturas das imagens" width="720" height="450" loading="lazy">
+        <span>em ícones</span>
+    </button>
+  </div>
+  <button class="shot showcase-shot" type="button" data-full="../../assets/screenshots/files-columns.webp" data-label="o octopus files em colunas, dentro de um repositório git">
+    <img src="../../assets/screenshots/thumbs/files-columns.webp" alt="o octopus files em colunas: as pastas desde a raiz, a barra do git com a branch e o commit, e uma imagem na prévia" width="720" height="450" loading="lazy">
+  </button>
+</section>
+
+<section class="showcase flip" id="reminders" data-reveal>
+  <div class="showcase-text">
+    <span class="shape-badge big tone-c" data-shape="sunny" data-hover="burst"><span class="symbol">alarm</span></span>
+    <h2>lembretes, digitados</h2>
+    <p class="lead">um <code>!</code> no spotlight cria um: <code>!10 min chá</code>, <code>!18h pão</code>, <code>!amanhã às 9 dentista</code>, <code>!alarme 6:45</code>. em português ou inglês.</p>
+    <ul class="points">
+      <li><span class="symbol">notifications_active</span><span>um aviso na hora, pra adiar ou dispensar; um alarme toca até você responder</span></li>
+      <li><span class="symbol">repeat</span><span>um appzinho lista, edita e faz eles repetirem</span></li>
+      <li><span class="symbol">power_settings_new</span><span>um daemon dentro do shell, que dá pra desligar</span></li>
+    </ul>
+    <button class="shot showcase-inset" type="button" data-full="../../assets/screenshots/launcher-remind.webp" data-label="um lembrete pelo spotlight">
+      <img src="../../assets/screenshots/thumbs/launcher-remind.webp" alt="o spotlight com !10 min tea digitado, mostrando quando vai tocar" width="720" height="450" loading="lazy">
+        <span>pelo spotlight</span>
+    </button>
+  </div>
+  <button class="shot showcase-shot" type="button" data-full="../../assets/screenshots/reminders.webp" data-label="o app de lembretes">
+    <img src="../../assets/screenshots/thumbs/reminders.webp" alt="o app de lembretes: uma lista de lembretes e alarmes com switches" width="720" height="450" loading="lazy">
+  </button>
 </section>
 
 <section class="showcase" id="bar-editor" data-reveal>
@@ -111,6 +164,7 @@
     <ul class="points">
       <li><span class="symbol">open_with</span><span>arraste um widget pra mover, o canto pra mudar o tamanho</span></li>
       <li><span class="symbol">business_center</span><span>a maleta embaixo guarda o resto: arraste um pra fora, ou solte um de volta</span></li>
+      <li><span class="symbol">visibility_off</span><span>embaixo de uma janela, o widget some e para de atualizar até ela sair</span></li>
       <li><span class="symbol">keyboard</span><span><kbd>esc</kbd> ou <em>pronto</em> devolve eles pra baixo das janelas</span></li>
     </ul>
     <button class="shot showcase-inset" type="button" data-full="../../assets/screenshots/desktop-arrange.webp" data-label="organizando os widgets, com a maleta">
@@ -212,7 +266,7 @@
 <footer>
   <p>gpl-3.0-or-later · feito por <a href="https://github.com/pxotitas">pxotitas</a>, com partes do <a href="https://github.com/andreumassanet/impasto">impasto</a> e do <a href="https://github.com/pxdritz1/velatura">velatura</a>.</p>
 </footer>
-<script src="../../reveal.js?v=803f244c" defer></script>
+<script src="../../reveal.js?v=d61e4d67" defer></script>
 <script src="../../media.js?v=e0d8a952" defer></script>
 <script src="../../weather-demo.js?v=cfa96bf6" defer></script>
 <script src="../../motion.js?v=3a80b21e" defer></script>
