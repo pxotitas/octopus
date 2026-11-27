@@ -150,10 +150,11 @@ pub fn takes_looks(id: &str) -> bool {
     !matches!(id, "workspaces" | "battery" | "controls" | "tray")
 }
 
-/// The arrow tray button, when install.sh could build it.
+/// The arrow tray button: built by install.sh, or shipped by the package.
 pub fn arrow() -> Option<String> {
-    let path = crate::exec::cache_dir().join("tray-arrow.so");
-    path.exists().then(|| path.to_string_lossy().into_owned())
+    let built = crate::exec::cache_dir().join("tray-arrow.so");
+    let shipped = std::path::PathBuf::from("/usr/lib/octopus/tray-arrow.so");
+    [built, shipped].into_iter().find(|p| p.exists()).map(|p| p.to_string_lossy().into_owned())
 }
 
 fn icon_module(format: &str, tooltip: &str, click: &str) -> Value {

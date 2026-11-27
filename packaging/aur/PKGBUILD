@@ -1,0 +1,80 @@
+# Maintainer: pxotitas <https://github.com/pxotitas>
+pkgname=octopus-shell-git
+_pkgname=octopus
+pkgver=r0.0000000
+pkgrel=1
+pkgdesc="A cozy material 3 shell for niri: a vertical waybar and a rust + gtk4 companion"
+arch=(x86_64 aarch64)
+url="https://github.com/pxotitas/octopus"
+license=(GPL-3.0-or-later)
+depends=(
+  niri waybar gtk4 gtk4-layer-shell gtk3 glib2 pam dbus
+  python python-dateutil
+  matugen awww cliphist wl-clipboard wtype
+  playerctl cava brightnessctl pipewire libpulse
+  networkmanager bluez-utils fd rofi
+  ttf-material-symbols-variable unicode-emoji unicode-cldr-annotations
+)
+makedepends=(git cargo gcc pkgconf)
+optdepends=(
+  'matuwall: the wallpaper picker on Mod+Shift+W'
+  'fuzzel: the other launcher, themed with the wallpaper'
+  'git: the git bar in octopus files'
+  'github-cli: cloning your repositories in octopus files'
+  'avahi: computers on the network in octopus files'
+  'gvfs: trash, network and servers in octopus files'
+  'ffmpegthumbnailer: video thumbnails in octopus files'
+  'unzip: extracting zips in octopus files'
+  'zip: compressing in octopus files'
+  'rclone: google drive in octopus files'
+)
+provides=(octopus-shell)
+conflicts=(octopus-shell)
+install=octopus-shell-git.install
+source=("$_pkgname::git+https://github.com/pxotitas/octopus.git#branch=main")
+sha256sums=('SKIP')
+
+pkgver() {
+  cd "$_pkgname"
+  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short=7 HEAD)"
+}
+
+prepare() {
+  cd "$_pkgname/companion"
+  export RUSTUP_TOOLCHAIN=stable
+  cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
+}
+
+build() {
+  cd "$_pkgname"
+  export RUSTUP_TOOLCHAIN=stable
+  export CARGO_TARGET_DIR=target
+  export OCTOPUS_DATA_DIR=/usr/share/octopus
+  cargo build --frozen --release --manifest-path companion/Cargo.toml
+  gcc $CFLAGS -shared -fPIC -o tray-arrow.so waybar/tray-arrow.c \
+    $(pkg-config --cflags --libs gtk+-3.0) -lm $LDFLAGS
+}
+
+package() {
+  cd "$_pkgname"
+  install -Dm755 target/release/octopus "$pkgdir/usr/bin/octopus"
+  install -Dm755 tray-arrow.so "$pkgdir/usr/lib/octopus/tray-arrow.so"
+
+  # matuwall's hooks run octopus-theme after a wallpaper is applied
+  printf '#!/bin/sh\nexec "${XDG_CONFIG_HOME:-$HOME/.config}/octopus/scripts/theme.sh" "$@"\n' \
+    > octopus-theme
+  install -Dm755 octopus-theme "$pkgdir/usr/bin/octopus-theme"
+
+  local data="$pkgdir/usr/share/octopus"
+  install -dm755 "$data/waybar" "$data/rofi"
+  cp -r --no-preserve=ownership scripts matugen assets "$data/"
+  install -m644 cava.conf octopus.toml niri.kdl "$data/"
+  install -m644 rofi/config.rasi "$data/rofi/"
+  install -m644 waybar/style.css "$data/waybar/"
+  echo "$pkgver" > "$data/VERSION"
+
+  install -Dm644 assets/octopus-reminders.desktop "$pkgdir/usr/share/applications/octopus-reminders.desktop"
+  install -Dm644 assets/octopus-files.desktop "$pkgdir/usr/share/applications/octopus-files.desktop"
+  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+  install -Dm644 NOTICE.md "$pkgdir/usr/share/licenses/$pkgname/NOTICE.md"
+}

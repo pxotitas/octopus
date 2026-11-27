@@ -14,6 +14,7 @@ mod memory;
 mod panels;
 mod popup;
 mod services;
+mod setup;
 mod shell;
 mod store;
 mod theme;
@@ -38,6 +39,7 @@ const USAGE: &str = "usage: octopus [daemon]
        octopus remind <when> <what>   (10 min tea, 18h bread, alarm 6:45)
        octopus reminders
        octopus files [path]
+       octopus setup                  (after installing the package)
        octopus luma <image>
        octopus reload
        octopus restart";
@@ -47,6 +49,7 @@ fn main() -> glib::ExitCode {
     match args.first().map(String::as_str) {
         None | Some("daemon") => run_daemon(),
         Some("files") => files::run(&args[1..]),
+        Some("setup") => setup::run(),
         Some("-h" | "--help" | "help") => {
             println!("{USAGE}");
             glib::ExitCode::SUCCESS
@@ -75,6 +78,9 @@ fn main() -> glib::ExitCode {
 
 fn run_daemon() -> glib::ExitCode {
     memory::tune();
+    if let Err(err) = setup::sync() {
+        eprintln!("octopus: couldn't update ~/.config/octopus: {err}");
+    }
     let app = gtk::Application::builder()
         .application_id(APP_ID)
         .flags(gio::ApplicationFlags::NON_UNIQUE)

@@ -1,0 +1,22 @@
+post_install() {
+  cat <<'MSG'
+==> octopus is installed. As your user (not root), run:
+
+      octopus setup
+
+    then add this line to the end of ~/.config/niri/config.kdl:
+
+      include "~/.config/octopus/niri.kdl"
+
+==> To make octopus files the default file manager:
+
+      xdg-mime default octopus-files.desktop inode/directory
+MSG
+}
+
+post_upgrade() {
+  cat <<'MSG'
+==> octopus copies the new version into ~/.config/octopus the next time it
+    starts (octopus restart). Your octopus.toml and niri.kdl stay as they are.
+MSG
+}

@@ -87,7 +87,7 @@ fn current() -> String {
 }
 
 fn apply(path: &str) {
-    let script = "awww img --transition-type grow --transition-fps 60 --transition-duration 0.8 \"$1\" && exec \"$HOME/.local/bin/octopus-theme\" \"$1\"";
+    let script = "awww img --transition-type grow --transition-fps 60 --transition-duration 0.8 \"$1\" && exec \"$HOME/.config/octopus/scripts/theme.sh\" \"$1\"";
     exec::spawn("sh", &["-c", script, "sh", path]);
 }
 
