@@ -29,8 +29,16 @@ pub fn widgets(ctx: &Rc<Ctx>) -> gtk::Widget {
     let arrange = action("dashboard_customize", t("organizar agora"), || {
         crate::exec::spawn("octopus", &["desktop", "arrange"]);
     });
+    let c = ctx.clone();
+    let aside = switch(ctx.get().desktop.hide_under_windows, move |on| c.edit(|cfg| cfg.desktop.hide_under_windows = on));
     column.append(&group(&[
         &inline("desktop_windows", t("mostrar widgets"), t("desligado, a área de trabalho fica só com o wallpaper"), &enabled),
+        &inline(
+            "visibility_off",
+            t("sair da frente das janelas"),
+            t("cada widget some enquanto uma janela está em cima dele, e para de atualizar até voltar"),
+            &aside,
+        ),
         &inline(
             "drag_pan",
             t("organizar"),

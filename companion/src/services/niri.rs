@@ -143,8 +143,46 @@ fn apply(windows: &Store<Vec<Window>>, workspaces: &Store<Vec<Workspace>>, line:
     }
 }
 
+thread_local! {
+    static SHARED: std::cell::RefCell<std::rc::Weak<Niri>> = std::cell::RefCell::new(std::rc::Weak::new());
+}
+
 impl Niri {
-    pub fn new() -> Rc<Self> {
+    /// One event stream for everything that watches the windows; it ends
+    /// when the last of them lets go.
+    pub fn shared() -> Rc<Self> {
+        SHARED.with(|cell| {
+            if let Some(niri) = cell.borrow().upgrade() {
+                return niri;
+            }
+            let niri = Self::new();
+            *cell.borrow_mut() = Rc::downgrade(&niri);
+            niri
+        })
+    }
+
+    /// Whether a window on the active workspace of `output` (any output when
+    /// empty) overlaps `rect`, in logical pixels of that output.
+    pub fn covers(&self, output: &str, rect: [f64; 4]) -> bool {
+        let active: Vec<u64> = self
+            .workspaces
+            .get()
+            .iter()
+            .filter(|ws| ws.active && (output.is_empty() || ws.output == output))
+            .map(|ws| ws.id)
+            .collect();
+        self.windows.get().iter().any(|win| {
+            win.workspace.is_some_and(|id| active.contains(&id))
+                && win.tile.is_some_and(|t| {
+                    t[0] < rect[0] + rect[2]
+                        && t[0] + t[2] > rect[0]
+                        && t[1] < rect[1] + rect[3]
+                        && t[1] + t[3] > rect[1]
+                })
+        })
+    }
+
+    fn new() -> Rc<Self> {
         let windows: Rc<Store<Vec<Window>>> = Store::new(Vec::new());
         let workspaces: Rc<Store<Vec<Workspace>>> = Store::new(Vec::new());
         let events = exec::stream("niri", &["msg", "--json", "event-stream"], {

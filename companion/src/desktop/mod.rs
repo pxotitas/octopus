@@ -26,12 +26,14 @@ use gtk4_layer_shell::{Edge, KeyboardMode, Layer, LayerShell};
 
 use crate::config;
 use crate::icons;
+use crate::services::niri::Niri;
 use crate::services::Services;
 use crate::widgets::shape::{Kind, Shape};
 use layout::Rect;
 
 const MARGIN: i32 = 28;
 const THRESHOLD: f64 = 5.0;
+const FADE: std::time::Duration = std::time::Duration::from_millis(220);
 
 struct Item {
     id: &'static str,
@@ -70,6 +72,10 @@ pub struct Desktop {
     screen: (i32, i32),
     left_edge: i32,
     on_change: Rc<dyn Fn(Vec<String>)>,
+    niri: Option<Rc<Niri>>,
+    output: String,
+    cover: Cell<Option<glib::SourceId>>,
+    hiding: Rc<Cell<Option<glib::SourceId>>>,
 }
 
 impl Desktop {
@@ -82,12 +88,15 @@ impl Desktop {
         if !config.desktop.enabled {
             return None;
         }
-        let screen = gdk::Display::default()
+        let monitor = gdk::Display::default()
             .and_then(|d| d.monitors().item(0))
-            .and_downcast::<gdk::Monitor>()
+            .and_downcast::<gdk::Monitor>();
+        let screen = monitor
+            .as_ref()
             .map(|m| m.geometry())
             .map(|g| (g.width(), g.height()))
             .unwrap_or((1440, 900));
+        let output = monitor.and_then(|m| m.connector()).map(|c| c.to_string()).unwrap_or_default();
         let left_edge = if config.bar.right() { MARGIN } else { config.bar.width as i32 + 40 };
 
         let fixed = gtk::Fixed::new();
@@ -135,6 +144,10 @@ impl Desktop {
                 screen,
                 left_edge,
                 on_change,
+                niri: config.desktop.hide_under_windows.then(Niri::shared),
+                output,
+                cover: Cell::new(None),
+                hiding: Rc::default(),
             }
         });
         desktop.tray.root.set_visible(false);
@@ -145,6 +158,7 @@ impl Desktop {
         }
         desktop.gestures();
         window.present();
+        desktop.watch_windows();
         Some(desktop)
     }
 
@@ -292,6 +306,70 @@ impl Desktop {
             self.tray.set_receiving(false);
         }
         self.tray.root.set_visible(on);
+        self.apply_cover();
+    }
+
+    fn watch_windows(self: &Rc<Self>) {
+        let Some(niri) = &self.niri else { return };
+        let weak = Rc::downgrade(self);
+        niri.windows.subscribe(move |_| {
+            if let Some(d) = weak.upgrade() {
+                d.settle_cover();
+            }
+        });
+        let weak = Rc::downgrade(self);
+        niri.workspaces.subscribe(move |_| {
+            if let Some(d) = weak.upgrade() {
+                d.settle_cover();
+            }
+        });
+    }
+
+    /// Windows move in bursts while they animate; looks once they settle.
+    fn settle_cover(self: &Rc<Self>) {
+        if let Some(id) = self.cover.take() {
+            id.remove();
+        }
+        let weak = Rc::downgrade(self);
+        self.cover.set(Some(glib::timeout_add_local_once(std::time::Duration::from_millis(90), move || {
+            if let Some(d) = weak.upgrade() {
+                d.cover.set(None);
+                d.apply_cover();
+            }
+        })));
+    }
+
+    /// A widget under a window fades out and unmaps, which stops its timers;
+    /// with all of them under windows the layer itself goes away.
+    fn apply_cover(&self) {
+        let Some(niri) = &self.niri else { return };
+        let editing = self.editing.get();
+        let mut showing = editing;
+        {
+            let layout = self.layout.borrow();
+            for item in self.items.borrow().iter() {
+                let covered = !editing
+                    && layout
+                        .get(item.id)
+                        .is_some_and(|r| niri.covers(&self.output, [r.x as f64, r.y as f64, r.w as f64, r.h as f64]));
+                showing |= !covered;
+                fade(&item.frame, !covered);
+            }
+        }
+        if let Some(id) = self.hiding.take() {
+            id.remove();
+        }
+        if showing {
+            self.window.set_visible(true);
+        } else if self.window.is_visible() {
+            let window = self.window.clone();
+            let hiding = self.hiding.clone();
+            self.hiding.set(Some(glib::timeout_add_local_once(FADE, move || {
+                hiding.set(None);
+                window.set_visible(false);
+                crate::memory::release_soon();
+            })));
+        }
     }
 
     fn item_at(&self, x: f64, y: f64) -> Option<(Rc<Item>, gtk::Widget)> {
@@ -465,6 +543,26 @@ impl Desktop {
             })));
         }
         menu::open(&self.fixed, x, y, rows, || {});
+    }
+}
+
+fn fade(frame: &gtk::Overlay, shown: bool) {
+    if shown {
+        if !frame.is_visible() {
+            frame.set_visible(true);
+            let f = frame.clone();
+            glib::timeout_add_local_once(std::time::Duration::from_millis(30), move || f.remove_css_class("aside"));
+        } else {
+            frame.remove_css_class("aside");
+        }
+    } else if frame.is_visible() && !frame.has_css_class("aside") {
+        frame.add_css_class("aside");
+        let f = frame.clone();
+        glib::timeout_add_local_once(FADE, move || {
+            if f.has_css_class("aside") {
+                f.set_visible(false);
+            }
+        });
     }
 }
 

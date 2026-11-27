@@ -363,6 +363,8 @@ pub struct Desktop {
     pub corners: u32,
     /// A grid the widgets snap to while arranging, in pixels; 0 is free.
     pub snap: u32,
+    /// Each widget steps aside while a window is over it.
+    pub hide_under_windows: bool,
     pub clock: DeskClock,
     pub weather: DeskWeather,
     pub agenda: DeskAgenda,
@@ -382,6 +384,7 @@ impl Default for Desktop {
             card: "surface".into(),
             corners: 32,
             snap: 0,
+            hide_under_windows: true,
             clock: DeskClock::default(),
             weather: DeskWeather::default(),
             agenda: DeskAgenda::default(),

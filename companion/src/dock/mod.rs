@@ -111,7 +111,7 @@ impl Dock {
             swell: Tween::new(0.0),
             icon,
             headroom,
-            niri: Niri::new(),
+            niri: Niri::shared(),
             apps: Apps::load(),
             pinned: RefCell::new(config.pinned.clone()),
             mode: mode.to_owned(),
@@ -518,21 +518,7 @@ impl Dock {
             .connector()
             .map(|c| c.to_string())
             .unwrap_or_default();
-        let workspaces = self.niri.workspaces.get();
-        let active: Vec<u64> = workspaces
-            .iter()
-            .filter(|ws| ws.active && (connector.is_empty() || ws.output == connector))
-            .map(|ws| ws.id)
-            .collect();
-        self.niri.windows.get().iter().any(|win| {
-            win.workspace.is_some_and(|id| active.contains(&id))
-                && win.tile.is_some_and(|t| {
-                    t[0] < dock[0] + dock[2]
-                        && t[0] + t[2] > dock[0]
-                        && t[1] < dock[1] + dock[3]
-                        && t[1] + t[3] > dock[1]
-                })
-        })
+        self.niri.covers(&connector, dock)
     }
 
     fn wanted(&self) -> bool {
