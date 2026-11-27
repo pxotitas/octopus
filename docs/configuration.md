@@ -11,6 +11,7 @@ a tree on the left: five big categories, each with its branches.
 - **look**: colors (mode, palette style, contrast) and language
 - **bar**: the editor, presets, shape and anchoring
 - **panels**: dash, notifications, weather, music and calendar
+- **panels**: also the control center and the reminders
 - **desktop**: widgets (with each one's options) and the dock
 - **system**: lock screen and about
 
@@ -125,6 +126,20 @@ lyrics_offset_ms = 0
 [lock]
 lyrics = true
 
+[control_center]
+sections = ["header", "tiles", "sliders", "media", "notifications"]  # order and which
+tiles = ["wifi", "bluetooth", "mic", "theme"]   # also caffeine, dnd
+sliders = ["volume", "mic", "brightness", "keyboard"]
+date = true                # in the header
+weather = true
+settings = true            # the gear beside power
+power = true
+visualizer = true          # the bars behind the player
+
+[reminders]
+enabled = true             # the daemon; off, nothing rings
+snooze = 10                # minutes
+
 [dock]
 enabled = false
 mode = "smart"             # "fixed", "autohide" or "smart"
@@ -141,6 +156,7 @@ contributions_colors = "github"  # or "theme", the wallpaper's color
 card = "surface"           # the cards' color: surface, tonal, primary, none
 corners = 32               # 0 to 48
 snap = 0                   # a grid to snap to while arranging, in px; 0 is free
+hide_under_windows = true  # a widget steps aside (and stops updating) under a window
 
 [desktop.clock]
 face = "analog"            # or "digital", hours over minutes
@@ -191,6 +207,62 @@ feed). it refreshes every 15 minutes and keeps a copy in
 anyone read the calendar: don't share it. reading recurring events needs
 `python-dateutil`.
 
+## control center
+
+Mod+C. its sections (header, tiles, sliders, music, notifications) can be
+turned off and put in any order in **panels → control center**, and so can
+the tiles and the sliders. the gear beside power opens the settings.
+
+the **caffeine** tile (or `octopus caffeine`, `octopus caffeine on|off`) keeps
+the screen awake: no dimming, locking or sleep until you turn it off.
+**do not disturb** keeps the toasts quiet; they still go to the list.
+
+## reminders
+
+a daemon inside octopus (it can be turned off in **panels → reminders**). it
+rings at the time with a toast that snoozes or dismisses; an **alarm** loops a
+sound until you answer it.
+
+- from the spotlight: `!` then when and what. `!10 min tea`, `!18h bread`,
+  `!tomorrow at 9 dentist`, `!friday 18h call mom`, `!alarm 6:45`
+- from a terminal: `octopus remind 10 min tea`
+- the little app (`octopus reminders`, or reminders in your apps menu)
+  lists them, turns them on and off, edits them and makes them repeat
+
+they are kept in `~/.local/state/octopus/reminders.json`.
+
+## files
+
+`octopus files [folder]` opens **octopus files**, a file manager in the same
+m3 look, after the macos finder:
+
+- **views**: icons (with a zoom slider), list and columns (<kbd>ctrl</kbd>
+  <kbd>1</kbd>/<kbd>2</kbd>/<kbd>3</kbd>). in columns, a click on a folder
+  opens it beside, <kbd>→</kbd>/<kbd>←</kbd> go in and out, and a file gets a
+  preview at the end
+- **sidebar**: favorites, bookmarks (<kbd>ctrl</kbd><kbd>shift</kbd><kbd>d</kbd>,
+  remove with the × or a right-click), disks with how full they are, the
+  trash, the network and colored tags
+- **quick look** with <kbd>space</kbd>, **get info** with <kbd>ctrl</kbd><kbd>i</kbd>,
+  tabs, undo, compress and extract, open with, a terminal here
+- **search**: typing filters the folder; <kbd>enter</kbd> looks through every
+  folder under it with `fd`, skipping `.git`, `node_modules` and `target`
+- **git**: inside a repository a bar shows the branch (click to switch or make
+  one), what changed, what is only local, and pull, push and **commit** (pick
+  the files, write the message, and push too if you want). **clone
+  repository…** (the + button, the ⋮ menu or a right-click) takes an address
+  or picks from your github repositories; **connect to github** signs `gh` in
+  through the browser
+- **localsend**: right-click → **send with localsend…** finds phones and
+  computers with localsend open on the same network
+- **on the network**: computers that announce sftp or smb, and localsend
+  devices. **connect to server** takes `sftp://`, `smb://`, `ftp://`…
+- **google drive**: through `rclone`, signing in on the browser; it mounts in
+  `~/Google Drive`
+
+the installer asks whether to install it and whether to make it the default,
+which also answers apps' "show in folder".
+
 ## your own css
 
 a `~/.config/octopus/style.css` goes on top of the built-in css and reloads
@@ -234,3 +306,7 @@ away (drop it on the case, or its ×). **done** or <kbd>esc</kbd> ends it.
 
 where they sit is kept in `~/.local/state/octopus/desktop.json`; delete that
 file to put them back in the corner.
+
+with **step aside from windows** on (`hide_under_windows`), a widget under a
+window fades out and stops updating until the window goes; with all of them
+covered the whole layer goes away, so a busy workspace costs nothing.

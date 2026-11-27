@@ -16,14 +16,15 @@ the docs (this) live on the `eng` branch (and in portuguese on `pt-br`);
 │   │   ├── bar.rs        writes waybar's config from octopus.toml
 │   │   ├── i18n.rs       portuguese → english
 │   │   ├── panels/       one file per panel (control center, dash, menus…)
-│   │   ├── launcher/     the spotlight (apps, calculator, files)
+│   │   ├── launcher/     the spotlight (apps, calculator, files, reminders)
+│   │   ├── files/        octopus files, the file manager (git.rs, columns.rs, share.rs…)
 │   │   ├── dock/         the dock (optional), with the magnification in shelf.rs
 │   │   ├── lock/         the lock screen (its own pam)
-│   │   ├── services/     the system behind it all (audio, network, media, niri…)
+│   │   ├── services/     the system behind it all (audio, network, media, niri, reminders…)
 │   │   └── widgets/      reused pieces (shapes, animation, sliders…)
 │   └── style/octopus.css the css built into the binary
 ├── waybar/           style.css, tray-arrow.c (the animated tray button)
-├── scripts/          theme, battery, weather, lyrics, emoji, rofi, matuwall
+├── scripts/          theme, battery, weather, lyrics, emoji, rofi, matuwall, localsend
 ├── matugen/          color templates (companion, waybar, fuzzel, rofi, matuwall)
 ├── rofi/config.rasi  the rofi on Mod+D (its theme.rasi is generated)
 ├── niri.kdl          autostart and shortcuts, included from niri's config
