@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=Reminders
+Name[pt_BR]=Lembretes
+Comment=Alarms and reminders from the octopus shell
+Comment[pt_BR]=Alarmes e lembretes do octopus
+Exec=octopus reminders
+Icon=alarm-symbolic
+Terminal=false
+Categories=GTK;Utility;Clock;

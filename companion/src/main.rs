@@ -3,6 +3,7 @@ mod config;
 mod desktop;
 mod dock;
 mod exec;
+mod files;
 mod i18n;
 mod icons;
 mod ipc;
@@ -36,6 +37,7 @@ const USAGE: &str = "usage: octopus [daemon]
        octopus caffeine [on|off]
        octopus remind <when> <what>   (10 min tea, 18h bread, alarm 6:45)
        octopus reminders
+       octopus files [path]
        octopus luma <image>
        octopus reload
        octopus restart";
@@ -44,6 +46,7 @@ fn main() -> glib::ExitCode {
     let args: Vec<String> = std::env::args().skip(1).collect();
     match args.first().map(String::as_str) {
         None | Some("daemon") => run_daemon(),
+        Some("files") => files::run(&args[1..]),
         Some("-h" | "--help" | "help") => {
             println!("{USAGE}");
             glib::ExitCode::SUCCESS

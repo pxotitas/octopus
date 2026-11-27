@@ -1,0 +1,12 @@
+[Desktop Entry]
+Type=Application
+Name=Files
+Name[pt_BR]=Arquivos
+Comment=Browse your files, in the octopus shell's colors
+Comment[pt_BR]=Navegue pelos seus arquivos, nas cores do octopus
+Exec=octopus files %U
+Icon=system-file-manager
+Terminal=false
+Categories=GTK;Utility;Core;FileManager;
+MimeType=inode/directory;
+StartupNotify=true
