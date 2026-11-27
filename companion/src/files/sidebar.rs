@@ -174,12 +174,44 @@ impl Sidebar {
         if !marks.is_empty() {
             self.heading(t("marcadores"));
             for (file, name) in marks {
-                self.row("bookmark", &name, Place::Folder(file), None);
+                // the x shows on hover; a right click offers the same
+                let remove = icons::button("close", t("remover marcador"));
+                remove.add_css_class("files-unmark");
+                let f = file.clone();
+                remove.connect_clicked(move |_| toggle_bookmark(&f));
+                self.row("bookmark", &name, Place::Folder(file.clone()), Some(remove.upcast()));
+                if let Some((row, _)) = self.rows.borrow().last() {
+                    let click = gtk::GestureClick::new();
+                    click.set_button(gdk::BUTTON_SECONDARY);
+                    let (target, f) = (row.clone(), file.clone());
+                    click.connect_pressed(move |g, _, x, y| {
+                        g.set_state(gtk::EventSequenceState::Claimed);
+                        let menu = gtk::Popover::new();
+                        let button = gtk::Button::with_label(t("remover marcador"));
+                        button.add_css_class("files-pop-item");
+                        let (f, m) = (f.clone(), menu.clone());
+                        button.connect_clicked(move |_| {
+                            toggle_bookmark(&f);
+                            m.popdown();
+                        });
+                        menu.set_child(Some(&button));
+                        menu.set_parent(&target);
+                        menu.set_has_arrow(false);
+                        menu.set_pointing_to(Some(&gdk::Rectangle::new(x as i32, y as i32, 1, 1)));
+                        menu.connect_closed(|p| {
+                            let p = p.clone();
+                            glib::idle_add_local_once(move || p.unparent());
+                        });
+                        menu.popup();
+                    });
+                    row.add_controller(click);
+                }
             }
         }
 
         self.heading(t("locais"));
         self.row("computer", t("computador"), Place::Folder(gio::File::for_path("/")), None);
+        self.usage(&gio::File::for_path("/"));
         for mount in gio::VolumeMonitor::get().mounts() {
             if mount.is_shadowed() {
                 continue;
@@ -200,7 +232,8 @@ impl Sidebar {
                 Some("sftp" | "ftp" | "smb" | "dav" | "davs") => "lan",
                 _ => "hard_drive",
             };
-            self.row(symbol, &mount.name(), Place::Folder(root), Some(eject.upcast()));
+            self.row(symbol, &mount.name(), Place::Folder(root.clone()), Some(eject.upcast()));
+            self.usage(&root);
         }
         // volumes that aren't mounted yet: a click mounts them
         for volume in gio::VolumeMonitor::get().volumes() {
@@ -253,6 +286,29 @@ impl Sidebar {
             dot.set_valign(gtk::Align::Center);
             self.row("label", t(name), Place::Tag(id), Some(dot.upcast()));
         }
+    }
+
+    /// A thin bar under a disk's row: how full it is.
+    fn usage(&self, root: &gio::File) {
+        let bar = gtk::LevelBar::for_interval(0.0, 1.0);
+        bar.add_css_class("files-usage");
+        bar.set_visible(false);
+        self.list.append(&bar);
+        let b = bar.clone();
+        root.query_filesystem_info_async("filesystem::size,filesystem::free", glib::Priority::LOW, gio::Cancellable::NONE, move |r| {
+            if let Ok(info) = r {
+                let (size, free) = (info.attribute_uint64("filesystem::size"), info.attribute_uint64("filesystem::free"));
+                if size > 0 {
+                    let used = 1.0 - free as f64 / size as f64;
+                    b.set_value(used);
+                    if used > 0.9 {
+                        b.add_css_class("full");
+                    }
+                    b.set_tooltip_text(Some(&crate::i18n::tf("{} livres", glib::format_size(free))));
+                    b.set_visible(true);
+                }
+            }
+        });
     }
 
     /// Lights up the row of the folder shown.
