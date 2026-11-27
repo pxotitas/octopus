@@ -3,6 +3,7 @@
 //! symbols and shapes. Finder's ideas, Material's looks.
 
 mod cells;
+mod columns;
 mod dbus;
 mod drive;
 mod git;
@@ -26,7 +27,7 @@ pub const APP_ID: &str = "dev.pxota.Octopus.Files";
 
 /// Attributes every listing asks for.
 pub const ATTRIBUTES: &str = "standard::name,standard::display-name,standard::type,standard::size,standard::content-type,\
-standard::icon,standard::is-hidden,standard::is-backup,standard::is-symlink,standard::target-uri,time::modified,\
+standard::icon,standard::symbolic-icon,standard::is-hidden,standard::is-backup,standard::is-symlink,standard::target-uri,time::modified,\
 thumbnail::path,thumbnail::failed,xattr::xdg.tags,trash::orig-path,trash::deletion-date,id::filesystem,access::can-write";
 
 /// ~/.local/state (or $XDG_STATE_HOME).

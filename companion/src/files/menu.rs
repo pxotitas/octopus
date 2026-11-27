@@ -32,6 +32,7 @@ pub fn accels(app: &gtk::Application) {
         ("win.zoom-out", &["<Control>minus"]),
         ("win.view::icons", &["<Control>1"]),
         ("win.view::list", &["<Control>2"]),
+        ("win.view::columns", &["<Control>3"]),
         ("win.bookmark", &["<Control><Shift>d"]),
         ("win.terminal", &["<Control><Alt>t"]),
         ("win.reload", &["F5", "<Control>r"]),

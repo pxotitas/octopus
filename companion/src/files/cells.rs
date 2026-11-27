@@ -65,7 +65,7 @@ fn dots(info: &gio::FileInfo) -> gtk::Box {
 }
 
 /// A folder under the pointer takes dropped files.
-fn drop_into(widget: &impl IsA<gtk::Widget>, item: &gtk::ListItem, on_drop: &OnDrop) {
+pub fn drop_into(widget: &impl IsA<gtk::Widget>, item: &gtk::ListItem, on_drop: &OnDrop) {
     let target = gtk::DropTarget::new(gdk::FileList::static_type(), gdk::DragAction::COPY | gdk::DragAction::MOVE);
     let (weak, on_drop) = (item.downgrade(), on_drop.clone());
     target.connect_accept(move |_, _| weak.upgrade().and_then(|i| info_of(&i)).is_some_and(|i| is_dir(&i)));

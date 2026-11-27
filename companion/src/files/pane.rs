@@ -8,6 +8,7 @@ use gtk::prelude::*;
 use gtk::{gdk, gio, glib};
 
 use super::cells::{self, OnDrop};
+use super::columns::Columns;
 use super::{file_of, state, ATTRIBUTES};
 use crate::i18n::t;
 
@@ -28,6 +29,10 @@ pub struct Pane {
     stack: gtk::Stack,
     grid: gtk::GridView,
     list: gtk::ColumnView,
+    columns: Rc<Columns>,
+    /// The columns above the open folder hide what this tab hides, but
+    /// aren't searched.
+    plain: gtk::CustomFilter,
     empty: gtk::Box,
     dir: gtk::DirectoryList,
     results: gio::ListStore,
@@ -103,6 +108,12 @@ impl Pane {
                 (if descending { order.reverse() } else { order }).into()
             })
         };
+        let plain = {
+            let hidden = hidden.clone();
+            gtk::CustomFilter::new(move |obj| {
+                obj.downcast_ref::<gio::FileInfo>().is_some_and(|i| hidden.get() || !(i.is_hidden() || i.is_backup()))
+            })
+        };
         let filter_model = gtk::FilterListModel::new(Some(dir.clone()), Some(filter.clone()));
         let sorted = gtk::SortListModel::new(Some(filter_model.clone()), Some(sorter.clone()));
         let selection = gtk::MultiSelection::new(Some(sorted));
@@ -118,6 +129,19 @@ impl Pane {
         list.set_reorderable(false);
         cells::list_columns(&list, dropped);
 
+        let me: Rc<RefCell<std::rc::Weak<Pane>>> = Rc::default();
+        let go = {
+            let me = me.clone();
+            Rc::new(move |folder: gio::File, pick: Option<gio::File>| {
+                let Some(p) = me.borrow().upgrade() else { return };
+                p.go(&folder);
+                if let Some(file) = pick {
+                    p.reveal(&file);
+                }
+            })
+        };
+        let columns = Columns::new(&selection, plain.clone(), sorter.clone().upcast(), hooks.dropped.clone(), go);
+
         let stack = gtk::Stack::new();
         stack.set_transition_type(gtk::StackTransitionType::Crossfade);
         stack.set_transition_duration(140);
@@ -125,6 +149,7 @@ impl Pane {
             let scroller = gtk::ScrolledWindow::builder().child(&view).hexpand(true).vexpand(true).build();
             stack.add_named(&scroller, Some(name));
         }
+        stack.add_named(&columns.root, Some("columns"));
 
         let empty = gtk::Box::new(gtk::Orientation::Vertical, 8);
         empty.add_css_class("files-empty");
@@ -148,6 +173,8 @@ impl Pane {
             stack,
             grid,
             list,
+            columns,
+            plain,
             empty,
             dir,
             results,
@@ -165,6 +192,7 @@ impl Pane {
             zoom,
             hooks,
         });
+        *me.borrow_mut() = Rc::downgrade(&pane);
         pane.set_view(&st.view);
         pane.wire();
         pane
@@ -204,7 +232,17 @@ impl Pane {
             }
         });
 
-        for view in [self.grid.clone().upcast::<gtk::Widget>(), self.list.clone().upcast()] {
+        let weak = Rc::downgrade(self);
+        self.columns.last.connect_activate(move |_, pos| {
+            if let Some(p) = weak.upgrade() {
+                let Some(info) = p.selection.item(pos).and_downcast::<gio::FileInfo>() else { return };
+                if let Some(file) = file_of(&info) {
+                    (p.hooks.open)(file, info);
+                }
+            }
+        });
+
+        for view in [self.grid.clone().upcast::<gtk::Widget>(), self.list.clone().upcast(), self.columns.last.clone().upcast()] {
             // right click: on an item, it joins (or becomes) the selection
             let click = gtk::GestureClick::new();
             click.set_button(gdk::BUTTON_SECONDARY);
@@ -335,7 +373,10 @@ impl Pane {
         self.dir.set_file(Some(file));
         self.filter.changed(gtk::FilterChange::Different);
         self.selection.unselect_all();
-        for scroller in [self.grid.parent(), self.list.parent()].into_iter().flatten() {
+        if self.view() == "columns" {
+            self.columns.show(Some(file));
+        }
+        for scroller in [self.grid.parent(), self.list.parent(), self.columns.last.parent()].into_iter().flatten() {
             if let Some(s) = scroller.downcast_ref::<gtk::ScrolledWindow>() {
                 s.vadjustment().set_value(0.0);
             }
@@ -377,6 +418,7 @@ impl Pane {
         *self.title.borrow_mut() = Some(title.to_owned());
         self.results.remove_all();
         self.filter_model.set_model(Some(&self.results));
+        self.columns.show(None);
         (self.hooks.moved)();
         self.append_results(files);
     }
@@ -425,9 +467,32 @@ impl Pane {
             self.selection.select_item(pos, true);
             match self.view().as_str() {
                 "list" => self.list.scroll_to(pos, None, gtk::ListScrollFlags::FOCUS, None),
+                "columns" => self.columns.last.scroll_to(pos, gtk::ListScrollFlags::FOCUS, None),
                 _ => self.grid.scroll_to(pos, gtk::ListScrollFlags::FOCUS, None),
             }
         }
+    }
+
+    /// Picks `file` once the folder has listed it.
+    pub fn reveal(self: &Rc<Self>, file: &gio::File) {
+        if !self.dir.is_loading() {
+            self.select_file(file);
+            return;
+        }
+        let handler: Rc<RefCell<Option<glib::SignalHandlerId>>> = Rc::default();
+        let (weak, h, file) = (Rc::downgrade(self), handler.clone(), file.clone());
+        let id = self.dir.connect_loading_notify(move |dir| {
+            if dir.is_loading() {
+                return;
+            }
+            if let Some(id) = h.borrow_mut().take() {
+                dir.disconnect(id);
+            }
+            if let Some(p) = weak.upgrade() {
+                p.select_file(&file);
+            }
+        });
+        *handler.borrow_mut() = Some(id);
     }
 
     pub fn count(&self) -> u32 {
@@ -444,9 +509,20 @@ impl Pane {
     }
 
     pub fn set_view(&self, view: &str) {
-        let view = if view == "list" { "list" } else { "icons" };
+        let view = match view {
+            "list" | "columns" => view,
+            _ => "icons",
+        };
+        if view == "columns" {
+            let location = self.location();
+            self.columns.show((!self.showing_results()).then_some(&location));
+        }
         self.stack.set_visible_child_name(view);
-        let focus: gtk::Widget = if view == "list" { self.list.clone().upcast() } else { self.grid.clone().upcast() };
+        let focus: gtk::Widget = match view {
+            "list" => self.list.clone().upcast(),
+            "columns" => self.columns.last.clone().upcast(),
+            _ => self.grid.clone().upcast(),
+        };
         focus.grab_focus();
     }
 
@@ -454,6 +530,7 @@ impl Pane {
     pub fn set_hidden(&self, on: bool) {
         self.hidden.set(on);
         self.filter.changed(gtk::FilterChange::Different);
+        self.plain.changed(gtk::FilterChange::Different);
     }
 
     pub fn sort(&self) -> (String, bool) {

@@ -26,6 +26,7 @@ pub struct Window {
     search: gtk::SearchEntry,
     view_icons: gtk::ToggleButton,
     view_list: gtk::ToggleButton,
+    view_columns: gtk::ToggleButton,
     status: gtk::Label,
     free: gtk::Label,
     zoom: gtk::Scale,
@@ -98,8 +99,13 @@ impl Window {
         view_list.set_child(Some(&icons::icon("view_list")));
         view_list.set_tooltip_text(Some(t("lista")));
         view_list.set_group(Some(&view_icons));
+        let view_columns = gtk::ToggleButton::new();
+        view_columns.set_child(Some(&icons::icon("view_column")));
+        view_columns.set_tooltip_text(Some(t("colunas")));
+        view_columns.set_group(Some(&view_icons));
         views.append(&view_icons);
         views.append(&view_list);
+        views.append(&view_columns);
         header.pack_end(&views);
 
         let search = gtk::SearchEntry::new();
@@ -192,6 +198,7 @@ impl Window {
             search,
             view_icons,
             view_list,
+            view_columns,
             status,
             free,
             zoom,
@@ -392,6 +399,7 @@ impl Window {
         }
         self.view_icons.set_active(pane.view() == "icons");
         self.view_list.set_active(pane.view() == "list");
+        self.view_columns.set_active(pane.view() == "columns");
         self.zoom.set_visible(pane.view() == "icons");
         self.build_crumbs(&pane);
         self.path_entry.set_text(&location.parse_name());
@@ -668,7 +676,7 @@ impl Window {
                 glib::idle_add_local_once(move || w.refresh());
             }
         });
-        for (button, view) in [(self.view_icons.clone(), "icons"), (self.view_list.clone(), "list")] {
+        for (button, view) in [(self.view_icons.clone(), "icons"), (self.view_list.clone(), "list"), (self.view_columns.clone(), "columns")] {
             let weak = Rc::downgrade(self);
             button.connect_toggled(move |b| {
                 if b.is_active() {
@@ -968,6 +976,8 @@ impl Window {
         with_string("view", Box::new(|w, view| {
             if view == "list" {
                 w.view_list.set_active(true);
+            } else if view == "columns" {
+                w.view_columns.set_active(true);
             } else {
                 w.view_icons.set_active(true);
             }

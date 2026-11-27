@@ -3487,6 +3487,67 @@ columnview.file-list > header > button {
   font-size: 13px;
 }
 
+/* columns */
+
+.files-column-scroller {
+  border-right: 1px solid alpha(@outline_variant, 0.5);
+}
+
+listview.files-column {
+  background: none;
+  padding: 6px;
+}
+
+listview.files-column > row {
+  border-radius: 10px;
+  padding: 5px 8px;
+  margin: 1px 0;
+}
+
+listview.files-column > row:hover {
+  background: alpha(@on_surface, 0.06);
+}
+
+listview.files-column > row:selected {
+  background: @secondary_container;
+  color: @on_secondary_container;
+}
+
+listview.files-column.ancestor > row:selected {
+  background: alpha(@secondary_container, 0.7);
+}
+
+listview.files-column:focus-within > row:selected {
+  background: @primary;
+  color: @on_primary;
+}
+
+.column-chevron {
+  font-size: 16px;
+  color: @on_surface_variant;
+}
+
+row:selected .column-chevron {
+  color: inherit;
+}
+
+.files-preview {
+  padding: 28px 20px;
+}
+
+.files-preview .preview-icon {
+  margin-bottom: 8px;
+}
+
+.files-preview .preview-icon.thumb {
+  border-radius: 16px;
+}
+
+.preview-name {
+  font-size: 15px;
+  font-weight: 600;
+}
+
 .files-empty-shape {
   color: @surface_container_high;
 }
